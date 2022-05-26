@@ -1,0 +1,132 @@
+@font-face {
+    font-family: 'Montserrat-Light';
+    /*a name to be used later*/
+    src: url('./assets/fonts/Montserrat-Light.ttf') format('truetype');
+    /*URL to font*/
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    /*a name to be used later*/
+    src: url('./assets/fonts/Montserrat-Regular.ttf') format('truetype');
+    /*URL to font*/
+}
+
+@font-face {
+    font-family: 'Montserrat-SemiBold';
+    src: url('./assets/fonts/Montserrat-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Montserrat-Bold';
+    /*a name to be used later*/
+    src: url('./assets/fonts/Montserrat-Bold.ttf') format('truetype');
+    /*URL to font*/
+}
+
+::-webkit-scrollbar {
+    width: 7.5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #282828;
+    border-radius: 90px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #383838;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+img {
+    -webkit-user-drag: none;
+    user-select: none;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat';
+    color: #1c1c1c;
+}
+
+.common-layout {
+    .el-container {
+        height: 100vh;
+    }
+
+    // menu styling
+    .el-aside {
+        background-color: #1c1c1c;
+        color: #fff;
+        width: fit-content;
+
+        .el-menu {
+            background-color: transparent;
+            height: 100%;
+            font-family: 'Montserrat-SemiBold';
+            padding-top: 72px;
+
+            .el-menu-item {
+                color: #fff;
+
+                img {
+                    margin-right: 20px;
+                }
+
+                &:hover {
+                    background-color: #282828;
+                }
+            }
+
+            .el-menu-item.is-active {
+                background-color: #282828;
+            }
+
+
+            .logo {
+                z-index: 9;
+                position: absolute;
+                top: 10px;
+                left: 6px;
+            }
+
+            .collapseButton {
+                background-color: transparent;
+                border: none;
+                position: absolute;
+                top: 15px;
+                right: 10px;
+                z-index: 8;
+                padding: 8px;
+
+                &:hover {
+                    background-color: #282828;
+                }
+            }
+        }
+    }
+
+    .el-main {
+        background-color: #f6f6f6;
+    }
+
+    .el-header {
+        padding: 15px 35px;
+        height: fit-content;
+    }
+
+    .el-input__wrapper {
+        background-color: #f6f6f6;
+        box-shadow: none;
+    }
+
+    .pageTitle {
+        margin: 0;
+        font-size: 30px;
+        font-family: 'Montserrat-SemiBold';
+    }
+}
