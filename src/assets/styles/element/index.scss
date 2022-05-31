@@ -1,7 +1,7 @@
 /* just override what you need */
 @forward 'element-plus/theme-chalk/src/common/var.scss' with ($colors: ('primary': ('base': #613C97),
         'success': ('base': #00B742),
-        'error': ('base': #EC0004),
+        'danger': ('base': #FF0004),
     ));
 
 @use "element-plus/theme-chalk/src/index.scss" as *;

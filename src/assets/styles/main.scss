@@ -88,9 +88,21 @@ a {
     margin: 0;
 }
 
+.mr-15 {
+    margin-right: 15px;
+}
+
+.mr-10 {
+    margin-right: 10px;
+}
+
 .common-layout {
     .el-container {
         height: 100vh;
+    }
+
+    .el-form-item__label:before {
+        display: none;
     }
 
     // menu styling
@@ -147,6 +159,7 @@ a {
 
     .el-main {
         background-color: #f6f6f6;
+        padding: 20px 35px;
     }
 
     .el-header {
@@ -182,6 +195,13 @@ a {
                 font-family: 'Montserrat-Light';
                 font-size: 14px;
             }
+        }
+    }
+
+    .teamPage {
+        .el-input__wrapper {
+            background-color: #fff;
+            margin-right: 35px;
         }
     }
 }

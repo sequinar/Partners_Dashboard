@@ -89,7 +89,7 @@ const rules = reactive({
         { min: 3, max: 25, message: 'Length should be 3 to 25', trigger: 'change' },
     ],
     email: [
-        { required: true, message: 'Please input Activity name', trigger: 'blur' },
+        { required: true, message: 'Email is required', trigger: 'blur' },
         { type: 'email', message: 'Please enter a valid email address', trigger: 'blur' },
     ],
 })
