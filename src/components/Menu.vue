@@ -10,10 +10,10 @@
             <img src="../assets/Worlds.png" alt="worlds">
             <template #title>Worlds</template>
         </el-menu-item>
-        <el-menu-item index="2" @click="goTo('/analytics')">
+        <!-- <el-menu-item index="2" @click="goTo('/analytics')">
             <img src="../assets/Analytics.png" alt="analytics">
             <template #title>Analytics</template>
-        </el-menu-item>
+        </el-menu-item> -->
         <el-menu-item index="3" @click="goTo('/team')">
             <img src="../assets/Team.png" alt="team">
             <template #title>Team</template>

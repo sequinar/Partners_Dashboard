@@ -10,7 +10,7 @@
             </span>
             <template #dropdown>
                 <el-dropdown-menu>
-                    <el-dropdown-item>Analytics</el-dropdown-item>
+                    <!-- <el-dropdown-item>Analytics</el-dropdown-item> -->
                     <el-dropdown-item>Settings</el-dropdown-item>
                     <el-dropdown-item>Share</el-dropdown-item>
                     <el-dropdown-item>Unpublish</el-dropdown-item>
@@ -20,7 +20,7 @@
 
         <div class="worldItem--footer">
             <h3>Club Camelot</h3>
-            <div class="statistics">
+            <!-- <div class="statistics">
                 <span class="statistics--item">
                     <span class="status" :class="{ online: isOnline }"></span>
                     <small>0045</small>
@@ -38,7 +38,7 @@
                     <small>0045</small>
                 </span>
                 <ArrowUp class="green" />
-            </div>
+            </div> -->
         </div>
     </el-card>
 </template>
@@ -64,7 +64,8 @@ const isOnline = ref(true);
     }
 
     &--footer {
-        padding: 10px 15px 15px 15px;
+        padding: 30px 15px;
+        text-align: center;
 
         h3 {
             margin: 0;
