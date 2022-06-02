@@ -18,17 +18,27 @@
             <img src="../assets/Team.png" alt="team">
             <template #title>Team</template>
         </el-menu-item>
+        <el-menu-item class="onboarding" index="4" @click="isOnboarding = true">
+            <el-icon>
+                <QuestionFilled />
+            </el-icon>
+            <template #title>Onboarding</template>
+        </el-menu-item>
     </el-menu>
+    <Onboarding :is-open="isOnboarding" @close="isOnboarding = false" />
 </template>
 
 <script setup>
 import { ref } from "vue"
 import { useRouter } from 'vue-router'
+import { QuestionFilled } from '@element-plus/icons-vue'
+import Onboarding from "./modals/Onboarding.vue";
 
 const router = useRouter()
 
 let isCollapse = ref(true);
 let blockCollapse = ref(false);
+const isOnboarding = ref(false);
 
 function openMenu() {
     isCollapse.value = false;
@@ -49,12 +59,24 @@ function goTo(route) {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .el-menu-vertical:not(.el-menu--collapse) {
     width: 300px;
 }
 
 .flip {
     transform: rotateY(180deg);
+}
+
+.onboarding {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    i {
+        font-size: 23px;
+        margin-right: 20px;
+    }
 }
 </style>
