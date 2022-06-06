@@ -14,7 +14,7 @@
                 <el-input v-model="settings.user_name" size="large" />
             </el-form-item>
             <el-form-item label="Email" prop="email">
-                <el-input v-model="settings.email" placeholder="Emailexample@email.com" size="large" />
+                <el-input v-model="settings.email" disabled placeholder="Emailexample@email.com" size="large" />
             </el-form-item>
             <el-button class="full-width" type="primary" size="large" @click="submitNameForm">Save</el-button>
         </el-form>

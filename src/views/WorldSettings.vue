@@ -1,0 +1,86 @@
+<template>
+    <div class="worldSettings">
+        <div class="worldSettings__container">
+            <h1>World Settings</h1>
+            <p>Edit content available inside the world as banner ads, video uploads, and streming.</p>
+            <div class="switcher">
+                <label @click="disableChat = !disableChat">Enable or disable chat in world?</label>
+                <el-switch v-model="disableChat" size="large" />
+            </div>
+            <el-tabs v-model="activeName" class="demo-tabs">
+                <el-tab-pane label="World Banners" name="first">
+                    <WorldBanners />
+                </el-tab-pane>
+                <el-tab-pane label="Video Streaming" name="second">
+                    <VideoStreaming />
+                </el-tab-pane>
+            </el-tabs>
+        </div>
+    </div>
+</template>
+
+<script setup>
+import { ref } from 'vue';
+import WorldBanners from '../components/WorldSettings/WorldBanners.vue';
+import VideoStreaming from '../components/WorldSettings/VideoStreaming.vue';
+const disableChat = ref(true);
+const activeName = ref('first')
+</script>
+
+<style scoped lang="scss">
+.worldSettings {
+    display: flex;
+    justify-content: center;
+    color: #1c1c1c;
+
+    &__container {
+        width: 600px;
+
+        h1 {
+            font-size: 30px;
+            font-family: 'Montserrat-SemiBold';
+            margin: 0;
+        }
+
+        p {
+            font-size: 14px;
+            font-family: 'Montserrat-Light';
+            margin-top: 5px;
+        }
+
+        .switcher {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+
+            label {
+                font-size: 14px;
+                font-family: 'Montserrat-Bold';
+                cursor: pointer;
+            }
+        }
+    }
+}
+</style>
+
+<style lang="scss">
+.worldSettings {
+    .el-tabs__item {
+        font-size: 14px;
+        font-family: 'Montserrat-Bold';
+    }
+
+    .el-tabs__item {
+        height: unset;
+        line-height: 1.2;
+        padding-top: 0;
+        padding-bottom: 0;
+        margin: 10px 0;
+    }
+
+    #tab-first {
+        border-right: 3px solid var(--el-color-primary);
+    }
+}
+</style>

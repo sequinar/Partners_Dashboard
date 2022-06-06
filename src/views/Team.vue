@@ -49,7 +49,7 @@
 </template>
 
 <script setup>
-import AddNewMember from '../components/modals/AddNewMember.vue';
+import AddNewMember from '../components/Modals/AddNewMember.vue';
 import { Plus, Search, Lock } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 

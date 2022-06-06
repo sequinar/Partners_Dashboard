@@ -11,7 +11,7 @@
             <template #dropdown>
                 <el-dropdown-menu>
                     <!-- <el-dropdown-item>Analytics</el-dropdown-item> -->
-                    <el-dropdown-item>Settings</el-dropdown-item>
+                    <el-dropdown-item @click="router.push('settings')">Settings</el-dropdown-item>
                     <el-dropdown-item>Share</el-dropdown-item>
                     <el-dropdown-item>Unpublish</el-dropdown-item>
                 </el-dropdown-menu>
@@ -45,6 +45,8 @@
 <script setup>
 import { HeartOutline, ChatOutline, EyeOutline, DotsHorizontal, ArrowUp } from 'mdue';
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const isOnline = ref(true);
 </script>
 
