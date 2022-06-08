@@ -45,13 +45,13 @@
             </el-table-column>
         </el-table>
     </el-row>
-    <AddNewMember :isOpen="newMemeberDialog" @close="newMemeberDialog = false" />
+    <AddNewMember :isOpen="newMemeberDialog" @close="newMemeberDialog = false"></AddNewMember>
 </template>
 
 <script setup>
-import AddNewMember from '../components/Modals/AddNewMember.vue';
-import { Plus, Search, Lock } from '@element-plus/icons-vue'
-import { ref } from 'vue'
+import AddNewMember from '../components/modals/AddNewMember.vue';
+import { Plus, Search, Lock } from '@element-plus/icons-vue';
+import { ref } from 'vue';
 
 const search = ref('');
 const newMemeberDialog = ref(false);

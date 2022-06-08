@@ -32,7 +32,7 @@
 import { ref } from "vue"
 import { useRouter } from 'vue-router'
 import { QuestionFilled } from '@element-plus/icons-vue'
-import Onboarding from "./Modals/Onboarding.vue";
+import Onboarding from "./modals/Onboarding.vue";
 
 const router = useRouter()
 
