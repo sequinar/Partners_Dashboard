@@ -96,6 +96,10 @@ a {
     margin-right: 10px;
 }
 
+.mt-10 {
+    margin-top: 10px;
+}
+
 .common-layout {
     .el-container {
         height: 100vh;
@@ -202,6 +206,40 @@ a {
         .el-input__wrapper {
             background-color: #fff;
             margin-right: 35px;
+        }
+    }
+
+    .authContainer {
+        width: 330px;
+        background-color: #fff;
+        border-radius: 10px;
+        text-align: center;
+        padding: 30px 35px;
+        color: #1c1c1c;
+
+        h1 {
+            font-size: 24px;
+            font-family: 'Montserrat-Bold';
+            color: var(--el-color-primary);
+            margin: 0;
+        }
+
+        p {
+            font-size: 14px;
+            font-family: 'Montserrat-Light';
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        a {
+            font-size: 12px;
+            font-family: 'Montserrat-Bold';
+        }
+
+        .el-input__wrapper {
+            background-color: transparent;
+            border: 1px solid #d9d9d9;
+            height: 50px;
         }
     }
 }

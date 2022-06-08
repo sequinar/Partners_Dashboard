@@ -1,7 +1,7 @@
 <template>
     <el-menu default-active="1" class="el-menu-vertical" :collapse="isCollapse" @mouseenter="openMenu"
         @mouseleave="collapseMenu">
-        <img class="logo" src="../assets/Sequin.world.png" alt="logo">
+        <router-link to="/"><img class="logo" src="../assets/Sequin.world.png" alt="logo"></router-link>
         <el-button v-show="!isCollapse" text large class="collapseButton" :class="{ flip: !blockCollapse }"
             @click="toggleCollapse">
             <img src="../assets/CollapseMenu.png" alt="collapseIcon">

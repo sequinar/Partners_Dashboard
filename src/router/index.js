@@ -4,7 +4,11 @@ import Worlds from '../views/Worlds.vue';
 import Analytics from '../views/Analytics.vue';
 import Team from '../views/Team.vue';
 import WorldSettings from '../views/WorldSettings.vue';
-import Login from '../views/Login.vue';
+import Auth from '../views/Auth.vue';
+import SignUp from '../components/Auth/SignUp.vue';
+import LogIn from '../components/Auth/LogIn.vue';
+import UpdatePassword from '../components/Auth/UpdatePassword.vue';
+import NewPassword from '../components/Auth/NewPassword.vue';
 import NotFound from '../views/NotFound.vue';
 
 const router = createRouter({
@@ -15,26 +19,44 @@ const router = createRouter({
         component: Main,
         children: [
           {
-            path: '/',
+            path: '',
             component: Worlds
           },
           {
-            path: '/analytics',
+            path: 'analytics',
             component: Analytics
           },
           {
-            path: '/team',
+            path: 'team',
             component: Team
           },
           {
-            path: '/settings',
+            path: 'settings',
             component: WorldSettings
           }
         ]
       },
       {
-        path: '/login',
-        component: Login
+        path: '/auth',
+        component: Auth,
+        children: [
+          {
+            path: '',
+            component: SignUp
+          },
+          {
+            path: 'login',
+            component: LogIn
+          },
+          {
+            path: 'pass-update',
+            component: UpdatePassword
+          },
+          {
+            path: 'new-password',
+            component: NewPassword
+          }
+        ]
       },
       { 
         path: '/:pathMatch(.*)*', 
