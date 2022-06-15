@@ -9,7 +9,7 @@
             </el-button>
             <el-dropdown trigger="click" popper-class="headerDropdown" placement="bottom-end">
                 <span class="el-dropdown-link">
-                    <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+                    <el-avatar :src="user.picture" />
                     <el-icon class="el-icon--right">
                         <arrow-down />
                     </el-icon>
@@ -41,6 +41,7 @@ import { ref, inject } from "vue";
 const auth = inject('Auth');
 const search = ref("");
 const drawer = ref(false);
+const user = ref(auth.user);
 
 const logOut = () => {
     auth.logout();

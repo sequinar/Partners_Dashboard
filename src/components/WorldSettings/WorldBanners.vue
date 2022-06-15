@@ -44,12 +44,18 @@
                 <p>Upload a <span>160px by 600px</span> PNG, JPG.</p>
             </el-col>
         </el-row>
+        <el-row>
+            <el-col :span="24">
+                <el-button class="previewWorld full-width" type="primary" size="large">Preview World</el-button>
+                <small>* The sizes are a scaled representation of the actua dimensions of the ads inside the
+                    world.</small>
+            </el-col>
+        </el-row>
     </div>
 </template>
 
 <script setup>
 import BannerUpload from './BannerUpload.vue';
-
 </script>
 
 <style lang="scss" scoped>
@@ -67,6 +73,15 @@ import BannerUpload from './BannerUpload.vue';
         span {
             font-family: 'Montserrat-Bold';
         }
+    }
+
+    small {
+        font-size: 12px;
+        font-style: italic;
+    }
+
+    .previewWorld {
+        margin-top: 50px;
     }
 }
 

@@ -40,7 +40,7 @@
     </div>
 </template>
 <script setup>
-import { reactive, ref, inject, onMounted } from 'vue';
+import { reactive, ref, inject } from 'vue';
 import UserAvatar from './UserAvatar.vue';
 
 const auth = inject('Auth');

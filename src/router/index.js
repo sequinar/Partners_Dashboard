@@ -1,4 +1,3 @@
-import { watchEffect } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import Main from '../views/Main.vue';
 import Worlds from '../views/Worlds.vue';
