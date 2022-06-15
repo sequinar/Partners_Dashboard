@@ -1,6 +1,6 @@
 <template>
-    <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false"
-        :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+    <el-upload class="avatar-uploader" :auto-upload="false" action="#" :show-file-list="false"
+        :on-change="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
         <el-avatar v-if="imageUrl" :src="imageUrl" size="large" />
         <el-icon v-else class="avatar-uploader-icon">
             <Plus />
@@ -12,16 +12,15 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
-
 import type { UploadProps } from 'element-plus'
 
-const imageUrl = ref('https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png');
+const props = defineProps(['userAvatar']);
+const imageUrl = ref(props.userAvatar);
 
-const handleAvatarSuccess: UploadProps['onSuccess'] = (
-    response,
-    uploadFile
-) => {
-    imageUrl.value = URL.createObjectURL(uploadFile.raw!)
+const handleAvatarSuccess = (res) => {
+    console.log(URL.createObjectURL(res.raw!));
+
+    imageUrl.value = URL.createObjectURL(res.raw!)
 }
 
 const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {

@@ -1,20 +1,20 @@
 <template>
     <div class="accountSetting">
         <div class="accountSetting--header d-flex align-center justify-between">
-            <UserAvatar />
+            <UserAvatar :user-avatar="user.picture" />
             <el-button text large class="collapseButton flip" @click="emit('close')">
                 <img src="../assets/CollapseMenu.png" alt="collapseIcon">
             </el-button>
         </div>
-        <el-form ref="nameForm" label-position="top" :model="settings" @submit.prevent :rules="rules">
+        <el-form ref="nameForm" label-position="top" :model="user" @submit.prevent :rules="rules">
             <el-form-item label="Name" prop="name">
-                <el-input v-model="settings.name" size="large" />
+                <el-input v-model="user.name" size="large" />
             </el-form-item>
-            <el-form-item label="User name" prop="user_name">
-                <el-input v-model="settings.user_name" size="large" />
+            <el-form-item label="User name" prop="nickname">
+                <el-input v-model="user.nickname" size="large" />
             </el-form-item>
             <el-form-item label="Email" prop="email">
-                <el-input v-model="settings.email" disabled placeholder="Emailexample@email.com" size="large" />
+                <el-input v-model="user.email" disabled placeholder="Emailexample@email.com" size="large" />
             </el-form-item>
             <el-button class="full-width" type="primary" size="large" @click="submitNameForm">Save</el-button>
         </el-form>
@@ -40,17 +40,14 @@
     </div>
 </template>
 <script setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref, inject, onMounted } from 'vue';
 import UserAvatar from './UserAvatar.vue';
 
+const auth = inject('Auth');
+const user = auth.user;
 const emit = defineEmits(['close']);
 const nameForm = ref();
 const passForm = ref();
-const settings = reactive({
-    name: '',
-    user_name: '',
-    email: '',
-})
 const passwordUpdate = reactive({
     currentPass: '',
     pass: '',
@@ -84,7 +81,7 @@ const rules = reactive({
         { required: true, message: 'Please input your name', trigger: 'blur' },
         { min: 3, max: 25, message: 'Length should be 3 to 25', trigger: 'change' },
     ],
-    user_name: [
+    nickname: [
         { required: true, message: 'Please input your name', trigger: 'blur' },
         { min: 3, max: 25, message: 'Length should be 3 to 25', trigger: 'change' },
     ],

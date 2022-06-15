@@ -19,7 +19,7 @@
                         <el-dropdown-item @click="drawer = true">
                             <cog-outline /> Account Settings
                         </el-dropdown-item>
-                        <el-dropdown-item>
+                        <el-dropdown-item @click="logOut">
                             <logout />Log Out
                         </el-dropdown-item>
                     </el-dropdown-menu>
@@ -36,9 +36,15 @@
 import AccountSettings from './AccountSettings.vue';
 import { CogOutline, Logout, BellOutline } from 'mdue';
 import { Search, ArrowDown } from '@element-plus/icons-vue';
-import { ref } from "vue";
+import { ref, inject } from "vue";
+
+const auth = inject('Auth');
 const search = ref("");
 const drawer = ref(false);
+
+const logOut = () => {
+    auth.logout();
+}
 
 </script>
 
