@@ -3,7 +3,7 @@
         <div class="worldSettings__container">
             <h1>World Settings</h1>
             <p>Edit content available inside the world as banner ads, video uploads, and streming.</p>
-            <div class="switcher">
+            <div class="switcher mt-30">
                 <label @click="disableChat = !disableChat">Enable or disable chat in world?</label>
                 <el-switch v-model="disableChat" size="large" />
             </div>
@@ -21,13 +21,13 @@
 
 <script setup>
 import { ref } from 'vue';
-import WorldBanners from '../components/WorldSettings/WorldBanners.vue';
-import VideoStreaming from '../components/WorldSettings/VideoStreaming.vue';
+import WorldBanners from '../components/WorldSettings/TabWorldBanners.vue';
+import VideoStreaming from '../components/WorldSettings/TabVideoStreaming.vue';
 const disableChat = ref(true);
 const activeName = ref('first')
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .worldSettings {
     display: flex;
     justify-content: center;
@@ -52,7 +52,6 @@ const activeName = ref('first')
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 30px;
 
             label {
                 font-size: 14px;

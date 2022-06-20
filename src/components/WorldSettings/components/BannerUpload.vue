@@ -1,7 +1,7 @@
 <template>
     <div ref="banner" class="bannerUpload" :style="{ width: width, height: height }">
         <el-upload ref="uploadRef" drag action="#" :auto-upload="false" :on-change="uploadSuccess" :limit="1"
-            :on-exceed="handleExceed">
+            :on-exceed="handleExceed" accept="image/*">
             <div class="el-upload__text d-flex align-center justify-center"
                 :class="{ 'direction-column': bannerWidth < 400 }">
                 <el-icon class="el-icon--upload">

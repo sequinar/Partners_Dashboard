@@ -55,7 +55,7 @@
 </template>
 
 <script setup>
-import BannerUpload from './BannerUpload.vue';
+import BannerUpload from './components/BannerUpload.vue';
 </script>
 
 <style lang="scss" scoped>
