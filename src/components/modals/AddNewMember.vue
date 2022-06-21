@@ -28,7 +28,7 @@
                     <el-button size="large" type="primary" @click="submitMemberForm">Send Invite</el-button>
                 </el-col>
                 <el-col :span="12">
-                    <el-button size="large" @click="$emit('close')">Cancel</el-button>
+                    <el-button size="large" @click="emit('close')">Cancel</el-button>
                 </el-col>
             </el-row>
         </template>
@@ -37,7 +37,12 @@
 
 <script setup>
 import { reactive, ref } from 'vue';
+import { useStore } from 'vuex'
+import { ElMessage } from 'element-plus'
+
+const store = useStore();
 const props = defineProps(['isOpen']);
+const emit = defineEmits(['close']);
 const memberForm = ref();
 const member = reactive({
     name: '',
@@ -64,7 +69,12 @@ const rules = reactive({
 const submitMemberForm = async () => {
     await memberForm.value.validate((valid, fields) => {
         if (valid) {
-            console.log('submit!')
+            store.dispatch('team/addMember', {
+                ...member,
+                id: Date.now()
+            })
+            emit('close');
+            ElMessage.success("Member has been added");
         } else {
             console.log('error submit!', fields)
         }

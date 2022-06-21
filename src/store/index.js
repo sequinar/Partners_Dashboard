@@ -1,16 +1,16 @@
 import { createStore } from 'vuex'
+import Team from './modules/team'
 
 // Create a new store instance.
 const store = createStore({
   state () {
     return {
-      count: 0
     }
   },
   mutations: {
-    increment (state) {
-      state.count++
-    }
+  },
+  modules: {
+    team: Team
   }
 })
 

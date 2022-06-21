@@ -34,13 +34,13 @@
             <el-table-column prop="date" label="Last seen" />
             <el-table-column align="right">
                 <template #default="scope">
-                    <el-popconfirm confirm-button-text="Remove" cancel-button-text="Cancel" title="Are you sure?">
+                    <el-popconfirm confirm-button-text="Remove" cancel-button-text="Cancel" title="Are you sure?"
+                        @confirm="removeMember(scope.row.id)">
                         <template #reference>
                             <el-button type="danger" text>Remove member
                             </el-button>
                         </template>
                     </el-popconfirm>
-
                 </template>
             </el-table-column>
         </el-table>
@@ -51,33 +51,20 @@
 <script setup>
 import AddNewMember from '../components/modals/AddNewMember.vue';
 import { Plus, Search, Lock } from '@element-plus/icons-vue';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import { useStore } from 'vuex'
+import { ElMessage } from 'element-plus'
 
+const store = useStore();
 const search = ref('');
 const newMemeberDialog = ref(false);
-const tableData = [
-    {
-        date: '2016-05-03',
-        name: 'Jhon Doe',
-        worlds: 'All worlds',
-        role: 'Admin',
-        email: 'jhondoe@mail.com'
-    },
-    {
-        date: '2016-05-03',
-        name: 'Jhon Doe',
-        worlds: 'All worlds',
-        role: 'Admin',
-        email: 'jhondoe@mail.com'
-    },
-    {
-        date: '2016-05-03',
-        name: 'Jhon Doe',
-        worlds: 'All worlds',
-        role: 'Admin',
-        email: 'jhondoe@mail.com'
-    },
-]
+
+const tableData = computed(() => store.getters['team/getMembers'])
+
+const removeMember = (id) => {
+    store.dispatch('team/removeMember', id);
+    ElMessage.success("Member is removed");
+}
 </script>
 
 <style lang="scss">
