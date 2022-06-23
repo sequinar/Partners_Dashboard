@@ -25,7 +25,7 @@
             <template #title>Onboarding</template>
         </el-menu-item>
     </el-menu>
-    <Onboarding :is-open="isOnboarding" @close="isOnboarding = false" />
+    <Onboarding :is-open="isOnboarding" :is-collapsed="isCollapse" @close="isOnboarding = false" />
 </template>
 
 <script setup>
@@ -41,6 +41,7 @@ let blockCollapse = ref(false);
 const isOnboarding = ref(false);
 
 function openMenu() {
+    if (isOnboarding.value) return;
     isCollapse.value = false;
 };
 
@@ -55,6 +56,7 @@ function toggleCollapse() {
 }
 
 function goTo(route) {
+    if (isOnboarding.value) return;
     router.push(route);
 }
 </script>
@@ -78,5 +80,12 @@ function goTo(route) {
         font-size: 23px;
         margin-right: 20px;
     }
+}
+
+.instruction {
+    border: 2px solid #FFF;
+    box-shadow: 0 1px 4px 0 #FFF;
+    border-radius: 5px;
+    z-index: 999999;
 }
 </style>

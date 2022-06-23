@@ -1,6 +1,7 @@
 <template>
-    <el-dialog custom-class="onboarding" v-model="isOpen" width="600px" @close="$emit('close')" destroy-on-close>
-        <el-carousel :autoplay="false" :loop="false" trigger="click" arrow="always" height="450px">
+    <el-dialog :custom-class="customClass" v-model="isOpen" width="600px" @opened="onOpen" @close="$emit('close')"
+        destroy-on-close :close-on-click-modal="false">
+        <el-carousel :autoplay="false" :loop="false" trigger="click" arrow="always" height="450px" @change="onChange">
             <el-carousel-item>
                 <img src="../../assets/Group.png" alt="onboarding image1">
                 <h2>Manage and preview your World</h2>
@@ -18,14 +19,41 @@
 </template>
 
 <script setup>
+import { ref, computed, onBeforeUnmount } from 'vue';
 const emits = defineEmits(['close']);
-const props = defineProps(['isOpen']);
+const props = defineProps(['isOpen', 'isCollapsed']);
+let menuItems = ref(null);
 
+const customClass = computed(() => `onboardingDialog ${props.isCollapsed ? 'left-90' : 'left-310'}`);
+
+const onChange = (index) => {
+    menuItems.forEach(item => item.classList.remove('instruction'));
+    menuItems[index].classList.add('instruction');
+}
+
+const onOpen = () => {
+    menuItems = document.querySelectorAll('.el-menu-item');
+    menuItems[0].classList.add('instruction');
+}
+
+onBeforeUnmount(() => {
+    // menuItems.forEach(item => item.classList.remove('instruction'));
+})
 
 </script>
 
 <style lang="scss">
-.onboarding {
+.onboardingDialog {
+    position: absolute;
+
+    &.left-90 {
+        left: 90px;
+    }
+
+    &.left-310 {
+        left: 310px;
+    }
+
     h2 {
         font-size: 20px;
         font-family: 'Montserrat-Bold';
