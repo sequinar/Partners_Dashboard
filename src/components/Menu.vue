@@ -6,18 +6,18 @@
             @click="toggleCollapse">
             <img src="../assets/CollapseMenu.png" alt="collapseIcon">
         </el-button>
-        <el-menu-item index="1" @click="goTo('/')">
+        <el-menu-item index="1" :class="showIntruction(0)" @click="goTo('/')">
             <img src="../assets/Worlds.png" alt="worlds">
             <template #title>Worlds</template>
         </el-menu-item>
-        <!-- <el-menu-item index="2" @click="goTo('/analytics')">
-            <img src="../assets/Analytics.png" alt="analytics">
-            <template #title>Analytics</template>
-        </el-menu-item> -->
-        <el-menu-item index="3" @click="goTo('/team')">
+        <el-menu-item index="2" :class="showIntruction(1)" @click="goTo('/team')">
             <img src="../assets/Team.png" alt="team">
             <template #title>Team</template>
         </el-menu-item>
+        <!-- <el-menu-item index="3" @click="goTo('/analytics')">
+            <img src="../assets/Analytics.png" alt="analytics">
+            <template #title>Analytics</template>
+        </el-menu-item> -->
         <el-menu-item class="onboarding" index="4" @click="isOnboarding = true">
             <el-icon>
                 <QuestionFilled />
@@ -25,7 +25,8 @@
             <template #title>Onboarding</template>
         </el-menu-item>
     </el-menu>
-    <Onboarding :is-open="isOnboarding" :is-collapsed="isCollapse" @close="isOnboarding = false" />
+    <Onboarding v-if="isOnboarding" :is-open="isOnboarding" :is-collapsed="isCollapse" @change="slideChange"
+        @close="isOnboarding = false" />
 </template>
 
 <script setup>
@@ -38,6 +39,7 @@ const router = useRouter()
 
 let isCollapse = ref(true);
 let blockCollapse = ref(false);
+let onboardingSlide = ref(0);
 const isOnboarding = ref(false);
 
 function openMenu() {
@@ -58,6 +60,16 @@ function toggleCollapse() {
 function goTo(route) {
     if (isOnboarding.value) return;
     router.push(route);
+}
+
+function slideChange(index) {
+    onboardingSlide.value = index;
+}
+
+function showIntruction(index) {
+    return {
+        'instruction': isOnboarding.value && onboardingSlide.value === index
+    }
 }
 </script>
 

@@ -19,25 +19,29 @@
 </template>
 
 <script setup>
-import { ref, computed, onBeforeUnmount } from 'vue';
-const emits = defineEmits(['close']);
+import { ref, computed, onMounted } from 'vue';
+const emits = defineEmits(['close', 'change']);
 const props = defineProps(['isOpen', 'isCollapsed']);
+let onboardingDialog = ref(null);
 let menuItems = ref(null);
+let rectTop = ref(null);
 
 const customClass = computed(() => `onboardingDialog ${props.isCollapsed ? 'left-90' : 'left-310'}`);
 
 const onChange = (index) => {
-    menuItems.forEach(item => item.classList.remove('instruction'));
-    menuItems[index].classList.add('instruction');
+    emits('change', index);
+    rectTop.value = menuItems[index].getBoundingClientRect().top;
+    onboardingDialog.value.style.top = `${rectTop.value + 10}px`;
 }
 
 const onOpen = () => {
-    menuItems = document.querySelectorAll('.el-menu-item');
-    menuItems[0].classList.add('instruction');
+    onboardingDialog.value = document.querySelector('.el-dialog');
+    onboardingDialog.value.style.top = `${rectTop.value + 10}px`;
 }
 
-onBeforeUnmount(() => {
-    // menuItems.forEach(item => item.classList.remove('instruction'));
+onMounted(() => {
+    menuItems = document.querySelectorAll('.el-menu-item');
+    rectTop.value = menuItems[0].getBoundingClientRect().top;
 })
 
 </script>
@@ -45,6 +49,7 @@ onBeforeUnmount(() => {
 <style lang="scss">
 .onboardingDialog {
     position: absolute;
+    margin: 0;
 
     &.left-90 {
         left: 90px;
