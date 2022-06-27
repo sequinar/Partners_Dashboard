@@ -14,16 +14,16 @@
         </el-col>
     </el-row>
     <el-row class="teamsContainer">
-        <el-table :data="tableData" style="width: 100%">
+        <el-table v-loading="loading" :data="tableData" style="width: 100%">
             <el-table-column prop="name" label="Name">
                 <template #default="scope">
                     <div class="d-flex align-center">
                         <div class="mr-15">
-                            <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+                            <el-avatar :src="scope.row.profile_image" />
                         </div>
                         <div>
                             <p class="ma-0">{{ scope.row.name }}</p>
-                            <small>{{ scope.row.email }}</small>
+                            <small>{{ scope.row.alternateid }}</small>
                         </div>
                     </div>
 
@@ -35,7 +35,7 @@
             <el-table-column align="right">
                 <template #default="scope">
                     <el-popconfirm confirm-button-text="Remove" cancel-button-text="Cancel" title="Are you sure?"
-                        @confirm="removeMember(scope.row.id)">
+                        @confirm="removeMember(scope.row.user_id)">
                         <template #reference>
                             <el-button type="danger" text>Remove member
                             </el-button>
@@ -51,20 +51,25 @@
 <script setup>
 import AddNewMember from '../components/modals/AddNewMember.vue';
 import { Plus, Search, Lock } from '@element-plus/icons-vue';
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useStore } from 'vuex'
-import { ElMessage } from 'element-plus'
 
+const loading = ref(true)
 const store = useStore();
 const search = ref('');
 const newMemeberDialog = ref(false);
 
-const tableData = computed(() => store.getters['team/getMembers'])
+const tableData = computed(() => store.state.team.members);
 
 const removeMember = (id) => {
     store.dispatch('team/removeMember', id);
-    ElMessage.success("Member is removed");
 }
+
+onMounted(async () => {
+    await store.dispatch('team/getTeam');
+    await store.dispatch('team/getMembers');
+    loading.value = false;
+})
 </script>
 
 <style lang="scss">

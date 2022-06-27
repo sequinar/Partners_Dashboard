@@ -1,56 +1,49 @@
+import axios from '@/axios/index';
 const store = {
     namespaced: true,
     state() {
         return {
-            members: [
-                {
-                    date: "2016-05-03",
-                    name: "Jhon Doe",
-                    worlds: "All worlds",
-                    role: "Admin",
-                    email: "jhondoe@mail.com",
-                    id: 1,
-                },
-                {
-                    date: "2016-05-03",
-                    name: "Jhon Doe",
-                    worlds: "All worlds",
-                    role: "Admin",
-                    email: "jhondoe@mail.com",
-                    id: 2,
-                },
-                {
-                    date: "2016-05-03",
-                    name: "Jhon Doe",
-                    worlds: "All worlds",
-                    role: "Admin",
-                    email: "jhondoe@mail.com",
-                    id: 3,
-                },
-            ],
+            team: {},
+            members: [],
         };
     },
     mutations: {
+        setTeam(state, team) {
+            state.team = team[0];
+        },
+        setMembers(state, members) {
+            state.members = members;
+        },
         addMember(state, member) {
             state.members.push(member);
         },
-        removeMember(state, id) {
-            state.members = state.members.filter((member) => member.id !== id);
-        },
     },
     actions: {
-        addMember({ commit }, member) {
-            commit("addMember", member);
+        async createTeam({dispatch, rootState}) {
+            await axios.post('/team',{teamName: `${rootState.user.nickname} team`, teamLicenses: 5});
+            dispatch('getTeam');
         },
-        removeMember({ commit }, id) {
-            commit("removeMember", id);
+        async getTeam({commit, dispatch}) {
+            const team = await axios.get('/team');
+            if(team.data.lenght === 0) {
+                dispatch('createTeam');
+            } else {
+                commit('setTeam', team.data);
+            }
+        },
+        async getMembers({commit, state}) {
+            const members = await axios.get(`team/${state.team.id}/users`)
+            commit('setMembers', members.data);
+        },
+        async inviteMember({ state }, member) {
+            await axios.post(`team/${state.team.id}/invite-user/${member.email}`);
+        },
+        async removeMember({ dispatch, state }, id) {
+            await axios.delete(`team/${state.team.id}/remove-user/${id}`);
+            dispatch("getMembers");
         },
     },
-    getters: {
-        getMembers: (state) => {
-            return state.members;
-        },
-    },
+    getters: {},
 };
 
 export default store;

@@ -69,12 +69,11 @@ const rules = reactive({
 const submitMemberForm = async () => {
     await memberForm.value.validate((valid, fields) => {
         if (valid) {
-            store.dispatch('team/addMember', {
+            store.dispatch('team/inviteMember', {
                 ...member,
-                id: Date.now()
             })
             emit('close');
-            ElMessage.success("Member has been added");
+            ElMessage.success("Member has been invited");
         } else {
             console.log('error submit!', fields)
         }
