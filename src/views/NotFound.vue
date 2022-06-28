@@ -1,7 +1,7 @@
 <!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
 <template>
-  <img style="position: absolute; left: 48px; top: 26px; cursor: pointer;" src="../assets/logo.svg" alt=""
-    @click="goHome">
+  <img style="position: absolute; left: 48px; top: 26px; cursor: pointer;" src="../assets/icons/Sequin.world.svg"
+    alt="Sequin.world" @click="goHome">
   <div style="display: flex; height: 100vh; width: 100%; display: flex; align-items: center;
     justify-content: center; flex-direction: column; background-color: #282828;">
     <img style="height: 310px; width: 452px;" src="../assets/astronautimage.png" alt="">
