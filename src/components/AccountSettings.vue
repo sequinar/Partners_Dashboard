@@ -2,16 +2,16 @@
     <div class="accountSetting">
         <div class="accountSetting--header d-flex align-center justify-between">
             <UserAvatar :user-avatar="user.picture" />
-            <el-button text large class="collapseButton flip" @click="emit('close')">
-                <img src="../assets/CollapseMenu.png" alt="collapseIcon">
+            <el-button text large class="collapseButton" @click="emit('close')">
+                <img src="../assets/icons/Collapse_Profile_menu.svg" alt="collapseIcon">
             </el-button>
         </div>
         <el-form ref="nameForm" label-position="top" :model="user" @submit.prevent :rules="rules">
             <el-form-item label="Name" prop="name">
-                <el-input v-model="user.name" size="large" />
+                <el-input v-model="user.name" size="large" maxlength="25" show-word-limit />
             </el-form-item>
             <el-form-item label="User name" prop="nickname">
-                <el-input v-model="user.nickname" size="large" />
+                <el-input v-model="user.nickname" size="large" maxlength="25" show-word-limit />
             </el-form-item>
             <el-form-item label="Email" prop="email">
                 <el-input v-model="user.email" disabled placeholder="Emailexample@email.com" size="large" />
@@ -19,8 +19,8 @@
             <el-button class="full-width" type="primary" size="large" @click="submitNameForm">Save</el-button>
         </el-form>
         <el-form ref="passForm" label-position="top" :model="passwordUpdate" @submit.prevent :rules="rulesPass">
-            <h3>Update Password</h3>
-            <el-form-item class="ma-0" label="Current password" prop="currentPass">
+            <h4>Update Password</h4>
+            <el-form-item class="ma-0" label="Current password">
                 <el-input type="password" v-model="passwordUpdate.currentPass" autocomplete="off" size="large" />
             </el-form-item>
             <a href="#">Forgot password?</a>
@@ -92,7 +92,6 @@ const rules = reactive({
 })
 
 const rulesPass = reactive({
-    currentPass: [{ required: true, message: 'Please input the password', trigger: 'blur' },],
     pass: [{ validator: validatePass, trigger: 'blur' }],
     checkPass: [{ validator: validatePass2, trigger: 'blur' }],
 })
@@ -117,19 +116,29 @@ const submitPassForm = async () => {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .accountSetting {
-    padding: 20px 10px;
+    width: 325px;
+    margin: 0 auto;
+
+    .el-avatar {
+        border: 2px solid #fff;
+
+        &--large {
+            --el-avatar-size: 60px;
+        }
+    }
 
     &--header {
         margin-bottom: 30px;
     }
 
     .collapseButton {
+        height: 40px;
 
         &:hover,
         &:focus {
-            background-color: #282828;
+            background-color: #282828 !important;
         }
     }
 
@@ -137,14 +146,16 @@ const submitPassForm = async () => {
         margin-bottom: 10px;
         display: inline-block;
     }
-}
 
-.flip {
-    transform: rotateY(180deg);
+    h4 {
+        font-size: 16px;
+        margin-bottom: 26px;
+    }
 }
 
 .rules {
     font-size: 12px;
     padding-left: 15px;
+    margin-bottom: 18px;
 }
 </style>

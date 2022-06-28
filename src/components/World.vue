@@ -4,8 +4,8 @@
             class="image" />
         <el-dropdown class="dropdown" placement="bottom-end" trigger="click">
             <span class="el-dropdown-link">
-                <el-button circle>
-                    <DotsHorizontal />
+                <el-button circle size="small">
+                    <img src="@/assets/icons/Sub_menu_Dots.svg" alt="Sub_menu_Dots" />
                 </el-button>
             </span>
             <template #dropdown>
@@ -43,7 +43,6 @@
     </el-card>
 </template>
 <script setup>
-import { HeartOutline, ChatOutline, EyeOutline, DotsHorizontal, ArrowUp } from 'mdue';
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()

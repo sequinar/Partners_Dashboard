@@ -1,17 +1,17 @@
 <template>
-    <el-upload class="avatar-uploader" :auto-upload="false" action="#" :show-file-list="false"
+    <el-upload class="avatar-uploader" :auto-upload="false" accept="image/*" action="#" :show-file-list="false"
         :on-change="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
         <el-avatar v-if="imageUrl" :src="imageUrl" size="large" />
-        <el-icon v-else class="avatar-uploader-icon">
-            <Plus />
-        </el-icon>
+        <div class="avatar-uploader-icon">
+            <img src="@/assets/icons/EditIcon.svg" alt="EditIcon" />
+        </div>
     </el-upload>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { Plus } from '@element-plus/icons-vue'
+import { Edit } from '@element-plus/icons-vue'
 import type { UploadProps } from 'element-plus'
 
 const props = defineProps(['userAvatar']);
@@ -35,8 +35,12 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
 }
 </script>
 
-<style>
-.el-icon.avatar-uploader-icon {
+<style lang="scss">
+.el-upload {
+    position: relative;
+}
+
+.avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
     width: 56px;
@@ -44,5 +48,16 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
     border: 2px solid #fff;
     text-align: center;
     border-radius: 50%;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.7);
+    transition: all 0.3s ease;
+    opacity: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:hover {
+        opacity: 1;
+    }
 }
 </style>

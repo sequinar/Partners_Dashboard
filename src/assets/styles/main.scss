@@ -60,6 +60,10 @@ a {
     text-decoration: none;
 }
 
+input {
+    font-family: 'Montserrat';
+}
+
 .d-flex {
     display: flex;
 }
@@ -108,7 +112,20 @@ a {
     margin-top: 30px;
 }
 
+:root {
+    --hover-primary-color: #7749B7;
+}
+
 .common-layout {
+    .el-button--primary {
+        --el-button-hover-bg-color: #7749B7;
+        --el-button-hover-border-color: #7749B7;
+    }
+
+    .el-input .el-input__count .el-input__count-inner {
+        background: transparent;
+    }
+
     .el-container {
         height: 100vh;
     }
@@ -127,7 +144,7 @@ a {
             background-color: transparent;
             height: 100%;
             font-family: 'Montserrat-SemiBold';
-            padding-top: 72px;
+            padding-top: 145px;
 
             .el-menu-item {
                 color: #fff;
@@ -155,7 +172,7 @@ a {
             .logo {
                 z-index: 9;
                 position: absolute;
-                top: 10px;
+                top: 53px;
                 left: 15px;
             }
 
@@ -163,10 +180,12 @@ a {
                 background-color: transparent;
                 border: none;
                 position: absolute;
-                top: 15px;
-                right: 10px;
+                top: 55px;
+                right: 20px;
                 z-index: 8;
                 padding: 8px;
+                width: 40px;
+                height: 40px;
 
                 &:hover {
                     background-color: #282828;
@@ -186,7 +205,7 @@ a {
 
     .el-header {
         padding: 15px 35px;
-        height: fit-content;
+        height: 75px;
     }
 
     .el-input__wrapper {
@@ -271,6 +290,8 @@ a {
 }
 
 .headerDropdown {
+    border: none !important;
+
     .el-dropdown-menu {
         padding: 0;
         overflow: hidden;
@@ -283,14 +304,22 @@ a {
         color: #1c1c1c;
         transition: all 0.3s ease;
 
-        svg {
-            font-size: 22px;
-            margin-right: 24px;
+        img {
+            margin-right: 25px;
         }
 
-        &:focus {
+        &:hover {
+            color: #1c1c1c;
+        }
+
+        &:nth-child(2) {
             background-color: var(--el-color-primary);
             color: #fff;
+
+            &:hover {
+                background-color: var(--hover-primary-color);
+                color: #fff;
+            }
         }
     }
 }

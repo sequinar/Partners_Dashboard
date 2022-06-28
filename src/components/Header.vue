@@ -1,12 +1,16 @@
 <template>
     <el-row class="header">
         <el-col :span="12">
-            <el-input v-model="search" size="large" placeholder="Search Worlds" :prefix-icon="Search" />
+            <el-input v-model="search" size="large" placeholder="Search Worlds">
+                <template #prefix>
+                    <img src="../assets/icons/Search.svg" alt="Search" />
+                </template>
+            </el-input>
         </el-col>
         <el-col :span="12" class="alignment-container">
-            <el-button class="bell" text size="large" circle>
+            <!-- <el-button class="bell" text size="large" circle>
                 <bell-outline />
-            </el-button>
+            </el-button> -->
             <el-dropdown trigger="click" popper-class="headerDropdown" placement="bottom-end">
                 <span class="el-dropdown-link">
                     <el-avatar :src="user.picture" />
@@ -17,10 +21,10 @@
                 <template #dropdown>
                     <el-dropdown-menu>
                         <el-dropdown-item @click="drawer = true">
-                            <cog-outline /> Account Settings
+                            <img src="../assets/icons/AccountSettings.svg" alt="AccountSettings" /> Account Settings
                         </el-dropdown-item>
                         <el-dropdown-item @click="logOut">
-                            <logout />Log Out
+                            <img src="../assets/icons/LogoutIcon.svg" alt="LogoutIcon" />Log Out
                         </el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
@@ -34,8 +38,7 @@
 
 <script setup>
 import AccountSettings from './AccountSettings.vue';
-import { CogOutline, Logout, BellOutline } from 'mdue';
-import { Search, ArrowDown } from '@element-plus/icons-vue';
+import { ArrowDown } from '@element-plus/icons-vue';
 import { ref, inject } from "vue";
 
 const auth = inject('Auth');

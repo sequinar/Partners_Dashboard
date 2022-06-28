@@ -4,9 +4,8 @@
             :on-exceed="handleExceed" accept="image/*">
             <div class="el-upload__text d-flex align-center justify-center"
                 :class="{ 'direction-column': bannerWidth < 400 }">
-                <el-icon class="el-icon--upload">
-                    <upload />
-                </el-icon> <span>Choose a file or drag it here to upload.</span>
+                <img src="@/assets/icons/Uploadicon.svg" alt="Uploadicon" /> <span>Choose a file or drag it here to
+                    upload.</span>
             </div>
         </el-upload>
         <img v-if="img" :src="img" alt="uploaded image" @click="uploadImage">
@@ -15,7 +14,6 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { Upload } from '@element-plus/icons-vue'
 import { genFileId } from 'element-plus'
 let img = ref(null);
 let banner = ref(null);
@@ -54,8 +52,9 @@ const handleExceed = (files) => {
 .bannerUpload {
     overflow: hidden;
     position: relative;
+    color: #c8c8c8;
 
-    img {
+    &>img {
         width: 100%;
         height: auto;
         position: absolute;
@@ -82,8 +81,11 @@ const handleExceed = (files) => {
     }
 
     .el-upload__text {
+        opacity: 0.7;
+
         span {
             padding: 5px;
+            color: #c8c8c8;
         }
 
         &>* {

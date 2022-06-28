@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="29.762" height="16.866" viewBox="0 0 29.762 16.866">
+  <defs>
+    <path id="path-1" fill-rule="evenodd" d="M15 .96665185h8.95238095c1.10383005 0 2 .89616995 2 2v8.08850494c0 1.10383005-.89616995 2-2 2H15c-1.10383005 0-2-.89616995-2-2V2.96665185c0-1.10383005.89616995-2 2-2z"/>
+    <mask id="mask-2" x="0" y="0" maskContentUnits="userSpaceOnUse" maskUnits="userSpaceOnUse">
+      <rect width="29.762" height="16.866" x="0" y="0" fill="black"/>
+      <use fill="white" xlink:href="#path-1"/>
+    </mask>
+    <path id="path-3" fill-rule="evenodd" d="M18.80952381 3.81100595h8.95238095c1.10383005 0 2 .89616995 2 2v8.08850494c0 1.10383005-.89616995 2-2 2h-8.95238095c-1.10383005 0-2-.89616995-2-2V5.81100595c0-1.10383005.89616995-2 2-2z"/>
+    <mask id="mask-4" x="0" y="0" maskContentUnits="userSpaceOnUse" maskUnits="userSpaceOnUse">
+      <rect width="29.762" height="16.866" x="0" y="0" fill="black"/>
+      <use fill="white" xlink:href="#path-3"/>
+    </mask>
+  </defs>
+  <g>
+    <g>
+      <use fill-opacity="0" stroke="rgb(128,128,128)" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="2" mask="url(#mask-2)" xlink:href="#path-1"/>
+      <g>
+        <use fill="rgb(238,238,238)" xlink:href="#path-3"/>
+        <use fill-opacity="0" stroke="rgb(128,128,128)" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="2" mask="url(#mask-4)" xlink:href="#path-3"/>
+      </g>
+    </g>
+    <path fill="none" stroke="rgb(128,128,128)" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M.5.5v15.86616274"/>
+  </g>
+</svg>

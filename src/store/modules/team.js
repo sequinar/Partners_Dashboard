@@ -33,7 +33,7 @@ const store = {
         },
         async getMembers({commit, state}) {
             const members = await axios.get(`team/${state.team.id}/users`)
-            commit('setMembers', members.data);
+            commit('setMembers', members.data.message);
         },
         async inviteMember({ state }, member) {
             await axios.post(`team/${state.team.id}/invite-user/${member.email}`);

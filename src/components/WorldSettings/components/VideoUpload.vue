@@ -10,9 +10,8 @@
             list-type="picture">
             <div v-show="fileList.length === 0"
                 class="videoUpload__text d-flex align-center justify-center direction-column">
-                <el-icon class="el-icon--upload">
-                    <upload />
-                </el-icon> <span>Choose a file or drag it here to upload.</span>
+                <img src="@/assets/icons/Uploadicon.svg" alt="Uploadicon" /> <span>Choose a file or drag it here to
+                    upload.</span>
             </div>
             <ul v-show="fileList.length > 0" class="videoUpload__list">
                 <li class="videoUpload__list--item d-flex align-center" v-for="file in fileList" :key="file.uid"
@@ -30,7 +29,7 @@
 <script setup>
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { Plus, Upload } from '@element-plus/icons-vue'
+import { Plus } from '@element-plus/icons-vue'
 import useUtils from '@/composables/utils.js'
 
 const uploadVideoRef = ref(null);
