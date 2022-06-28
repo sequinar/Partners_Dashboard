@@ -7,7 +7,7 @@
             </small>
         </el-col>
         <el-col :span="12" class="buttonsGroup d-flex align-center">
-            <el-input v-model="search" size="large" placeholder="Search for a team member">
+            <el-input v-model="search" size="large" placeholder="Search for a team member" @input="searchMember">
                 <template #prefix>
                     <img src="../assets/icons/Search.svg" alt="Search" />
                 </template>
@@ -16,7 +16,7 @@
         </el-col>
     </el-row>
     <el-row class="teamsContainer">
-        <el-table v-loading="loading" :data="tableData" style="width: 100%">
+        <el-table v-loading="loading" :data="filteredTableData" style="width: 100%">
             <el-table-column prop="name" label="Name">
                 <template #default="scope">
                     <div class="d-flex align-center">
@@ -40,7 +40,10 @@
             </el-table-column>
             <el-table-column align="right">
                 <template #default="scope">
-                    <el-popconfirm v-if="userID !== scope.row.uniqueId" confirm-button-text="Remove"
+                    <el-button v-if="!scope.row.acceptedInvite" type="primary" text
+                        @click="resendInvitation(scope.row)">Resend Invitation
+                    </el-button>
+                    <el-popconfirm v-else-if="userID !== scope.row.uniqueId" confirm-button-text="Remove"
                         cancel-button-text="Cancel" title="Are you sure?" @confirm="removeMember(scope.row.user_id)">
                         <template #reference>
                             <el-button type="danger" text>Remove member
@@ -56,16 +59,18 @@
 
 <script setup>
 import AddNewMember from '../components/modals/AddNewMember.vue';
+import useUtils from '@/composables/utils.js'
 import { Plus } from '@element-plus/icons-vue';
 import { ref, computed, onMounted } from 'vue';
 import { useStore } from 'vuex';
-import useUtils from '@/composables/utils.js'
+import { ElMessage } from 'element-plus'
 
 const { getTimeSince } = useUtils();
 const loading = ref(true)
 const store = useStore();
 const search = ref('');
 const newMemeberDialog = ref(false);
+let filteredTableData = ref(null);
 
 const userID = computed(() => store.state.user.sub.split('|')[1]);
 const tableData = computed(() => store.state.team.members);
@@ -74,9 +79,25 @@ const removeMember = (id) => {
     store.dispatch('team/removeMember', id);
 }
 
+const resendInvitation = async (member) => {
+    await store.dispatch('team/inviteMember', {
+        ...member,
+    })
+    ElMessage.success("Member has been invited");
+}
+
+const searchMember = () => {
+
+    filteredTableData.value = tableData.value.filter(member => {
+        return member.email.indexOf(search.value) !== -1;
+    })
+    console.log(filteredTableData.value);
+}
+
 onMounted(async () => {
     await store.dispatch('team/getTeam');
     await store.dispatch('team/getMembers');
+    filteredTableData.value = tableData.value;
     loading.value = false;
 })
 </script>
