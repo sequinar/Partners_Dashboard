@@ -28,7 +28,6 @@
                             <small>{{ scope.row.email }}</small>
                         </div>
                     </div>
-
                 </template>
             </el-table-column>
             <el-table-column prop="worlds" label="Worlds" />
@@ -43,25 +42,25 @@
                     <el-button v-if="!scope.row.acceptedInvite" type="primary" text
                         @click="resendInvitation(scope.row)">Resend Invitation
                     </el-button>
-                    <el-popconfirm v-else-if="userID !== scope.row.uniqueId" confirm-button-text="Remove"
-                        cancel-button-text="Cancel" title="Are you sure?" @confirm="removeMember(scope.row.user_id)">
-                        <template #reference>
-                            <el-button type="danger" text>Remove member
-                            </el-button>
-                        </template>
-                    </el-popconfirm>
+                    <PermissionModal v-else-if="userID !== scope.row.uniqueId"
+                        @confirm="removeMember(scope.row.user_id)">
+                        <el-button type="danger" text>Remove member</el-button>
+                    </PermissionModal>
                 </template>
             </el-table-column>
         </el-table>
     </el-row>
+    <el-pagination v-if="filteredTableData" class="mt-10" v-model:currentPage="page" background
+        :total="tableData.meta.totalCount" :page-size="limit" layout="prev, pager, next" hide-on-single-page />
     <AddNewMember :isOpen="newMemeberDialog" @close="newMemeberDialog = false"></AddNewMember>
 </template>
 
 <script setup>
 import AddNewMember from '../components/modals/AddNewMember.vue';
+import PermissionModal from '../components/modals/PermissionModal.vue';
 import useUtils from '@/composables/utils.js'
 import { Plus } from '@element-plus/icons-vue';
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useStore } from 'vuex';
 import { ElMessage } from 'element-plus'
 
@@ -71,6 +70,8 @@ const store = useStore();
 const search = ref('');
 const newMemeberDialog = ref(false);
 let filteredTableData = ref(null);
+let limit = ref(10);
+let page = ref(1);
 
 const userID = computed(() => store.state.user.sub.split('|')[1]);
 const tableData = computed(() => store.state.team.members);
@@ -87,17 +88,28 @@ const resendInvitation = async (member) => {
 }
 
 const searchMember = () => {
-
-    filteredTableData.value = tableData.value.filter(member => {
+    filteredTableData.value = tableData.value.data.filter(member => {
         return member.email.indexOf(search.value) !== -1;
     })
-    console.log(filteredTableData.value);
 }
 
 onMounted(async () => {
     await store.dispatch('team/getTeam');
-    await store.dispatch('team/getMembers');
-    filteredTableData.value = tableData.value;
+    await store.dispatch('team/getMembers', {
+        limit: limit.value,
+        page: page.value
+    });
+    filteredTableData.value = tableData.value.data;
+    loading.value = false;
+})
+
+watch(page, async (newPage) => {
+    loading.value = true;
+    await store.dispatch('team/getMembers', {
+        limit: limit.value,
+        page: newPage
+    });
+    filteredTableData.value = tableData.value.data;
     loading.value = false;
 })
 </script>
@@ -117,6 +129,11 @@ onMounted(async () => {
         font-size: 12px;
         font-family: 'Montserrat-SemiBold';
         color: #1c1c1c;
+        overflow: visible;
+
+        * {
+            overflow: visible;
+        }
 
         tr,
         .el-table__cell {
@@ -129,6 +146,10 @@ onMounted(async () => {
 
         p {
             line-height: 1;
+        }
+
+        .el-table__inner-wrapper::before {
+            z-index: 0;
         }
     }
 }

@@ -7,16 +7,14 @@
                 <el-carousel-item>
                     <img src="../../assets/Group.png" alt="onboarding image1">
                     <h2>Manage and preview your World</h2>
-                    <p>Follow projects at every stage. You know where work stands, keep everyone aligned on goals,
-                        and
-                        control remotely any enviroment from anywhere in the world.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                        labore.</p>
                 </el-carousel-item>
                 <el-carousel-item>
                     <img src="../../assets/Group2.png" alt="onboarding image2">
                     <h2>Manage your team</h2>
-                    <p>Give access to world enviroments, and analytics. Collaborate seamlesly, share insights and
-                        improve
-                        your world in one place.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                        labore.</p>
                 </el-carousel-item>
             </el-carousel>
         </div>
@@ -39,7 +37,7 @@ const onChange = (index) => {
 
 <style lang="scss">
 .onboardingDialog {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
@@ -109,6 +107,11 @@ const onChange = (index) => {
         .el-carousel__arrow {
             background-color: var(--el-color-primary);
             opacity: 0.3;
+            transition: all 0.3s ease;
+
+            &:hover {
+                opacity: 1;
+            }
         }
     }
 

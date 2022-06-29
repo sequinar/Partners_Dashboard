@@ -88,6 +88,7 @@ function showIntruction(index) {
     bottom: 40px;
     left: 0;
     right: 0;
+    margin-bottom: 0;
 
     i {
         font-size: 23px;

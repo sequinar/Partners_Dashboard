@@ -31,8 +31,8 @@ const store = {
                 commit('setTeam', team.data);
             }
         },
-        async getMembers({commit, state}) {
-            const members = await axios.get(`team/${state.team.id}/users`)
+        async getMembers({commit, state}, params) {
+            const members = await axios.get(`team/${state.team.id}/users`, {params: params})
             commit('setMembers', members.data.message);
         },
         async inviteMember({ state }, member) {
