@@ -117,6 +117,8 @@ input {
 }
 
 .common-layout {
+    min-height: 100vh;
+
     .el-button--primary {
         --el-button-hover-bg-color: #7749B7;
         --el-button-hover-border-color: #7749B7;

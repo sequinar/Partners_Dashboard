@@ -94,7 +94,6 @@ const searchMember = () => {
 }
 
 onMounted(async () => {
-    await store.dispatch('team/getTeam');
     await store.dispatch('team/getMembers', {
         limit: limit.value,
         page: page.value

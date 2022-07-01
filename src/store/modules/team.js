@@ -3,7 +3,7 @@ const store = {
     namespaced: true,
     state() {
         return {
-            team: {},
+            team: null,
             members: [],
         };
     },

@@ -5,20 +5,25 @@
         </el-col>
         <el-col :span="12" class="buttonsGroup">
             <!-- <el-button type="primary" size="large" :icon="Plus">New World</el-button> -->
-            <el-button-group>
+            <el-button-group class="buttonsGroup__pagination">
                 <el-button size="large" disabled :icon="ArrowLeft"></el-button>
                 <el-button size="large" :icon="ArrowRight"></el-button>
             </el-button-group>
         </el-col>
     </el-row>
     <el-row class="worldsContainer">
-        <World v-for="o in 6" :key="o" />
+        <World v-for="world in worlds" :key="world.world_id" :world="world" />
     </el-row>
 </template>
 
 <script setup>
-import { Plus, ArrowLeft, ArrowRight } from '@element-plus/icons-vue'
+import { Plus, ArrowLeft, ArrowRight } from '@element-plus/icons-vue';
 import World from '../components/World.vue';
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+const worlds = computed(() => store.state.worlds.worlds);
 </script>
 
 <style scoped lang="scss">
@@ -28,6 +33,20 @@ import World from '../components/World.vue';
 
     &>button:first-child {
         margin-right: 30px;
+    }
+
+    &__pagination {
+        .el-button {
+            background-color: #fff;
+            width: 40px;
+            height: 40px;
+            border-radius: 3px;
+            border: none;
+
+            &.is-disabled {
+                background-color: transparent;
+            }
+        }
     }
 }
 

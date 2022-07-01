@@ -1,25 +1,13 @@
 <template>
     <el-card class="worldItem" :body-style="{ padding: '0px' }">
-        <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-            class="image" />
-        <el-dropdown class="dropdown" placement="bottom-end" trigger="click">
-            <span class="el-dropdown-link">
-                <el-button circle size="small">
-                    <img src="@/assets/icons/Sub_menu_Dots.svg" alt="Sub_menu_Dots" />
-                </el-button>
-            </span>
-            <template #dropdown>
-                <el-dropdown-menu>
-                    <!-- <el-dropdown-item>Analytics</el-dropdown-item> -->
-                    <el-dropdown-item @click="router.push('settings')">Settings</el-dropdown-item>
-                    <el-dropdown-item>Share</el-dropdown-item>
-                    <el-dropdown-item>Unpublish</el-dropdown-item>
-                </el-dropdown-menu>
-            </template>
-        </el-dropdown>
-
+        <img :src="props.world.thumbnail_link" class="image" />
+        <dropdown>
+            <li @click="router.push(`/settings/${props.world.public_id}`)">Settings</li>
+            <li>Share</li>
+            <li>Unpublish</li>
+        </dropdown>
         <div class="worldItem--footer">
-            <h3>Club Camelot</h3>
+            <h3>{{ props.world.worldname }}</h3>
             <!-- <div class="statistics">
                 <span class="statistics--item">
                     <span class="status" :class="{ online: isOnline }"></span>
@@ -43,9 +31,12 @@
     </el-card>
 </template>
 <script setup>
+import Dropdown from './Dropdown.vue';
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
+
+const props = defineProps(['world']);
 const isOnline = ref(true);
 </script>
 

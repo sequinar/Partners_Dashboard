@@ -27,7 +27,7 @@ const router = createRouter({
             component: Team
           },
           {
-            path: 'settings',
+            path: 'settings/:id',
             component: WorldSettings
           }
         ]

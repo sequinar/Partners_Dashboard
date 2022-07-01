@@ -1,5 +1,5 @@
 <template>
-    <div ref="banner" class="bannerUpload" :style="{ width: width, height: height }">
+    <div ref="bannerRef" class="bannerUpload" :style="{ width: width, height: height }">
         <el-upload ref="uploadRef" drag action="#" :auto-upload="false" :on-change="uploadSuccess" :limit="1"
             :on-exceed="handleExceed" accept="image/*">
             <div class="el-upload__text d-flex align-center justify-center"
@@ -16,7 +16,7 @@
 import { ref, computed } from 'vue';
 import { genFileId } from 'element-plus'
 let img = ref(null);
-let banner = ref(null);
+let bannerRef = ref(null);
 const uploadRef = ref(null);
 const props = defineProps({
     width: {
@@ -28,11 +28,15 @@ const props = defineProps({
         required: true
     }
 })
+const emits = defineEmits(['imageUpdate']);
 
-const bannerWidth = computed(() => banner.value ? banner.value.offsetWidth : null);
+const bannerWidth = computed(() => bannerRef.value ? bannerRef.value.offsetWidth : null);
 
 const uploadSuccess = (res) => {
     img.value = URL.createObjectURL(res.raw);
+    let fd = new FormData();
+    fd.append("bannerImage", res.raw);
+    emits('imageUpdate', fd);
 };
 
 const uploadImage = () => {

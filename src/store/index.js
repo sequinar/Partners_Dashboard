@@ -1,5 +1,6 @@
 import { createStore } from 'vuex'
 import Team from './modules/team'
+import Worlds from './modules/worlds'
 import axios from '../axios/index'
 
 // Create a new store instance.
@@ -20,7 +21,8 @@ const store = createStore({
     }
   },
   modules: {
-    team: Team
+    team: Team,
+    worlds: Worlds
   }
 })
 

@@ -1,18 +1,18 @@
 <template>
-    <div class="worldSettings">
-        <div class="worldSettings__container">
+    <div v-loading="loading" class="worldSettings">
+        <div v-if="world" class="worldSettings__container">
             <h1>World Settings</h1>
             <p>Edit content available inside the world as banner ads, video uploads, and streming.</p>
             <div class="switcher mt-30">
                 <label @click="disableChat = !disableChat">Enable or disable chat in world?</label>
-                <el-switch v-model="disableChat" size="large" />
+                <el-switch v-model="world.chat_status" @change="switchChat" size="large" />
             </div>
             <el-tabs v-model="activeName" class="demo-tabs">
                 <el-tab-pane label="World Banners" name="first">
-                    <WorldBanners />
+                    <WorldBanners :world='world' />
                 </el-tab-pane>
                 <el-tab-pane label="Video Streaming" name="second">
-                    <VideoStreaming />
+                    <VideoStreaming :world='world' />
                 </el-tab-pane>
             </el-tabs>
         </div>
@@ -20,11 +20,30 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import WorldBanners from '../components/WorldSettings/TabWorldBanners.vue';
 import VideoStreaming from '../components/WorldSettings/TabVideoStreaming.vue';
-const disableChat = ref(true);
-const activeName = ref('first')
+import { useRoute } from 'vue-router';
+import { useStore } from 'vuex';
+
+const store = useStore();
+const route = useRoute();
+const activeName = ref('first');
+const world = computed(() => store.state.worlds.currentWorld)
+
+let loading = ref(true);
+
+const switchChat = (status) => {
+    store.dispatch('worlds/updateChatStatus', {
+        id: route.params.id,
+        status: status
+    })
+}
+
+onMounted(async () => {
+    await store.dispatch('worlds/getCurrentWorld', route.params.id);
+    loading.value = false;
+})
 </script>
 
 <style lang="scss">

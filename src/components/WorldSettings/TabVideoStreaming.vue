@@ -66,13 +66,15 @@ import VideoPreview from './components/VideoPreview.vue';
 import { ref } from 'vue';
 import { ElMessage } from 'element-plus'
 
-let videoFile = ref({});
+const props = defineProps(['world']);
 const streamKeyDefault = ref('');
 const streamKey = ref('asfsdsdgdfhdfhgjghj');
 const streamUrl = ref('This is a long streaming link');
 const backUpUrl = ref('This is a long streaming link?backup=1');
 const autoStart = ref(true);
 const autoStop = ref(false);
+
+let videoFile = ref({});
 
 const onPreview = (file) => {
     videoFile.value = file

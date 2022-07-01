@@ -3,13 +3,13 @@
         <el-row class="leaderboard">
             <el-col>
                 <h3>Leaderboard (720x90)</h3>
-                <BannerUpload width="100%" height="72px" />
+                <BannerUpload width="100%" height="72px" @image-update="imageUpdate($event, 'Leaderboard', '720x90')" />
             </el-col>
             <el-col :span="24">
-                <BannerUpload width="100%" height="72px" />
+                <BannerUpload width="100%" height="72px" @image-update="imageUpdate($event, 'Leaderboard', '720x90')" />
             </el-col>
             <el-col :span="24">
-                <BannerUpload width="100%" height="72px" />
+                <BannerUpload width="100%" height="72px" @image-update="imageUpdate($event, 'Leaderboard', '720x90')" />
                 <p>Upload a <span>720px by 90px</span> PNG, JPG.</p>
             </el-col>
         </el-row>
@@ -18,10 +18,12 @@
                 <h3>Medium Rectangle (300x250)</h3>
             </el-col>
             <el-col :span="12">
-                <BannerUpload width="100%" height="230px" />
+                <BannerUpload width="100%" height="230px"
+                    @image-update="imageUpdate($event, 'Medium Rectangle', '300x250')" />
             </el-col>
             <el-col :span="12">
-                <BannerUpload width="100%" height="230px" />
+                <BannerUpload width="100%" height="230px"
+                    @image-update="imageUpdate($event, 'Medium Rectangle', '300x250')" />
             </el-col>
             <el-col :span="24">
                 <p>Upload a <span>300px by 250px</span> PNG, JPG.</p>
@@ -32,13 +34,16 @@
                 <h3>Skyscrapper (160x600)</h3>
             </el-col>
             <el-col :span="8">
-                <BannerUpload width="100%" height="600px" />
+                <BannerUpload width="100%" height="600px"
+                    @image-update="imageUpdate($event, 'Skyscrapper', '160x600')" />
             </el-col>
             <el-col :span="8">
-                <BannerUpload width="100%" height="600px" />
+                <BannerUpload width="100%" height="600px"
+                    @image-update="imageUpdate($event, 'Skyscrapper', '160x600')" />
             </el-col>
             <el-col :span="8">
-                <BannerUpload width="100%" height="600px" />
+                <BannerUpload width="100%" height="600px"
+                    @image-update="imageUpdate($event, 'Skyscrapper', '160x600')" />
             </el-col>
             <el-col :span="24">
                 <p>Upload a <span>160px by 600px</span> PNG, JPG.</p>
@@ -56,6 +61,21 @@
 
 <script setup>
 import BannerUpload from './components/BannerUpload.vue';
+import { useStore } from 'vuex';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+const store = useStore();
+const props = defineProps(['world']);
+
+const imageUpdate = (formData, placement, size) => {
+    store.dispatch('worlds/updateBanners', {
+        id: route.params.id,
+        placement: placement,
+        size: size,
+        formData: formData
+    })
+}
 </script>
 
 <style lang="scss" scoped>
