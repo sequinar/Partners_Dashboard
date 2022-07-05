@@ -21,13 +21,17 @@ const store = {
     },
     actions: {
         async createWorld({dispatch, rootState}, data) {
-            await axios.post(`team/${rootState.team.team.id}/worlds`, {
+            let response = await axios.post(`team/${rootState.team.team.id}/worlds`, {
                 worldname: data.name, 
                 worlddescription: data.descrition, 
                 customizations: data.customizations, 
                 thumbnail: data.thumbnail 
             });
             dispatch('getWorlds');
+            dispatch('showAlert', {
+                status: response.status,
+                messageSuccess: 'World created successfully'
+            }, {root: true})
         },
         async getWorlds({commit, rootState}) {
             let worlds = await axios.get(`/team/${rootState.team.team.id}/worlds`);
@@ -39,7 +43,7 @@ const store = {
         },
         async getBanners({commit}, id) {
             let banners = await axios.get(`world/${id}/world-banner`);
-            commit('setBanners', banners);
+            commit('setBanners', banners.data);
         },
         async updateChatStatus({dispatch}, data) {
             await axios.post(`world/${data.id}/update-chat-status/${data.status}`);
@@ -49,10 +53,13 @@ const store = {
             await axios.post(`world/${data.id}/stream-status/${data.status}`);
             dispatch('getCurrentWorld', data.id);
         },
-        async updateBanners({dispatch}, data) {
-            await axios.post(`world/${data.id}/world-banner?placement=${data.placement}&size=${data.size}`, data.formData)
+        async updateBanners({dispatch, commit}, data) {
+            let response = await axios.post(`world/${data.id}/world-banner`, data.formData);
             dispatch('getCurrentWorld', data.id);
-            dispatch('getBanners', data.id);
+            dispatch('showAlert', {
+                status: response.status,
+                messageSuccess: 'Image uploaded successfully'
+            }, {root: true})
         }
     },
     getters: {},

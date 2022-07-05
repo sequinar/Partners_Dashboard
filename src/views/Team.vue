@@ -62,7 +62,7 @@ import useUtils from '@/composables/utils.js'
 import { Plus } from '@element-plus/icons-vue';
 import { ref, computed, onMounted, watch } from 'vue';
 import { useStore } from 'vuex';
-import { ElMessage } from 'element-plus'
+import { ElMessage } from 'element-plus';
 
 const { getTimeSince } = useUtils();
 const loading = ref(true)

@@ -8,7 +8,9 @@ const store = createStore({
   state () {
     return {
       accessToken: '',
-      user: {}
+      user: {},
+      messageSuccess: null,
+      messageError: null
     }
   },
   mutations: {
@@ -18,6 +20,21 @@ const store = createStore({
     },
     setUser(state, user) {
       state.user = user;
+    },
+    setMessageSuccess(state, message) {
+      state.messageSuccess = message;
+    },
+    setMessageError(state, message){
+      state.messageError = message ? message : 'Something went wrong';
+    } 
+  },
+  actions: {
+    showAlert({commit}, data) {
+      if(data.status === 200) {
+        commit('setMessageSuccess', data.messageSuccess)
+      } else {
+        commit('setMessageError', data.messageError)
+      }
     }
   },
   modules: {

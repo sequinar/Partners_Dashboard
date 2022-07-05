@@ -15,8 +15,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { genFileId } from 'element-plus'
-let img = ref(null);
-let bannerRef = ref(null);
+
 const uploadRef = ref(null);
 const props = defineProps({
     width: {
@@ -26,8 +25,15 @@ const props = defineProps({
     height: {
         type: String,
         required: true
+    },
+    image: {
+        type: String,
     }
 })
+
+let img = ref(props.image?.banner_url);
+let bannerRef = ref(null);
+
 const emits = defineEmits(['imageUpdate']);
 
 const bannerWidth = computed(() => bannerRef.value ? bannerRef.value.offsetWidth : null);
@@ -36,6 +42,7 @@ const uploadSuccess = (res) => {
     img.value = URL.createObjectURL(res.raw);
     let fd = new FormData();
     fd.append("bannerImage", res.raw);
+    if (props.image?.banner_id) fd.append("bannerId", props.image.banner_id);
     emits('imageUpdate', fd);
 };
 

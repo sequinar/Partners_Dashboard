@@ -1,29 +1,21 @@
 <template>
     <div class="worldBanners">
         <el-row class="leaderboard">
-            <el-col>
-                <h3>Leaderboard (720x90)</h3>
-                <BannerUpload width="100%" height="72px" @image-update="imageUpdate($event, 'Leaderboard', '720x90')" />
+            <h3>Leaderboard (720x90)</h3>
+            <el-col v-for="(banner, index) in 3" :key="'Leaderboard' + index">
+                <BannerUpload width="100%" height="72px" :image="leaderboards[index] ? leaderboards[index] : null"
+                    @image-update="imageUpdate($event, 'Leaderboard', '720x90', index)" />
             </el-col>
-            <el-col :span="24">
-                <BannerUpload width="100%" height="72px" @image-update="imageUpdate($event, 'Leaderboard', '720x90')" />
-            </el-col>
-            <el-col :span="24">
-                <BannerUpload width="100%" height="72px" @image-update="imageUpdate($event, 'Leaderboard', '720x90')" />
-                <p>Upload a <span>720px by 90px</span> PNG, JPG.</p>
-            </el-col>
+            <p>Upload a <span>720px by 90px</span> PNG, JPG.</p>
         </el-row>
         <el-row :gutter="30" class="medium">
             <el-col :span="24">
                 <h3>Medium Rectangle (300x250)</h3>
             </el-col>
-            <el-col :span="12">
+            <el-col :span="12" v-for="(banner, index) in 2" :key="'Medium_Rectangle' + index">
                 <BannerUpload width="100%" height="230px"
-                    @image-update="imageUpdate($event, 'Medium Rectangle', '300x250')" />
-            </el-col>
-            <el-col :span="12">
-                <BannerUpload width="100%" height="230px"
-                    @image-update="imageUpdate($event, 'Medium Rectangle', '300x250')" />
+                    :image="mediumRectangles[index] ? mediumRectangles[index] : null"
+                    @image-update="imageUpdate($event, 'Medium Rectangle', '300x250', index)" />
             </el-col>
             <el-col :span="24">
                 <p>Upload a <span>300px by 250px</span> PNG, JPG.</p>
@@ -33,17 +25,10 @@
             <el-col :span="24">
                 <h3>Skyscrapper (160x600)</h3>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="8" v-for="(banner, index) in 3" :key="'Skyscrapper' + index">
                 <BannerUpload width="100%" height="600px"
-                    @image-update="imageUpdate($event, 'Skyscrapper', '160x600')" />
-            </el-col>
-            <el-col :span="8">
-                <BannerUpload width="100%" height="600px"
-                    @image-update="imageUpdate($event, 'Skyscrapper', '160x600')" />
-            </el-col>
-            <el-col :span="8">
-                <BannerUpload width="100%" height="600px"
-                    @image-update="imageUpdate($event, 'Skyscrapper', '160x600')" />
+                    :image="skyscrappers[index] ? skyscrappers[index].banner_url : null"
+                    @image-update="imageUpdate($event, 'Skyscrapper', '160x600', index)" />
             </el-col>
             <el-col :span="24">
                 <p>Upload a <span>160px by 600px</span> PNG, JPG.</p>
@@ -63,16 +48,22 @@
 import BannerUpload from './components/BannerUpload.vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
+import { computed } from 'vue';
 
 const route = useRoute();
 const store = useStore();
 const props = defineProps(['world']);
 
-const imageUpdate = (formData, placement, size) => {
+const leaderboards = computed(() => props.world.banner_urls ? props.world.banner_urls.filter(banner => banner.placement === 'Leaderboard') : []);
+const mediumRectangles = computed(() => props.world.banner_urls ? props.world.banner_urls.filter(banner => banner.placement === 'Medium Rectangle') : []);
+const skyscrappers = computed(() => props.world.banner_urls ? props.world.banner_urls.filter(banner => banner.placement === 'Skyscrapper') : []);
+
+const imageUpdate = (formData, placement, size, index) => {
+    formData.append("placement", placement);
+    formData.append("size", size);
+    formData.append("position", index);
     store.dispatch('worlds/updateBanners', {
         id: route.params.id,
-        placement: placement,
-        size: size,
         formData: formData
     })
 }
@@ -111,7 +102,8 @@ const imageUpdate = (formData, placement, size) => {
     }
 
     p {
-        margin-top: 10px;
+        margin-top: -5px;
+        margin-bottom: 10px;
     }
 }
 

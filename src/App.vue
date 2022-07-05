@@ -5,13 +5,16 @@
 </template>
 
 <script setup>
-import { onMounted, inject, computed, ref } from 'vue';
+import { onMounted, inject, computed, ref, watch } from 'vue';
 import { useStore } from 'vuex'
+import { ElMessage } from 'element-plus'
 
 const store = useStore();
 const auth = inject('Auth');
-
 const worlds = computed(() => store.state.worlds.worlds);
+const messageSuccess = computed(() => store.state.messageSuccess);
+const messageError = computed(() => store.state.messageError);
+
 let loading = ref(true);
 
 onMounted(async () => {
@@ -22,6 +25,18 @@ onMounted(async () => {
   await store.dispatch('team/getTeam');
   await store.dispatch('worlds/getWorlds');
   loading.value = false;
+})
+
+watch(messageSuccess, (value) => {
+  if (!value) return;
+  ElMessage.success(value);
+  store.commit('setMessageSuccess', null)
+})
+
+watch(messageError, (value) => {
+  if (!value) return;
+  ElMessage.error(value);
+  store.commit('setMessageError', null)
 })
 </script>
 
