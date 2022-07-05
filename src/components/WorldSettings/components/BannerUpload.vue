@@ -27,7 +27,7 @@ const props = defineProps({
         required: true
     },
     image: {
-        type: String,
+        type: Object,
     }
 })
 
@@ -47,7 +47,7 @@ const uploadSuccess = (res) => {
 };
 
 const uploadImage = () => {
-    document.querySelector('.el-upload__text').click();
+    bannerRef.value.querySelector('.el-upload__text').click();
 }
 
 const handleExceed = (files) => {

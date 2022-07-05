@@ -26,8 +26,7 @@
                 <h3>Skyscrapper (160x600)</h3>
             </el-col>
             <el-col :span="8" v-for="(banner, index) in 3" :key="'Skyscrapper' + index">
-                <BannerUpload width="100%" height="600px"
-                    :image="skyscrappers[index] ? skyscrappers[index].banner_url : null"
+                <BannerUpload width="100%" height="600px" :image="skyscrappers[index] ? skyscrappers[index] : null"
                     @image-update="imageUpdate($event, 'Skyscrapper', '160x600', index)" />
             </el-col>
             <el-col :span="24">
