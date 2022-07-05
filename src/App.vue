@@ -1,6 +1,6 @@
 <template>
   <div v-loading="loading" class="common-layout">
-    <router-view v-if="worlds"></router-view>
+    <router-view v-if="worlds && team"></router-view>
   </div>
 </template>
 
@@ -12,6 +12,7 @@ import { ElMessage } from 'element-plus'
 const store = useStore();
 const auth = inject('Auth');
 const worlds = computed(() => store.state.worlds.worlds);
+const team = computed(() => store.state.team.team);
 const messageSuccess = computed(() => store.state.messageSuccess);
 const messageError = computed(() => store.state.messageError);
 
