@@ -1,8 +1,8 @@
 <template>
-    <el-card class="worldItem" :body-style="{ padding: '0px' }">
+    <el-card class="worldItem" :body-style="{ padding: '0px' }" @click="openWorld('view', props.world.public_id)">
         <img :src="props.world.thumbnail_link" class="image" />
         <dropdown>
-            <li @click="router.push(`/settings/${props.world.public_id}`)">Settings</li>
+            <li @click.stop="router.push(`/settings/${props.world.public_id}`)">Settings</li>
             <li>Share</li>
             <li>Unpublish</li>
         </dropdown>
@@ -29,13 +29,20 @@
             </div> -->
         </div>
     </el-card>
+    <WorldLoadingModal :show-modal="isWorldLoadingModal" :title="props.world.worldname"
+        @close="isWorldLoadingModal = false" />
 </template>
 <script setup>
 import Dropdown from './Dropdown.vue';
+import WorldLoadingModal from '../components/modals/WorldLoadingModal.vue';
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-const router = useRouter()
+import { useRouter } from 'vue-router';
+import { useOpenWorld } from "@/composables/OpenWorld";
+import { useStore } from 'vuex';
 
+const store = useStore();
+const router = useRouter()
+const { openWorld, isWorldLoadingModal } = useOpenWorld(store);
 const props = defineProps(['world']);
 const isOnline = ref(true);
 </script>
@@ -43,6 +50,7 @@ const isOnline = ref(true);
 <style scoped lang="scss">
 .worldItem {
     position: relative;
+    cursor: pointer;
 
     img {
         width: 100%;

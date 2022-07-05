@@ -9,6 +9,7 @@ const store = createStore({
     return {
       accessToken: '',
       user: {},
+      apiEndpoint: process.env.API_ENDPOINT,
       messageSuccess: null,
       messageError: null
     }

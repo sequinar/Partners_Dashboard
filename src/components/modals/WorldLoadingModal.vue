@@ -1,0 +1,63 @@
+<template>
+    <el-dialog custom-class="worldLoadingModal" :model-value="props.showModal" width="500px" top="30vh"
+        @closed="emits('close')">
+        <div class="modalContainer">
+            <img src="@/assets/icons/Sequin.world.svg" alt="sequin logo">
+            <h2>Get Ready!</h2>
+            <p>{{ props.title }} is now loading...</p>
+            <a href="#">Download window Example</a>
+        </div>
+    </el-dialog>
+</template>
+
+<script setup>
+const props = defineProps(['showModal', 'title'])
+const emits = defineEmits(['close']);
+</script>
+
+<style lang="scss">
+.worldLoadingModal {
+
+    .el-dialog__headerbtn,
+    .el-dialog__header {
+        display: none;
+    }
+
+    .el-dialog__body {
+        height: 300px;
+        padding: 0;
+    }
+
+    .modalContainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        img {
+            height: 75px;
+            width: 75px;
+            margin-top: 70px;
+        }
+
+        h2 {
+            font-size: 20px;
+            color: var(--el-color-primary);
+            font-family: 'Montserrat-Bold';
+            margin-top: 34px;
+            margin-bottom: 0;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        a {
+            font-size: 14px;
+            color: #9B3D97;
+            margin-top: 15px;
+            font-family: 'Montserrat';
+        }
+    }
+}
+</style>
