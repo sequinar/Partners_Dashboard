@@ -58,7 +58,7 @@
 <script setup>
 import AddNewMember from '../components/modals/AddNewMember.vue';
 import PermissionModal from '../components/modals/PermissionModal.vue';
-import useUtils from '@/composables/Utils'
+import useUtils from '@/composables/utils'
 import { Plus } from '@element-plus/icons-vue';
 import { ref, computed, onMounted, watch } from 'vue';
 import { useStore } from 'vuex';
