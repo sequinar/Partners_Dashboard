@@ -4,15 +4,25 @@
         <div class="modalContainer">
             <img src="@/assets/icons/Sequin.world.svg" alt="sequin logo">
             <h2>Get Ready!</h2>
-            <p>{{ props.title }} is now loading...</p>
-            <a href="#">Download window Example</a>
+            <p>{{ props.world.worldname }} is now loading...</p>
+            <a href="#" @click="downloadWorld()">Download window Example</a>
         </div>
     </el-dialog>
+    <LoadingInstructions :showInstaractions="showInstaractions" :world="world" @close="showInstaractions = false" />
 </template>
 
 <script setup>
-const props = defineProps(['showModal', 'title'])
+import LoadingInstructions from './LoadingInstructions.vue';
+import { ref } from 'vue';
+
+const props = defineProps(['showModal', 'world'])
 const emits = defineEmits(['close']);
+let showInstaractions = ref(false);
+
+const downloadWorld = () => {
+    showInstaractions.value = true;
+    emits('close');
+}
 </script>
 
 <style lang="scss">

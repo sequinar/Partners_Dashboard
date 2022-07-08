@@ -14,7 +14,8 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { genFileId } from 'element-plus'
+import { genFileId } from 'element-plus';
+import { ElMessage } from 'element-plus';
 
 const uploadRef = ref(null);
 const props = defineProps({
@@ -39,11 +40,16 @@ const emits = defineEmits(['imageUpdate']);
 const bannerWidth = computed(() => bannerRef.value ? bannerRef.value.offsetWidth : null);
 
 const uploadSuccess = (res) => {
-    img.value = URL.createObjectURL(res.raw);
-    let fd = new FormData();
-    fd.append("bannerImage", res.raw);
-    if (props.image?.banner_id) fd.append("bannerId", props.image.banner_id);
-    emits('imageUpdate', fd);
+    if (res.raw.type == 'image/jpeg' || res.raw.type == 'image/png') {
+        img.value = URL.createObjectURL(res.raw);
+        let fd = new FormData();
+        fd.append("bannerImage", res.raw);
+        if (props.image?.banner_id) fd.append("bannerId", props.image.banner_id);
+        emits('imageUpdate', fd);
+    } else {
+        ElMessage.error('Avatar picture must be JPG/PNG format!')
+    }
+
 };
 
 const uploadImage = () => {

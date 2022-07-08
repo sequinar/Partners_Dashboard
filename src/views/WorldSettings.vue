@@ -79,6 +79,42 @@ onMounted(async () => {
             }
         }
     }
+
+    .el-input {
+        height: 40px;
+
+        .el-input__wrapper,
+        .el-input-group__append {
+            background-color: #fff;
+            box-shadow: none;
+        }
+
+        &.is-disabled .el-input__wrapper,
+        .el-input-group__append {
+            background-color: #eee;
+            box-shadow: none;
+        }
+
+        .el-input-group__append button {
+            position: relative;
+
+            &:hover,
+            &:focus {
+                background-color: transparent;
+            }
+
+            &:before {
+                content: '';
+                position: absolute;
+                width: 1px;
+                height: 16px;
+                top: 8px;
+                left: 0;
+                background-color: #808080;
+                overflow: visible;
+            }
+        }
+    }
 }
 </style>
 

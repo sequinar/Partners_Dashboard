@@ -7,11 +7,11 @@
             </el-button>
         </div>
         <el-form ref="nameForm" label-position="top" :model="user" @submit.prevent :rules="rules">
-            <el-form-item label="Name" prop="name">
-                <el-input v-model="user.name" size="large" maxlength="25" show-word-limit />
-            </el-form-item>
-            <el-form-item label="User name" prop="nickname">
+            <el-form-item label="Name" prop="nickname">
                 <el-input v-model="user.nickname" size="large" maxlength="25" show-word-limit />
+            </el-form-item>
+            <el-form-item label="User name" prop="name">
+                <el-input v-model="user.name" size="large" maxlength="25" show-word-limit />
             </el-form-item>
             <el-form-item label="Email" prop="email">
                 <el-input v-model="user.email" disabled placeholder="Emailexample@email.com" size="large" />
@@ -40,12 +40,14 @@
     </div>
 </template>
 <script setup>
-import { reactive, ref, inject } from 'vue';
+import { reactive, ref, computed } from 'vue';
 import UserAvatar from './UserAvatar.vue';
+import { useStore } from 'vuex';
 
-const auth = inject('Auth');
-const user = auth.user;
+const store = useStore();
 const emit = defineEmits(['close']);
+
+const user = computed(() => store.state.user)
 const nameForm = ref();
 const passForm = ref();
 const passwordUpdate = reactive({
@@ -99,7 +101,10 @@ const rulesPass = reactive({
 const submitNameForm = async () => {
     await nameForm.value.validate((valid, fields) => {
         if (valid) {
-            console.log('submit!')
+            store.dispatch('updateUser', {
+                displayName: user.value.nickname,
+                name: user.value.name
+            })
         } else {
             console.log('error submit!', fields)
         }
@@ -108,7 +113,9 @@ const submitNameForm = async () => {
 const submitPassForm = async () => {
     await passForm.value.validate((valid, fields) => {
         if (valid) {
-            console.log('submit!')
+            store.dispatch('updateUser', {
+                password: passwordUpdate.value.pass
+            })
         } else {
             console.log('error submit!', fields)
         }

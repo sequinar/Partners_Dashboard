@@ -13,7 +13,7 @@
             </el-button> -->
             <el-dropdown trigger="click" popper-class="headerDropdown" placement="bottom-end">
                 <span class="el-dropdown-link">
-                    <el-avatar :src="user.picture" />
+                    <el-avatar :src="user.picture" :key="user.updated_at" />
                     <el-icon class="el-icon--right">
                         <arrow-down />
                     </el-icon>
@@ -39,12 +39,13 @@
 <script setup>
 import AccountSettings from './AccountSettings.vue';
 import { ArrowDown } from '@element-plus/icons-vue';
-import { ref, inject } from "vue";
+import { ref, computed } from "vue";
+import { useStore } from 'vuex';
 
-const auth = inject('Auth');
+const store = useStore();
+const user = computed(() => store.state.user);
 const search = ref("");
 const drawer = ref(false);
-const user = ref(auth.user);
 
 const logOut = () => {
     auth.logout();

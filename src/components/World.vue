@@ -29,8 +29,7 @@
             </div> -->
         </div>
     </el-card>
-    <WorldLoadingModal :show-modal="isWorldLoadingModal" :title="props.world.worldname"
-        @close="isWorldLoadingModal = false" />
+    <WorldLoadingModal :show-modal="isWorldLoadingModal" :world="props.world" @close="isWorldLoadingModal = false" />
 </template>
 <script setup>
 import Dropdown from './Dropdown.vue';

@@ -153,14 +153,21 @@ async function init(options: Auth0PluginOptions): Promise<Plugin> {
   };
 }
 
+async function getUser() {
+  let user = await client.getUser();
+  return user;
+}
+
 interface Auth0Plugin {
     init(options: Auth0PluginOptions): Promise<Plugin>;
-    routeGuard: NavigationGuardWithThis<undefined>
+    routeGuard: NavigationGuardWithThis<undefined>,
+    getUser: any
 }
 
 const Auth0: Auth0Plugin = {
   init,
   routeGuard,
+  getUser
 };
 
 export default Auth0;

@@ -5,6 +5,7 @@
             <el-col v-for="(banner, index) in 3" :key="'Leaderboard' + index">
                 <BannerUpload width="100%" height="72px" :image="leaderboards[index] ? leaderboards[index] : null"
                     @image-update="imageUpdate($event, 'Leaderboard', '720x90', index)" />
+                <BannerCleanUp :banner="leaderboards[index]" />
             </el-col>
             <p>Upload a <span>720px by 90px</span> PNG, JPG.</p>
         </el-row>
@@ -16,6 +17,7 @@
                 <BannerUpload width="100%" height="230px"
                     :image="mediumRectangles[index] ? mediumRectangles[index] : null"
                     @image-update="imageUpdate($event, 'Medium Rectangle', '300x250', index)" />
+                <BannerCleanUp :banner="mediumRectangles[index]" :columns="[24, 24]" />
             </el-col>
             <el-col :span="24">
                 <p>Upload a <span>300px by 250px</span> PNG, JPG.</p>
@@ -26,11 +28,16 @@
                 <h3>Skyscrapper (160x600)</h3>
             </el-col>
             <el-col :span="8" v-for="(banner, index) in 3" :key="'Skyscrapper' + index">
+                {{ banner }}
                 <BannerUpload width="100%" height="600px" :image="skyscrappers[index] ? skyscrappers[index] : null"
                     @image-update="imageUpdate($event, 'Skyscrapper', '160x600', index)" />
             </el-col>
             <el-col :span="24">
                 <p>Upload a <span>160px by 600px</span> PNG, JPG.</p>
+            </el-col>
+            <el-col :span="24" v-for="(banner, index) in 3">
+                {{ banner }}
+                <BannerCleanUp :banner="skyscrappers[index]" />
             </el-col>
         </el-row>
         <el-row>
@@ -45,6 +52,7 @@
 
 <script setup>
 import BannerUpload from './components/BannerUpload.vue';
+import BannerCleanUp from './components/BannerCleanUp.vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
 import { computed } from 'vue';

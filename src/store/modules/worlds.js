@@ -34,7 +34,7 @@ const store = {
             }, {root: true})
         },
         async getWorlds({commit, rootState}) {
-            let worlds = await axios.get(`/team/${rootState.team.team.id}/worlds`);
+            let worlds = await axios.get(`team/${rootState.team.team.id}/worlds`);
             commit('setWorlds', worlds.data.message);
         },
         async getCurrentWorld({commit}, worldId) {
@@ -53,12 +53,20 @@ const store = {
             await axios.post(`world/${data.id}/stream-status/${data.status}`);
             dispatch('getCurrentWorld', data.id);
         },
-        async updateBanners({dispatch, commit}, data) {
+        async updateBanners({dispatch}, data) {
             let response = await axios.post(`world/${data.id}/world-banner`, data.formData);
             dispatch('getCurrentWorld', data.id);
             dispatch('showAlert', {
                 status: response.status,
                 messageSuccess: 'Image uploaded successfully'
+            }, {root: true})
+        },
+        async deleteBanner({dispatch}, data) {
+            let response = await axios.delete(`/world/${data.id}/world-banner/${data.bannerId}`)
+            dispatch('getCurrentWorld', data.id);
+            dispatch('showAlert', {
+                status: response.status,
+                messageSuccess: 'Image deleted successfully'
             }, {root: true})
         }
     },

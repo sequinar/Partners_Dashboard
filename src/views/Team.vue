@@ -134,6 +134,10 @@ watch(page, async (newPage) => {
             overflow: visible;
         }
 
+        .el-avatar--circle {
+            overflow: hidden;
+        }
+
         tr,
         .el-table__cell {
             background-color: transparent;

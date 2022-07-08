@@ -1,6 +1,6 @@
 <template>
     <el-upload class="avatar-uploader" :auto-upload="false" accept="image/*" action="#" :show-file-list="false"
-        :on-change="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+        :on-change="handleAvatarSuccess">
         <el-avatar v-if="imageUrl" :src="imageUrl" size="large" />
         <div class="avatar-uploader-icon">
             <img src="@/assets/icons/EditIcon.svg" alt="EditIcon" />
@@ -8,31 +8,38 @@
     </el-upload>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { Edit } from '@element-plus/icons-vue'
-import type { UploadProps } from 'element-plus'
+import { useStore } from 'vuex';
+
+const store = useStore();
 
 const props = defineProps(['userAvatar']);
 const imageUrl = ref(props.userAvatar);
 
 const handleAvatarSuccess = (res) => {
-    console.log(URL.createObjectURL(res.raw!));
-
-    imageUrl.value = URL.createObjectURL(res.raw!)
-}
-
-const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
-    if (rawFile.type !== 'image/jpeg') {
-        ElMessage.error('Avatar picture must be JPG format!')
-        return false
-    } else if (rawFile.size / 1024 / 1024 > 1) {
-        ElMessage.error('Avatar picture size can not exceed 1MB!')
-        return false
+    if (res.raw.type == 'image/jpeg' || res.raw.type == 'image/png') {
+        imageUrl.value = URL.createObjectURL(res.raw)
+        toDataURL(imageUrl.value)
+            .then(dataUrl => {
+                store.dispatch('updateUser', {
+                    picture: dataUrl
+                })
+            })
+    } else {
+        ElMessage.error('Avatar picture must be JPG/PNG format!')
     }
-    return true
 }
+
+const toDataURL = url => fetch(url)
+    .then(response => response.blob())
+    .then(blob => new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onloadend = () => resolve(reader.result)
+        reader.onerror = reject
+        reader.readAsDataURL(blob)
+    }))
 </script>
 
 <style lang="scss">
