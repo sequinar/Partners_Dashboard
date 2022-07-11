@@ -12,7 +12,7 @@
                     <img src="../assets/icons/Search.svg" alt="Search" />
                 </template>
             </el-input>
-            <el-button type="primary" size="large" :icon="Plus" @click="newMemeberDialog = true">Add Member</el-button>
+            <AddNewMember></AddNewMember>
         </el-col>
     </el-row>
     <el-row class="teamsContainer">
@@ -52,7 +52,6 @@
     </el-row>
     <el-pagination v-if="filteredTableData" class="mt-10" v-model:currentPage="page" background
         :total="tableData.meta.totalCount" :page-size="limit" layout="prev, pager, next" hide-on-single-page />
-    <AddNewMember :isOpen="newMemeberDialog" @close="newMemeberDialog = false"></AddNewMember>
 </template>
 
 <script setup>
@@ -68,7 +67,6 @@ const { getTimeSince } = useUtils();
 const loading = ref(true)
 const store = useStore();
 const search = ref('');
-const newMemeberDialog = ref(false);
 let filteredTableData = ref(null);
 let limit = ref(10);
 let page = ref(1);

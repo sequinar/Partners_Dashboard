@@ -28,7 +28,7 @@ const handleAvatarSuccess = (res) => {
                 })
             })
     } else {
-        ElMessage.error('Avatar picture must be JPG/PNG format!')
+        ElMessage.error('Avatar picture must be JPG or PNG format!')
     }
 }
 

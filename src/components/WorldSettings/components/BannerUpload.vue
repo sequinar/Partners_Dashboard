@@ -48,7 +48,7 @@ const uploadSuccess = (res) => {
         if (props.image?.banner_id) fd.append("bannerId", props.image.banner_id);
         emits('imageUpdate', fd);
     } else {
-        ElMessage.error('Avatar picture must be JPG/PNG format!')
+        ElMessage.error('Image must be JPG or PNG format!')
     }
 
 };

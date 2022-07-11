@@ -1,54 +1,60 @@
 <template>
-    <el-dialog custom-class="addMember" v-model="isOpen" title="Add new member" width="30%">
-        <el-form ref="memberForm" label-position="top" :model="member" @submit.prevent :rules="rules">
-            <el-row :gutter="25">
-                <el-col :span="12">
-                    <el-form-item label="Name" prop="name">
-                        <el-input v-model="member.name" size="large" />
-                    </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                    <el-form-item label="Last Name" prop="last_name">
-                        <el-input v-model="member.last_name" size="large" />
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row>
-                <el-col :span="24">
-                    <el-form-item label="Email" prop="email">
-                        <el-input v-model="member.email" placeholder="Emailexample@email.com" size="large" />
-                    </el-form-item>
-                </el-col>
-            </el-row>
-        </el-form>
+    <div class="addMember">
+        <el-button type="primary" size="large" :icon="Plus" @click="isOpen = true">Add Member</el-button>
+        <div class="addMember__modal" v-if="isOpen">
+            <h4 class="title">Add new member</h4>
+            <div class="addMember__modal--body">
+                <el-form ref="memberForm" label-position="top" :model="member" @submit.prevent :rules="rules">
+                    <el-row :gutter="25">
+                        <el-col :span="12">
+                            <el-form-item label="Name" prop="name">
+                                <el-input v-model="member.name" size="large" />
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="Last Name" prop="last_name">
+                                <el-input v-model="member.last_name" size="large" />
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="24">
+                            <el-form-item label="Email" prop="email">
+                                <el-input v-model="member.email" placeholder="Emailexample@email.com" size="large" />
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                </el-form>
 
-        <template #footer>
-            <el-row class="addMember--buttons" :gutter="25">
-                <el-col :span="12">
-                    <el-button size="large" type="primary" @click="submitMemberForm">Send Invite</el-button>
-                </el-col>
-                <el-col :span="12">
-                    <el-button size="large" @click="emit('close')">Cancel</el-button>
-                </el-col>
-            </el-row>
-        </template>
-    </el-dialog>
+                <el-row class="addMember--buttons" :gutter="25">
+                    <el-col :span="12">
+                        <el-button size="large" type="primary" @click="submitMemberForm">Send Invite</el-button>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-button size="large" @click="isOpen = false">Cancel</el-button>
+                    </el-col>
+                </el-row>
+            </div>
+        </div>
+    </div>
+
 </template>
 
 <script setup>
 import { reactive, ref } from 'vue';
 import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
+import { Plus } from '@element-plus/icons-vue';
 
 const store = useStore();
-const props = defineProps(['isOpen']);
-const emit = defineEmits(['close']);
 const memberForm = ref();
 const member = reactive({
     name: '',
     last_name: '',
     email: '',
 })
+
+let isOpen = ref(false);
 
 //Need to copy same rules because of Element UI bug: prop and v-model should be the same
 const rules = reactive({
@@ -83,22 +89,47 @@ const submitMemberForm = async () => {
 
 <style lang="scss">
 .addMember {
+    position: relative;
+
+    &__modal {
+        position: absolute;
+        width: 430px;
+        top: 0;
+        right: 0;
+        background-color: #fff;
+        box-shadow: 0 0 10px 0 rgba(28, 28, 28, 0.5);
+        z-index: 999;
+        border-radius: 3px;
+
+        &--body {
+            padding: 20px;
+            padding-bottom: 35px;
+
+            .el-input__wrapper {
+                margin-right: 0 !important;
+                background-color: #f6f6f6 !important;
+            }
+        }
+    }
+
     &--buttons {
+        margin-top: 10px;
+
         button {
             width: 100%;
         }
     }
 
-    .el-dialog__header {
+    .title {
         border-bottom: 1px solid rgba($color: #858585, $alpha: 0.4);
         margin-right: 0;
         padding-right: 35px;
+        font-size: 18px;
+        font-family: 'Montserrat-SemiBold';
+        color: #1c1c1c;
+        margin: 0;
+        padding: 16px 18px;
 
-        .el-dialog__title {
-            font-size: 18px;
-            font-family: 'Montserrat-SemiBold';
-            color: #1c1c1c;
-        }
     }
 
     .el-form-item__label {
