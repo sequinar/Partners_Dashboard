@@ -1,44 +1,46 @@
 <template>
     <div class="worldBanners">
         <el-row class="leaderboard">
-            <h3>Leaderboard (720x90)</h3>
+            <h3>Leaderboard <span>Upload a </span>720px by 90px <span>PNG, JPG.</span></h3>
             <el-col v-for="(banner, index) in 3" :key="'Leaderboard' + index">
-                <BannerUpload width="100%" height="72px" :image="leaderboards[index] ? leaderboards[index] : null"
+                <BannerUpload width="100%" height="72px"
+                    :image="banners.leaderboard[index] ? banners.leaderboard[index] : null"
                     @image-update="imageUpdate($event, 'Leaderboard', '720x90', index)" />
-                <BannerCleanUp :banner="leaderboards[index]" />
+                <BannerCleanUp :banner="banners.leaderboard[index]" @delete="deleteBanner" />
             </el-col>
-            <p>Upload a <span>720px by 90px</span> PNG, JPG.</p>
         </el-row>
         <el-row :gutter="30" class="medium">
             <el-col :span="24">
-                <h3>Medium Rectangle (300x250)</h3>
+                <h3>Medium Rectangle <span>Upload a </span>300px by 250px <span>PNG, JPG.</span></h3>
             </el-col>
             <el-col :span="12" v-for="(banner, index) in 2" :key="'Medium_Rectangle' + index">
-                <BannerUpload width="100%" height="230px"
-                    :image="mediumRectangles[index] ? mediumRectangles[index] : null"
+                <BannerUpload width="100%" height="230px" :image="banners.medium[index] ? banners.medium[index] : null"
                     @image-update="imageUpdate($event, 'Medium Rectangle', '300x250', index)" />
-                <BannerCleanUp :banner="mediumRectangles[index]" :columns="[24, 24]" />
-            </el-col>
-            <el-col :span="24">
-                <p>Upload a <span>300px by 250px</span> PNG, JPG.</p>
+                <BannerCleanUp :banner="banners.medium[index]" :columns="[24, 24]" @delete="deleteBanner" />
             </el-col>
         </el-row>
-        <el-row :gutter="50">
+        <el-row :gutter="20" class="skyscrapper">
             <el-col :span="24">
-                <h3>Skyscrapper (160x600)</h3>
+                <h3>Skyscrapper <span>Upload a</span> 160px by 600px <span>PNG, JPG.</span></h3>
             </el-col>
-            <el-col :span="8" v-for="(banner, index) in 3" :key="'Skyscrapper' + index">
-                {{ banner }}
-                <BannerUpload width="100%" height="600px" :image="skyscrappers[index] ? skyscrappers[index] : null"
-                    @image-update="imageUpdate($event, 'Skyscrapper', '160x600', index)" />
-            </el-col>
-            <el-col :span="24">
-                <p>Upload a <span>160px by 600px</span> PNG, JPG.</p>
-            </el-col>
-            <el-col :span="24" v-for="(banner, index) in 3">
-                {{ banner }}
-                <BannerCleanUp :banner="skyscrappers[index]" />
-            </el-col>
+            <template v-for="(banner, index) in 3" :key="'Skyscrapper' + index">
+                <el-col :span="1">
+                    <span class="counter">{{ banner }}.</span>
+                </el-col>
+                <el-col :span="7">
+                    <BannerUpload width="100%" height="600px"
+                        :image="banners.skyscrapper[index] ? banners.skyscrapper[index] : null"
+                        @image-update="imageUpdate($event, 'Skyscrapper', '160x600', index)" />
+                </el-col>
+            </template>
+        </el-row>
+        <el-row class="skyscrapper__cleanUp">
+            <template v-for="(banner, index) in 3">
+                <el-col :span="1" class="d-flex align-center"><span class="counter">{{ banner }}.</span></el-col>
+                <el-col :span="23">
+                    <BannerCleanUp :banner="banners.skyscrapper[index]" :columns="[17, 7]" @delete="deleteBanner" />
+                </el-col>
+            </template>
         </el-row>
         <el-row>
             <el-col :span="24">
@@ -55,15 +57,24 @@ import BannerUpload from './components/BannerUpload.vue';
 import BannerCleanUp from './components/BannerCleanUp.vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
-import { computed } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 
 const route = useRoute();
 const store = useStore();
 const props = defineProps(['world']);
 
-const leaderboards = computed(() => props.world.banner_urls ? props.world.banner_urls.filter(banner => banner.placement === 'Leaderboard') : []);
-const mediumRectangles = computed(() => props.world.banner_urls ? props.world.banner_urls.filter(banner => banner.placement === 'Medium Rectangle') : []);
-const skyscrappers = computed(() => props.world.banner_urls ? props.world.banner_urls.filter(banner => banner.placement === 'Skyscrapper') : []);
+const banners = ref({
+    'leaderboard': {},
+    'medium': {},
+    'skyscrapper': {}
+})
+
+const setBanners = () => {
+    if (!props.world.banner_urls) return;
+    props.world.banner_urls.forEach(banner => {
+        banners.value[banner.placement.split(' ')[0].toLowerCase()][banner.position] = banner;
+    })
+}
 
 const imageUpdate = (formData, placement, size, index) => {
     formData.append("placement", placement);
@@ -74,22 +85,29 @@ const imageUpdate = (formData, placement, size, index) => {
         formData: formData
     })
 }
+
+const deleteBanner = (banner) => {
+    banners.value[banner.placement.split(' ')[0].toLowerCase()][banner.position] = null;
+}
+onMounted(() => {
+    setBanners();
+})
+
+watch(() => props.world.banner_urls, () => {
+    setBanners();
+})
+
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .worldBanners {
     h3 {
         font-size: 14px;
         font-family: 'Montserrat-Bold';
-        margin-bottom: 5px;
-    }
-
-    p {
-        font-size: 14px;
-        margin-bottom: 0;
+        margin-bottom: 10px;
 
         span {
-            font-family: 'Montserrat-Bold';
+            font-family: 'Montserrat-Light';
         }
     }
 
@@ -116,5 +134,14 @@ const imageUpdate = (formData, placement, size, index) => {
 
 .medium {
     margin-bottom: 15px;
+
+    .el-button {
+        margin-top: 10px;
+    }
+}
+
+.counter {
+    font-size: 14px;
+    font-family: 'Montserrat-Bold';
 }
 </style>

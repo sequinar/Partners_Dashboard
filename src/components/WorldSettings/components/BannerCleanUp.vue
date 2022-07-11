@@ -2,7 +2,7 @@
     <div class="bannerCleanUp">
         <el-row :gutter="15">
             <el-col :span="columns[0]">
-                <el-input v-model="props.banner.banner_url" disabled>
+                <el-input v-model="url" disabled>
                     <template #append>
                         <el-tooltip content="Copy url" placement="top">
                             <el-button text :icon="DocumentCopy" @click="copyLink" />
@@ -11,7 +11,8 @@
                 </el-input>
             </el-col>
             <el-col :span="columns[1]">
-                <el-button class="full-width" type="primary" size="large" @click="clearBanner">Clear</el-button>
+                <el-button class="full-width" type="primary" size="large" @click="clearBanner" :disabled="url === ''">
+                    Clear</el-button>
             </el-col>
         </el-row>
     </div>
@@ -22,9 +23,13 @@ import { DocumentCopy } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus'
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
+import { computed } from 'vue';
 
 const route = useRoute();
 const store = useStore();
+const emits = defineEmits(['delete']);
+
+const url = computed(() => props.banner ? props.banner.banner_url : '');
 
 const props = defineProps({
     banner: {
@@ -40,6 +45,7 @@ const props = defineProps({
 });
 
 const clearBanner = () => {
+    emits('delete', props.banner);
     store.dispatch("worlds/deleteBanner", {
         id: route.params.id,
         bannerId: props.banner.banner_id
@@ -56,10 +62,6 @@ const copyLink = () => {
 .bannerCleanUp {
     margin-top: 10px;
     margin-bottom: 10px;
-
-    .el-input {
-        margin-bottom: 10px;
-    }
 
     .el-input.is-disabled .el-input__wrapper,
     .el-input .el-input-group__append {

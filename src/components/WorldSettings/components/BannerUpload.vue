@@ -1,7 +1,7 @@
 <template>
     <div ref="bannerRef" class="bannerUpload" :style="{ width: width, height: height }">
         <el-upload ref="uploadRef" drag action="#" :auto-upload="false" :on-change="uploadSuccess" :limit="1"
-            :on-exceed="handleExceed" accept="image/*">
+            :on-exceed="handleExceed" accept=".png, .jpg, .jpeg">
             <div class="el-upload__text d-flex align-center justify-center"
                 :class="{ 'direction-column': bannerWidth < 400 }">
                 <img src="@/assets/icons/Uploadicon.svg" alt="Uploadicon" /> <span>Choose a file or drag it here to
@@ -9,6 +9,8 @@
             </div>
         </el-upload>
         <img v-if="img" :src="img" alt="uploaded image" @click="uploadImage">
+        <img v-else-if="props.image?.banner_url" :src="props.image?.banner_url" alt="uploaded image"
+            @click="uploadImage" />
     </div>
 </template>
 
@@ -31,8 +33,7 @@ const props = defineProps({
         type: Object,
     }
 })
-
-let img = ref(props.image?.banner_url);
+let img = ref(null);
 let bannerRef = ref(null);
 
 const emits = defineEmits(['imageUpdate']);
@@ -70,6 +71,7 @@ const handleExceed = (files) => {
     overflow: hidden;
     position: relative;
     color: #c8c8c8;
+    border-radius: 5px;
 
     &>img {
         width: 100%;
