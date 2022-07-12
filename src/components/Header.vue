@@ -65,10 +65,13 @@
 </template>
 
 <script setup>
-import AccountSettings from './AccountSettings.vue';
 import { ArrowDown } from '@element-plus/icons-vue';
-import { ref, computed } from "vue";
+import { ref, computed, defineAsyncComponent } from "vue";
 import { useStore } from 'vuex';
+
+const AccountSettings = defineAsyncComponent(() =>
+  import('./AccountSettings.vue')
+)
 
 const store = useStore();
 const user = computed(() => store.state.user);

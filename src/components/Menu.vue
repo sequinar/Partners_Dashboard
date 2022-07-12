@@ -81,9 +81,12 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue"
+import { ref, computed, defineAsyncComponent } from "vue"
 import { useRouter } from 'vue-router'
-import Onboarding from "./modals/Onboarding.vue";
+
+const Onboarding = defineAsyncComponent(() =>
+  import('./modals/Onboarding.vue')
+)
 
 const router = useRouter()
 

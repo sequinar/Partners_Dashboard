@@ -39,11 +39,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import WorldBanners from '../components/WorldSettings/TabWorldBanners.vue';
-import VideoStreaming from '../components/WorldSettings/TabVideoStreaming.vue';
+import { ref, onMounted, computed, defineAsyncComponent } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
+
+const VideoStreaming = defineAsyncComponent(() =>
+  import('../components/WorldSettings/TabVideoStreaming.vue')
+)
+const WorldBanners = defineAsyncComponent(() =>
+  import('../components/WorldSettings/TabWorldBanners.vue')
+)
 
 const store = useStore();
 const route = useRoute();

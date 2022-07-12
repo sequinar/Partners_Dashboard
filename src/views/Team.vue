@@ -110,13 +110,17 @@
 </template>
 
 <script setup>
-import AddNewMember from '../components/modals/AddNewMember.vue';
-import PermissionModal from '../components/modals/PermissionModal.vue';
-import useUtils from '@/composables/utils'
-import { Plus } from '@element-plus/icons-vue';
-import { ref, computed, onMounted, watch } from 'vue';
+import useUtils from '@/composables/utils';
+import { ref, computed, onMounted, watch, defineAsyncComponent } from 'vue';
 import { useStore } from 'vuex';
 import { ElMessage } from 'element-plus';
+
+const PermissionModal = defineAsyncComponent(() =>
+  import('../components/modals/PermissionModal.vue')
+)
+const AddNewMember = defineAsyncComponent(() =>
+  import('../components/modals/AddNewMember.vue')
+)
 
 const { getTimeSince } = useUtils();
 const loading = ref(true)

@@ -34,9 +34,12 @@
 
 <script setup>
 import { Plus, ArrowLeft, ArrowRight } from '@element-plus/icons-vue';
-import World from '../components/World.vue';
-import { computed } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 import { useStore } from 'vuex';
+
+const World = defineAsyncComponent(() =>
+  import('../components/World.vue')
+)
 
 const store = useStore();
 const worlds = computed(() => store.state.worlds.worlds);

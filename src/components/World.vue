@@ -45,12 +45,18 @@
   />
 </template>
 <script setup>
-import Dropdown from './Dropdown.vue';
-import WorldLoadingModal from '../components/modals/WorldLoadingModal.vue';
-import { ref } from 'vue'
+import { ref, defineAsyncComponent } from 'vue'
 import { useRouter } from 'vue-router';
 import { useOpenWorld } from "@/composables/OpenWorld";
 import { useStore } from 'vuex';
+
+const WorldLoadingModal = defineAsyncComponent(() =>
+  import('../components/modals/WorldLoadingModal.vue')
+)
+
+const Dropdown = defineAsyncComponent(() =>
+  import('./Dropdown.vue')
+)
 
 const store = useStore();
 const router = useRouter()
