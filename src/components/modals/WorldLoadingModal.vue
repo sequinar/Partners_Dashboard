@@ -1,21 +1,45 @@
 <template>
-    <el-dialog custom-class="worldLoadingModal" :model-value="props.showModal" width="500px" top="30vh"
-        @closed="emits('close')">
-        <div class="modalContainer">
-            <img src="@/assets/icons/Sequin.world.svg" alt="sequin logo">
-            <h2>Get Ready!</h2>
-            <p>{{ props.world.worldname }} is now loading...</p>
-            <a href="#" @click="downloadWorld()">Download window Example</a>
-        </div>
-    </el-dialog>
-    <LoadingInstructions :showInstaractions="showInstaractions" :world="world" @close="showInstaractions = false" />
+  <el-dialog
+    custom-class="worldLoadingModal"
+    :model-value="props.showModal"
+    width="500px"
+    top="30vh"
+    @closed="emits('close')"
+  >
+    <div class="modalContainer">
+      <img
+        src="@/assets/icons/Sequin.world.svg"
+        alt="sequin logo"
+      >
+      <h2>Get Ready!</h2>
+      <p>{{ props.world.worldname }} is now loading...</p>
+      <a
+        href="#"
+        @click="downloadWorld()"
+      >Download window Example</a>
+    </div>
+  </el-dialog>
+  <LoadingInstructions
+    :show-instaractions="showInstaractions"
+    :world="world"
+    @close="showInstaractions = false"
+  />
 </template>
 
 <script setup>
 import LoadingInstructions from './LoadingInstructions.vue';
 import { ref } from 'vue';
 
-const props = defineProps(['showModal', 'world'])
+//const props = defineProps(['showModal', 'world'])
+const props = defineProps({
+  showModal: {
+    type: Boolean
+  },
+  world: {
+    type: Object,
+    default: () => {}
+  }
+})
 const emits = defineEmits(['close']);
 let showInstaractions = ref(false);
 

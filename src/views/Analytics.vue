@@ -1,3 +1,3 @@
 <template>
-    <div>Analytics</div>
+  <div>Analytics</div>
 </template>

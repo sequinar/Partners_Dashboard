@@ -1,24 +1,49 @@
 <template>
-    <div class="onboardingDialog">
-        <div class="onboardingDialog--container" :class="leftGap" :style="{ top: top + 10 + 'px' }">
-            <el-button type="primary" text :icon="Close" @click="emits('close')" />
-            <el-carousel :autoplay="false" :loop="false" trigger="click" arrow="always" height="450px"
-                @change="onChange">
-                <el-carousel-item>
-                    <img src="../../assets/Group.png" alt="onboarding image1">
-                    <h2>Manage and preview your World</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore.</p>
-                </el-carousel-item>
-                <el-carousel-item>
-                    <img src="../../assets/Group2.png" alt="onboarding image2">
-                    <h2>Manage your team</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore.</p>
-                </el-carousel-item>
-            </el-carousel>
-        </div>
+  <div class="onboardingDialog">
+    <div
+      class="onboardingDialog--container"
+      :class="leftGap"
+      :style="{ top: top + 10 + 'px' }"
+    >
+      <el-button
+        type="primary"
+        text
+        :icon="Close"
+        @click="emits('close')"
+      />
+      <el-carousel
+        :autoplay="false"
+        :loop="false"
+        trigger="click"
+        arrow="always"
+        height="450px"
+        @change="onChange"
+      >
+        <el-carousel-item>
+          <img
+            src="../../assets/Group.png"
+            alt="onboarding image1"
+          >
+          <h2>Manage and preview your World</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+            labore.
+          </p>
+        </el-carousel-item>
+        <el-carousel-item>
+          <img
+            src="../../assets/Group2.png"
+            alt="onboarding image2"
+          >
+          <h2>Manage your team</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+            labore.
+          </p>
+        </el-carousel-item>
+      </el-carousel>
     </div>
+  </div>
 </template>
 
 <script setup>
@@ -26,7 +51,18 @@ import { Close } from '@element-plus/icons-vue'
 import { computed } from 'vue';
 
 const emits = defineEmits(['close', 'change']);
-const props = defineProps(['isOpen', 'isCollapsed', 'top']);
+const props = defineProps({
+  isOpen: {
+    type: Boolean
+  },
+  isCollapsed: {
+    type: Boolean
+  },
+  top: {
+    type: String,
+    default: () => "0px"
+  }
+})
 const leftGap = computed(() => `${props.isCollapsed ? 'left-90' : 'left-310'}`);
 
 const onChange = (index) => {

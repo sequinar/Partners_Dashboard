@@ -1,21 +1,38 @@
 <template>
-    <div class="bannerCleanUp">
-        <el-row :gutter="15">
-            <el-col :span="columns[0]">
-                <el-input v-model="url" disabled>
-                    <template #append>
-                        <el-tooltip content="Copy url" placement="top">
-                            <el-button text :icon="DocumentCopy" @click="copyLink" />
-                        </el-tooltip>
-                    </template>
-                </el-input>
-            </el-col>
-            <el-col :span="columns[1]">
-                <el-button class="full-width" type="primary" size="large" @click="clearBanner" :disabled="url === ''">
-                    Clear</el-button>
-            </el-col>
-        </el-row>
-    </div>
+  <div class="bannerCleanUp">
+    <el-row :gutter="15">
+      <el-col :span="columns[0]">
+        <el-input
+          v-model="url"
+          disabled
+        >
+          <template #append>
+            <el-tooltip
+              content="Copy url"
+              placement="top"
+            >
+              <el-button
+                text
+                :icon="DocumentCopy"
+                @click="copyLink"
+              />
+            </el-tooltip>
+          </template>
+        </el-input>
+      </el-col>
+      <el-col :span="columns[1]">
+        <el-button
+          class="full-width"
+          type="primary"
+          size="large"
+          :disabled="url === ''"
+          @click="clearBanner"
+        >
+          Clear
+        </el-button>
+      </el-col>
+    </el-row>
+  </div>
 </template>
 
 <script setup>
@@ -34,13 +51,13 @@ const url = computed(() => props.banner ? props.banner.banner_url : '');
 const props = defineProps({
     banner: {
         type: Object,
-        default: {
+        default: () => {
             banner_url: ''
         }
     },
     columns: {
         type: Array,
-        default: [18, 6]
+        default: () => [18, 6]
     }
 });
 

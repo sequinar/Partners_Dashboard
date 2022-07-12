@@ -1,43 +1,125 @@
 <template>
-    <div class="accountSetting">
-        <div class="accountSetting--header d-flex align-center justify-between">
-            <UserAvatar :user-avatar="user.picture" />
-            <el-button text large class="collapseButton" @click="emit('close')">
-                <img src="../assets/icons/Collapse_Profile_menu.svg" alt="collapseIcon">
-            </el-button>
-        </div>
-        <el-form ref="nameForm" label-position="top" :model="user" @submit.prevent :rules="rules">
-            <el-form-item label="Name" prop="nickname">
-                <el-input v-model="user.nickname" size="large" maxlength="25" show-word-limit />
-            </el-form-item>
-            <el-form-item label="User name" prop="name">
-                <el-input v-model="user.name" size="large" maxlength="25" show-word-limit />
-            </el-form-item>
-            <el-form-item label="Email" prop="email">
-                <el-input v-model="user.email" disabled placeholder="Emailexample@email.com" size="large" />
-            </el-form-item>
-            <el-button class="full-width" type="primary" size="large" @click="submitNameForm">Save</el-button>
-        </el-form>
-        <el-form ref="passForm" label-position="top" :model="passwordUpdate" @submit.prevent :rules="rulesPass">
-            <h4>Update Password</h4>
-            <el-form-item class="ma-0" label="Current password">
-                <el-input type="password" v-model="passwordUpdate.currentPass" autocomplete="off" size="large" />
-            </el-form-item>
-            <a href="#">Forgot password?</a>
-            <el-form-item label="New password" prop="pass">
-                <el-input type="password" v-model="passwordUpdate.pass" autocomplete="off" size="large" />
-            </el-form-item>
-            <el-form-item label="Confirm New password" prop="checkPass">
-                <el-input type="password" v-model="passwordUpdate.checkPass" autocomplete="off" size="large" />
-            </el-form-item>
-            <ul class="rules">
-                <li>Non-empty password required.</li>
-                <li>Must have at least 8 characters in length.</li>
-                <li>Lower case (a-z), upper case (A-Z) and numbers (0-9).</li>
-            </ul>
-            <el-button class="full-width" type="primary" size="large" @click="submitPassForm">Save</el-button>
-        </el-form>
+  <div class="accountSetting">
+    <div class="accountSetting--header d-flex align-center justify-between">
+      <UserAvatar :user-avatar="user.picture" />
+      <el-button
+        text
+        large
+        class="collapseButton"
+        @click="emit('close')"
+      >
+        <img
+          src="../assets/icons/Collapse_Profile_menu.svg"
+          alt="collapseIcon"
+        >
+      </el-button>
     </div>
+    <el-form
+      ref="nameForm"
+      label-position="top"
+      :model="user"
+      :rules="rules"
+      @submit.prevent
+    >
+      <el-form-item
+        label="Name"
+        prop="nickname"
+      >
+        <el-input
+          v-model="user.nickname"
+          size="large"
+          maxlength="25"
+          show-word-limit
+        />
+      </el-form-item>
+      <el-form-item
+        label="User name"
+        prop="name"
+      >
+        <el-input
+          v-model="user.name"
+          size="large"
+          maxlength="25"
+          show-word-limit
+        />
+      </el-form-item>
+      <el-form-item
+        label="Email"
+        prop="email"
+      >
+        <el-input
+          v-model="user.email"
+          disabled
+          placeholder="Emailexample@email.com"
+          size="large"
+        />
+      </el-form-item>
+      <el-button
+        class="full-width"
+        type="primary"
+        size="large"
+        @click="submitNameForm"
+      >
+        Save
+      </el-button>
+    </el-form>
+    <el-form
+      ref="passForm"
+      label-position="top"
+      :model="passwordUpdate"
+      :rules="rulesPass"
+      @submit.prevent
+    >
+      <h4>Update Password</h4>
+      <el-form-item
+        class="ma-0"
+        label="Current password"
+      >
+        <el-input
+          v-model="passwordUpdate.currentPass"
+          type="password"
+          autocomplete="off"
+          size="large"
+        />
+      </el-form-item>
+      <a href="#">Forgot password?</a>
+      <el-form-item
+        label="New password"
+        prop="pass"
+      >
+        <el-input
+          v-model="passwordUpdate.pass"
+          type="password"
+          autocomplete="off"
+          size="large"
+        />
+      </el-form-item>
+      <el-form-item
+        label="Confirm New password"
+        prop="checkPass"
+      >
+        <el-input
+          v-model="passwordUpdate.checkPass"
+          type="password"
+          autocomplete="off"
+          size="large"
+        />
+      </el-form-item>
+      <ul class="rules">
+        <li>Non-empty password required.</li>
+        <li>Must have at least 8 characters in length.</li>
+        <li>Lower case (a-z), upper case (A-Z) and numbers (0-9).</li>
+      </ul>
+      <el-button
+        class="full-width"
+        type="primary"
+        size="large"
+        @click="submitPassForm"
+      >
+        Save
+      </el-button>
+    </el-form>
+  </div>
 </template>
 <script setup>
 import { reactive, ref, computed } from 'vue';

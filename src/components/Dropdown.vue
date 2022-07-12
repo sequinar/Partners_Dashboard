@@ -1,14 +1,24 @@
 <template>
-    <div class="dropdown">
-        <span>
-            <el-button circle size="small" @click.stop="showDropdown = !showDropdown">
-                <img src="@/assets/icons/Sub_menu_Dots.svg" alt="Sub_menu_Dots" />
-            </el-button>
-        </span>
-        <ul v-if="showDropdown" class="dropdown__list">
-            <slot></slot>
-        </ul>
-    </div>
+  <div class="dropdown">
+    <span>
+      <el-button
+        circle
+        size="small"
+        @click.stop="showDropdown = !showDropdown"
+      >
+        <img
+          src="@/assets/icons/Sub_menu_Dots.svg"
+          alt="Sub_menu_Dots"
+        >
+      </el-button>
+    </span>
+    <ul
+      v-if="showDropdown"
+      class="dropdown__list"
+    >
+      <slot />
+    </ul>
+  </div>
 </template>
 
 <script setup>

@@ -1,43 +1,93 @@
 <template>
-    <div class="addMember">
-        <el-button type="primary" size="large" :icon="Plus" @click="isOpen = true">Add Member</el-button>
-        <div class="addMember__modal" v-if="isOpen">
-            <h4 class="title">Add new member</h4>
-            <div class="addMember__modal--body">
-                <el-form ref="memberForm" label-position="top" :model="member" @submit.prevent :rules="rules">
-                    <el-row :gutter="25">
-                        <el-col :span="12">
-                            <el-form-item label="Name" prop="name">
-                                <el-input v-model="member.name" size="large" />
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="12">
-                            <el-form-item label="Last Name" prop="last_name">
-                                <el-input v-model="member.last_name" size="large" />
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="24">
-                            <el-form-item label="Email" prop="email">
-                                <el-input v-model="member.email" placeholder="Emailexample@email.com" size="large" />
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-                </el-form>
+  <div class="addMember">
+    <el-button
+      type="primary"
+      size="large"
+      :icon="Plus"
+      @click="isOpen = true"
+    >
+      Add Member
+    </el-button>
+    <div
+      v-if="isOpen"
+      class="addMember__modal"
+    >
+      <h4 class="title">
+        Add new member
+      </h4>
+      <div class="addMember__modal--body">
+        <el-form
+          ref="memberForm"
+          label-position="top"
+          :model="member"
+          :rules="rules"
+          @submit.prevent
+        >
+          <el-row :gutter="25">
+            <el-col :span="12">
+              <el-form-item
+                label="Name"
+                prop="name"
+              >
+                <el-input
+                  v-model="member.name"
+                  size="large"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item
+                label="Last Name"
+                prop="last_name"
+              >
+                <el-input
+                  v-model="member.last_name"
+                  size="large"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24">
+              <el-form-item
+                label="Email"
+                prop="email"
+              >
+                <el-input
+                  v-model="member.email"
+                  placeholder="Emailexample@email.com"
+                  size="large"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
 
-                <el-row class="addMember--buttons" :gutter="25">
-                    <el-col :span="12">
-                        <el-button size="large" type="primary" @click="submitMemberForm">Send Invite</el-button>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-button size="large" @click="isOpen = false">Cancel</el-button>
-                    </el-col>
-                </el-row>
-            </div>
-        </div>
+        <el-row
+          class="addMember--buttons"
+          :gutter="25"
+        >
+          <el-col :span="12">
+            <el-button
+              size="large"
+              type="primary"
+              @click="submitMemberForm"
+            >
+              Send Invite
+            </el-button>
+          </el-col>
+          <el-col :span="12">
+            <el-button
+              size="large"
+              @click="isOpen = false"
+            >
+              Cancel
+            </el-button>
+          </el-col>
+        </el-row>
+      </div>
     </div>
-
+  </div>
 </template>
 
 <script setup>

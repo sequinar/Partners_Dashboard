@@ -1,57 +1,112 @@
 <template>
-    <el-row class="teamPage">
-        <el-col :span="12">
-            <h1 class="pageTitle">Team</h1>
-            <small class="d-flex align-center">
-                <img class="lock" src="@/assets/icons/Lock_Icon.svg" alt="Lock_Icon" />Only invited members can access
-            </small>
-        </el-col>
-        <el-col :span="12" class="buttonsGroup d-flex align-center">
-            <el-input v-model="search" size="large" placeholder="Search for a team member" @input="searchMember">
-                <template #prefix>
-                    <img src="../assets/icons/Search.svg" alt="Search" />
-                </template>
-            </el-input>
-            <AddNewMember></AddNewMember>
-        </el-col>
-    </el-row>
-    <el-row class="teamsContainer">
-        <el-table v-loading="loading" :data="filteredTableData" style="width: 100%">
-            <el-table-column prop="name" label="Name">
-                <template #default="scope">
-                    <div class="d-flex align-center">
-                        <div class="mr-15">
-                            <el-avatar :src="scope.row.profileImage" />
-                        </div>
-                        <div>
-                            <p class="ma-0">{{ scope.row.name }}</p>
-                            <small>{{ scope.row.email }}</small>
-                        </div>
-                    </div>
-                </template>
-            </el-table-column>
-            <el-table-column prop="worlds" label="Worlds" />
-            <el-table-column prop="teamRole" label="Role" />
-            <el-table-column prop="date" label="Last seen">
-                <template #default="scope">
-                    <span>{{ getTimeSince(new Date(scope.row.lastLogin).getTime()) }} ago</span>
-                </template>
-            </el-table-column>
-            <el-table-column align="right">
-                <template #default="scope">
-                    <el-button v-if="!scope.row.acceptedInvite" type="primary" text
-                        @click="resendInvitation(scope.row)">Resend Invitation
-                    </el-button>
-                    <PermissionModal v-else-if="userID !== scope.row.uniqueId"
-                        @confirm="removeMember(scope.row.user_id)">
-                        <el-button type="danger" text>Remove member</el-button>
-                    </PermissionModal>
-                </template>
-            </el-table-column>
-        </el-table>
-    </el-row>
-    <el-pagination v-if="filteredTableData" class="mt-10" v-model:currentPage="page" background
-        :total="tableData.meta.totalCount" :page-size="limit" layout="prev, pager, next" hide-on-single-page />
+  <el-row class="teamPage">
+    <el-col :span="12">
+      <h1 class="pageTitle">
+        Team
+      </h1>
+      <small class="d-flex align-center">
+        <img
+          class="lock"
+          src="@/assets/icons/Lock_Icon.svg"
+          alt="Lock_Icon"
+        >Only invited members can access
+      </small>
+    </el-col>
+    <el-col
+      :span="12"
+      class="buttonsGroup d-flex align-center"
+    >
+      <el-input
+        v-model="search"
+        size="large"
+        placeholder="Search for a team member"
+        @input="searchMember"
+      >
+        <template #prefix>
+          <img
+            src="../assets/icons/Search.svg"
+            alt="Search"
+          >
+        </template>
+      </el-input>
+      <AddNewMember />
+    </el-col>
+  </el-row>
+  <el-row class="teamsContainer">
+    <el-table
+      v-loading="loading"
+      :data="filteredTableData"
+      style="width: 100%"
+    >
+      <el-table-column
+        prop="name"
+        label="Name"
+      >
+        <template #default="scope">
+          <div class="d-flex align-center">
+            <div class="mr-15">
+              <el-avatar :src="scope.row.profileImage" />
+            </div>
+            <div>
+              <p class="ma-0">
+                {{ scope.row.name }}
+              </p>
+              <small>{{ scope.row.email }}</small>
+            </div>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="worlds"
+        label="Worlds"
+      />
+      <el-table-column
+        prop="teamRole"
+        label="Role"
+      />
+      <el-table-column
+        prop="date"
+        label="Last seen"
+      >
+        <template #default="scope">
+          <span>{{ getTimeSince(new Date(scope.row.lastLogin).getTime()) }} ago</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="right">
+        <template #default="scope">
+          <el-button
+            v-if="!scope.row.acceptedInvite"
+            type="primary"
+            text
+            @click="resendInvitation(scope.row)"
+          >
+            Resend Invitation
+          </el-button>
+          <PermissionModal
+            v-else-if="userID !== scope.row.uniqueId"
+            @confirm="removeMember(scope.row.user_id)"
+          >
+            <el-button
+              type="danger"
+              text
+            >
+              Remove member
+            </el-button>
+          </PermissionModal>
+        </template>
+      </el-table-column>
+    </el-table>
+  </el-row>
+  <el-pagination
+    v-if="filteredTableData"
+    v-model:currentPage="page"
+    class="mt-10"
+    background
+    :total="tableData.meta.totalCount"
+    :page-size="limit"
+    layout="prev, pager, next"
+    hide-on-single-page
+  />
 </template>
 
 <script setup>

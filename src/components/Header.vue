@@ -1,39 +1,67 @@
 <template>
-    <el-row class="header">
-        <el-col :span="12">
-            <el-input v-model="search" size="large" placeholder="Search Worlds">
-                <template #prefix>
-                    <img src="../assets/icons/Search.svg" alt="Search" />
-                </template>
-            </el-input>
-        </el-col>
-        <el-col :span="12" class="alignment-container">
-            <!-- <el-button class="bell" text size="large" circle>
+  <el-row class="header">
+    <el-col :span="12">
+      <el-input
+        v-model="search"
+        size="large"
+        placeholder="Search Worlds"
+      >
+        <template #prefix>
+          <img
+            src="../assets/icons/Search.svg"
+            alt="Search"
+          >
+        </template>
+      </el-input>
+    </el-col>
+    <el-col
+      :span="12"
+      class="alignment-container"
+    >
+      <!-- <el-button class="bell" text size="large" circle>
                 <bell-outline />
             </el-button> -->
-            <el-dropdown trigger="click" popper-class="headerDropdown" placement="bottom-end">
-                <span class="el-dropdown-link">
-                    <el-avatar :src="user.picture" :key="user.updated_at" />
-                    <el-icon class="el-icon--right">
-                        <arrow-down />
-                    </el-icon>
-                </span>
-                <template #dropdown>
-                    <el-dropdown-menu>
-                        <el-dropdown-item @click="drawer = true">
-                            <img src="../assets/icons/AccountSettings.svg" alt="AccountSettings" /> Account Settings
-                        </el-dropdown-item>
-                        <el-dropdown-item @click="logOut">
-                            <img src="../assets/icons/LogoutIcon.svg" alt="LogoutIcon" />Log Out
-                        </el-dropdown-item>
-                    </el-dropdown-menu>
-                </template>
-            </el-dropdown>
-        </el-col>
-    </el-row>
-    <el-drawer v-model="drawer" size="400px" :with-header="false" destroy-on-close>
-        <account-settings @close="drawer = false" />
-    </el-drawer>
+      <el-dropdown
+        trigger="click"
+        popper-class="headerDropdown"
+        placement="bottom-end"
+      >
+        <span class="el-dropdown-link">
+          <el-avatar
+            :key="user.updated_at"
+            :src="user.picture"
+          />
+          <el-icon class="el-icon--right">
+            <arrow-down />
+          </el-icon>
+        </span>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item @click="drawer = true">
+              <img
+                src="../assets/icons/AccountSettings.svg"
+                alt="AccountSettings"
+              > Account Settings
+            </el-dropdown-item>
+            <el-dropdown-item @click="logOut">
+              <img
+                src="../assets/icons/LogoutIcon.svg"
+                alt="LogoutIcon"
+              >Log Out
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+    </el-col>
+  </el-row>
+  <el-drawer
+    v-model="drawer"
+    size="400px"
+    :with-header="false"
+    destroy-on-close
+  >
+    <account-settings @close="drawer = false" />
+  </el-drawer>
 </template>
 
 <script setup>

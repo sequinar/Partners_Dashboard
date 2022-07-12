@@ -1,16 +1,33 @@
 <template>
-    <div class="permissionModal" @click="slotClick">
-        <slot></slot>
+  <div
+    class="permissionModal"
+    @click="slotClick"
+  >
+    <slot />
 
-        <div v-if="showModal" class="permissionModal__body">
-            <h4>Are you sure?</h4>
-            <p>Once you remove a user, the user wont be able to access any information from the account</p>
-            <div class="actions">
-                <el-button type="primary" @click.stop="onRemove">Remove</el-button>
-                <el-button type="primary" plain @click.stop="onCancel">Cancel</el-button>
-            </div>
-        </div>
+    <div
+      v-if="showModal"
+      class="permissionModal__body"
+    >
+      <h4>Are you sure?</h4>
+      <p>Once you remove a user, the user wont be able to access any information from the account</p>
+      <div class="actions">
+        <el-button
+          type="primary"
+          @click.stop="onRemove"
+        >
+          Remove
+        </el-button>
+        <el-button
+          type="primary"
+          plain
+          @click.stop="onCancel"
+        >
+          Cancel
+        </el-button>
+      </div>
     </div>
+  </div>
 </template>
 
 <script setup>

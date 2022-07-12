@@ -1,22 +1,41 @@
 <template>
-    <div v-loading="loading" class="worldSettings">
-        <div v-if="world" class="worldSettings__container">
-            <h1>World Settings</h1>
-            <p>Edit content available inside the world as banner ads, video uploads, and streming.</p>
-            <div class="switcher mt-30">
-                <label @click="disableChat = !disableChat">Enable or disable chat in world?</label>
-                <el-switch v-model="world.chat_status" @change="switchChat" size="large" />
-            </div>
-            <el-tabs v-model="activeName" class="demo-tabs">
-                <el-tab-pane label="World Banners" name="first">
-                    <WorldBanners :world='world' />
-                </el-tab-pane>
-                <el-tab-pane label="Video Streaming" name="second">
-                    <VideoStreaming :world='world' />
-                </el-tab-pane>
-            </el-tabs>
-        </div>
+  <div
+    v-loading="loading"
+    class="worldSettings"
+  >
+    <div
+      v-if="world"
+      class="worldSettings__container"
+    >
+      <h1>World Settings</h1>
+      <p>Edit content available inside the world as banner ads, video uploads, and streming.</p>
+      <div class="switcher mt-30">
+        <label @click="disableChat = !disableChat">Enable or disable chat in world?</label>
+        <el-switch
+          v-model="world.chat_status"
+          size="large"
+          @change="switchChat"
+        />
+      </div>
+      <el-tabs
+        v-model="activeName"
+        class="demo-tabs"
+      >
+        <el-tab-pane
+          label="World Banners"
+          name="first"
+        >
+          <WorldBanners :world="world" />
+        </el-tab-pane>
+        <el-tab-pane
+          label="Video Streaming"
+          name="second"
+        >
+          <VideoStreaming :world="world" />
+        </el-tab-pane>
+      </el-tabs>
     </div>
+  </div>
 </template>
 
 <script setup>

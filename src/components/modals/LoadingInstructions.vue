@@ -1,90 +1,132 @@
 <template>
-    <div v-if="props.showInstaractions">
-        <div class="loadingInstructions" v-if="isWindows">
-            <div class="loadingInstructions__header">
-                <h3>
-                    Thanks for Downloading
-                </h3>
-                <img src="@/assets/exiticon.svg" alt="close icon" @click="emits('close')">
-            </div>
-            <div class="loadingInstructions__body">
-                <div class="loadingInstructions__body--item">
-                    <h4 class="step">
-                        1
-                    </h4>
-                    <div class="modalText">
-                        Click <b>{{ props.world.worldname }}.msi</b> to run Sequin.World installer, Which just
-                        downloaded via your web browser.
-                    </div>
-                    <img src="@/assets/SequinWorldInstaller.png" style="width:200px;margin:auto;margin-top:50px">
-                </div>
-                <div class="loadingInstructions__body--item">
-                    <h4 class="step">
-                        2
-                    </h4>
-                    <div class="modalText">
-                        Click <b>Yes</b> when prompted by your computer to begin the installation process.
-                    </div>
-                    <img src="@/assets/SequinWorldInstallerModal.png" style="width:200px;margin:auto;margin-top:40px">
-                </div>
-                <div class="loadingInstructions__body--item">
-                    <h4 class="step">
-                        3
-                    </h4>
-                    <div class="modalText">
-                        After installation, click <b>Start</b> below to enter your world.
-                    </div>
-                    <el-button type="primary" size="large" @click="emits('openWorld')">Start</el-button>
-                </div>
-            </div>
-            <p class="loadingInstructions__footer">The Sequin.World installer should download shortly. If it doesn't,
-                start
-                the download now.</p>
+  <div v-if="props.showInstaractions">
+    <div
+      v-if="isWindows"
+      class="loadingInstructions"
+    >
+      <div class="loadingInstructions__header">
+        <h3>
+          Thanks for Downloading
+        </h3>
+        <img
+          src="@/assets/exiticon.svg"
+          alt="close icon"
+          @click="emits('close')"
+        >
+      </div>
+      <div class="loadingInstructions__body">
+        <div class="loadingInstructions__body--item">
+          <h4 class="step">
+            1
+          </h4>
+          <div class="modalText">
+            Click <b>{{ props.world.worldname }}.msi</b> to run Sequin.World installer, Which just
+            downloaded via your web browser.
+          </div>
+          <img
+            src="@/assets/SequinWorldInstaller.png"
+            style="width:200px;margin:auto;margin-top:50px"
+          >
         </div>
-        <div v-else class="loadingInstructions">
-            <div class="loadingInstructions__header">
-                <h3>
-                    Thanks for Downloading
-                </h3>
-                <img src="@/assets/exiticon.svg" alt="close icon" @click="emits('close')">
-            </div>
-            <div class="loadingInstructions__body">
-                <div class="loadingInstructions__body--item">
-                    <h4 class="step">
-                        1
-                    </h4>
-                    <div class="modalText">
-                        Click <b>{{ props.world.worldname }}.dmg</b> to run Sequin.World installer, Which just
-                        downlaoded
-                        via your web browser.
-                    </div>
-                    <img src="@/assets/Camelot_DMG_Image.png" style="width:200px;margin:auto;margin-top:50px">
-                </div>
-                <div class="loadingInstructions__body--item">
-                    <h4 class="step">
-                        2
-                    </h4>
-                    <div class="modalText">
-                        To install <b>drag</b> world's icon to the application folder
-                    </div>
-                    <img src="@/assets/Camelot_mac_Installer.png" style="width:200px;margin:auto;margin-top:40px">
-                </div>
-                <div class="loadingInstructions__body--item">
-                    <h4 class="step">
-                        3
-                    </h4>
-                    <div class="modalText">
-                        After installation, <b>look for {{ props.world.worldname }}</b> in your application folder to
-                        enter the world.
-                    </div>
-                    <el-button type="primary" size="large" @click="emits('openWorld')">Start</el-button>
-                </div>
-            </div>
-            <p class="loadingInstructions__footer">The Sequin.World installer should download shortly. If it doesn't,
-                start
-                the download now.</p>
+        <div class="loadingInstructions__body--item">
+          <h4 class="step">
+            2
+          </h4>
+          <div class="modalText">
+            Click <b>Yes</b> when prompted by your computer to begin the installation process.
+          </div>
+          <img
+            src="@/assets/SequinWorldInstallerModal.png"
+            style="width:200px;margin:auto;margin-top:40px"
+          >
         </div>
+        <div class="loadingInstructions__body--item">
+          <h4 class="step">
+            3
+          </h4>
+          <div class="modalText">
+            After installation, click <b>Start</b> below to enter your world.
+          </div>
+          <el-button
+            type="primary"
+            size="large"
+            @click="emits('openWorld')"
+          >
+            Start
+          </el-button>
+        </div>
+      </div>
+      <p class="loadingInstructions__footer">
+        The Sequin.World installer should download shortly. If it doesn't,
+        start
+        the download now.
+      </p>
     </div>
+    <div
+      v-else
+      class="loadingInstructions"
+    >
+      <div class="loadingInstructions__header">
+        <h3>
+          Thanks for Downloading
+        </h3>
+        <img
+          src="@/assets/exiticon.svg"
+          alt="close icon"
+          @click="emits('close')"
+        >
+      </div>
+      <div class="loadingInstructions__body">
+        <div class="loadingInstructions__body--item">
+          <h4 class="step">
+            1
+          </h4>
+          <div class="modalText">
+            Click <b>{{ props.world.worldname }}.dmg</b> to run Sequin.World installer, Which just
+            downlaoded
+            via your web browser.
+          </div>
+          <img
+            src="@/assets/Camelot_DMG_Image.png"
+            style="width:200px;margin:auto;margin-top:50px"
+          >
+        </div>
+        <div class="loadingInstructions__body--item">
+          <h4 class="step">
+            2
+          </h4>
+          <div class="modalText">
+            To install <b>drag</b> world's icon to the application folder
+          </div>
+          <img
+            src="@/assets/Camelot_mac_Installer.png"
+            style="width:200px;margin:auto;margin-top:40px"
+          >
+        </div>
+        <div class="loadingInstructions__body--item">
+          <h4 class="step">
+            3
+          </h4>
+          <div class="modalText">
+            After installation, <b>look for {{ props.world.worldname }}</b> in your application folder to
+            enter the world.
+          </div>
+          <el-button
+            type="primary"
+            size="large"
+            @click="emits('openWorld')"
+          >
+            Start
+          </el-button>
+        </div>
+      </div>
+      <p class="loadingInstructions__footer">
+        The Sequin.World installer should download shortly. If it doesn't,
+        start
+        the download now.
+      </p>
+    </div>
+  </div>
 </template>
 
 <script setup>

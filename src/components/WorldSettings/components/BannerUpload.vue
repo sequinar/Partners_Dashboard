@@ -1,17 +1,43 @@
 <template>
-    <div ref="bannerRef" class="bannerUpload" :style="{ width: width, height: height }">
-        <el-upload ref="uploadRef" drag action="#" :auto-upload="false" :on-change="uploadSuccess" :limit="1"
-            :on-exceed="handleExceed" accept=".png, .jpg, .jpeg">
-            <div class="el-upload__text d-flex align-center justify-center"
-                :class="{ 'direction-column': bannerWidth < 400 }">
-                <img src="@/assets/icons/Uploadicon.svg" alt="Uploadicon" /> <span>Choose a file or drag it here to
-                    upload.</span>
-            </div>
-        </el-upload>
-        <img v-if="img" :src="img" alt="uploaded image" @click="uploadImage">
-        <img v-else-if="props.image?.banner_url" :src="props.image?.banner_url" alt="uploaded image"
-            @click="uploadImage" />
-    </div>
+  <div
+    ref="bannerRef"
+    class="bannerUpload"
+    :style="{ width: width, height: height }"
+  >
+    <el-upload
+      ref="uploadRef"
+      drag
+      action="#"
+      :auto-upload="false"
+      :on-change="uploadSuccess"
+      :limit="1"
+      :on-exceed="handleExceed"
+      accept=".png, .jpg, .jpeg"
+    >
+      <div
+        class="el-upload__text d-flex align-center justify-center"
+        :class="{ 'direction-column': bannerWidth < 400 }"
+      >
+        <img
+          src="@/assets/icons/Uploadicon.svg"
+          alt="Uploadicon"
+        > <span>Choose a file or drag it here to
+          upload.</span>
+      </div>
+    </el-upload>
+    <img
+      v-if="img"
+      :src="img"
+      alt="uploaded image"
+      @click="uploadImage"
+    >
+    <img
+      v-else-if="props.image?.banner_url"
+      :src="props.image?.banner_url"
+      alt="uploaded image"
+      @click="uploadImage"
+    >
+  </div>
 </template>
 
 <script setup>
@@ -31,6 +57,7 @@ const props = defineProps({
     },
     image: {
         type: Object,
+        default: () => {}
     }
 })
 let img = ref(null);

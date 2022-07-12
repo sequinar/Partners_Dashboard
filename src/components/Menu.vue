@@ -1,30 +1,83 @@
 <template>
-    <el-menu default-active="1" class="el-menu-vertical" :collapse="isCollapse" @mouseenter="openMenu"
-        @mouseleave="collapseMenu">
-        <router-link to="/"><img class="logo" src="../assets/icons/Sequin.world.svg" alt="logo"></router-link>
-        <el-button v-show="!isCollapse" text large class="collapseButton" :class="{ flip: !blockCollapse }"
-            @click="toggleCollapse">
-            <img src="../assets/icons/CollapseLeftpanel_icon.svg" alt="collapseIcon">
-        </el-button>
-        <el-menu-item index="1" :class="showIntruction(0)" @click="goTo('/')">
-            <img src="../assets/icons/Worlds.svg" alt="worlds">
-            <template #title>Worlds</template>
-        </el-menu-item>
-        <el-menu-item index="2" :class="showIntruction(1)" @click="goTo('/team')">
-            <img src="../assets/icons/Teams.svg" alt="team">
-            <template #title>Team</template>
-        </el-menu-item>
-        <!-- <el-menu-item index="3" @click="goTo('/analytics')">
+  <el-menu
+    default-active="1"
+    class="el-menu-vertical"
+    :collapse="isCollapse"
+    @mouseenter="openMenu"
+    @mouseleave="collapseMenu"
+  >
+    <router-link to="/">
+      <img
+        class="logo"
+        src="../assets/icons/Sequin.world.svg"
+        alt="logo"
+      >
+    </router-link>
+    <el-button
+      v-show="!isCollapse"
+      text
+      large
+      class="collapseButton"
+      :class="{ flip: !blockCollapse }"
+      @click="toggleCollapse"
+    >
+      <img
+        src="../assets/icons/CollapseLeftpanel_icon.svg"
+        alt="collapseIcon"
+      >
+    </el-button>
+    <el-menu-item
+      index="1"
+      :class="showIntruction(0)"
+      @click="goTo('/')"
+    >
+      <img
+        src="../assets/icons/Worlds.svg"
+        alt="worlds"
+      >
+      <template #title>
+        Worlds
+      </template>
+    </el-menu-item>
+    <el-menu-item
+      index="2"
+      :class="showIntruction(1)"
+      @click="goTo('/team')"
+    >
+      <img
+        src="../assets/icons/Teams.svg"
+        alt="team"
+      >
+      <template #title>
+        Team
+      </template>
+    </el-menu-item>
+    <!-- <el-menu-item index="3" @click="goTo('/analytics')">
             <img src="../assets/Analytics.png" alt="analytics">
             <template #title>Analytics</template>
         </el-menu-item> -->
-        <el-menu-item class="onboarding" index="4" @click="isOnboarding = true">
-            <img src="../assets/icons/Onboarding.svg" alt="Onboarding">
-            <template #title>Onboarding</template>
-        </el-menu-item>
-    </el-menu>
-    <Onboarding v-if="isOnboarding" :is-open="isOnboarding" :is-collapsed="isCollapse" :top="rectTopInsruction"
-        @change="slideChange" @close="isOnboarding = false" />
+    <el-menu-item
+      class="onboarding"
+      index="4"
+      @click="isOnboarding = true"
+    >
+      <img
+        src="../assets/icons/Onboarding.svg"
+        alt="Onboarding"
+      >
+      <template #title>
+        Onboarding
+      </template>
+    </el-menu-item>
+  </el-menu>
+  <Onboarding
+    v-if="isOnboarding"
+    :is-open="isOnboarding"
+    :is-collapsed="isCollapse"
+    :top="rectTopInsruction"
+    @change="slideChange"
+    @close="isOnboarding = false"
+  />
 </template>
 
 <script setup>

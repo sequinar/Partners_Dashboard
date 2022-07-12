@@ -1,30 +1,65 @@
 <template>
-    <div class="videoUpload">
-        <h3>Videos</h3>
-        <el-button class="addVideoButton full-width" type="primary" size="large" :icon="Plus" @click="uploadVideo">Add
-            Video
-        </el-button>
-        <small>Upload at least a <span>1280px by 720px</span> h264.mp4</small>
-        <el-upload ref="uploadVideoRef" id="uploadVideo" drag action="#" :auto-upload="false" accept=".mp4" multiple
-            :limit="5" :on-exceed="handleExceed" :file-list="fileList" :on-change="onChange" :on-progress="onProgress"
-            list-type="picture">
-            <div v-show="fileList.length === 0"
-                class="videoUpload__text d-flex align-center justify-center direction-column">
-                <img src="@/assets/icons/Uploadicon.svg" alt="Uploadicon" /> <span>Choose a file or drag it here to
-                    upload.</span>
-            </div>
-            <ul v-show="fileList.length > 0" class="videoUpload__list">
-                <li class="videoUpload__list--item d-flex align-center" v-for="file in fileList" :key="file.uid"
-                    @click.stop="onPreview(file)">
-                    <video :src="file.url" width="60" height="34"></video>
-                    <div>
-                        <h4>{{ file.name }}</h4>
-                        <span>{{ getTimeSince(file.changed) }}</span>
-                    </div>
-                </li>
-            </ul>
-        </el-upload>
-    </div>
+  <div class="videoUpload">
+    <h3>Videos</h3>
+    <el-button
+      class="addVideoButton full-width"
+      type="primary"
+      size="large"
+      :icon="Plus"
+      @click="uploadVideo"
+    >
+      Add
+      Video
+    </el-button>
+    <small>Upload at least a <span>1280px by 720px</span> h264.mp4</small>
+    <el-upload
+      id="uploadVideo"
+      ref="uploadVideoRef"
+      drag
+      action="#"
+      :auto-upload="false"
+      accept=".mp4"
+      multiple
+      :limit="5"
+      :on-exceed="handleExceed"
+      :file-list="fileList"
+      :on-change="onChange"
+      :on-progress="onProgress"
+      list-type="picture"
+    >
+      <div
+        v-show="fileList.length === 0"
+        class="videoUpload__text d-flex align-center justify-center direction-column"
+      >
+        <img
+          src="@/assets/icons/Uploadicon.svg"
+          alt="Uploadicon"
+        > <span>Choose a file or drag it here to
+          upload.</span>
+      </div>
+      <ul
+        v-show="fileList.length > 0"
+        class="videoUpload__list"
+      >
+        <li
+          v-for="file in fileList"
+          :key="file.uid"
+          class="videoUpload__list--item d-flex align-center"
+          @click.stop="onPreview(file)"
+        >
+          <video
+            :src="file.url"
+            width="60"
+            height="34"
+          />
+          <div>
+            <h4>{{ file.name }}</h4>
+            <span>{{ getTimeSince(file.changed) }}</span>
+          </div>
+        </li>
+      </ul>
+    </el-upload>
+  </div>
 </template>
 <script setup>
 import { ref } from 'vue'

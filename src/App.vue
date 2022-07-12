@@ -1,6 +1,9 @@
 <template>
-  <div v-loading="loading" class="common-layout">
-    <router-view v-if="worlds && team"></router-view>
+  <div
+    v-loading="loading"
+    class="common-layout"
+  >
+    <router-view v-if="worlds && team" />
   </div>
 </template>
 
