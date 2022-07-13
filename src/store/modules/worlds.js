@@ -22,7 +22,7 @@ const store = {
     actions: {
         async createWorld({dispatch, rootState, commit}, data) {
             try{
-                await axios.post(`team/${rootState.team.team.id}/worlds`, {
+                await axios.post(`team/${rootState.team.team.teamId}/worlds`, {
                     worldname: data.name, 
                     worlddescription: data.descrition, 
                     customizations: data.customizations, 
@@ -35,7 +35,7 @@ const store = {
             }
         },
         async getWorlds({commit, rootState}) {
-            let worlds = await axios.get(`team/${rootState.team.team.id}/worlds`);
+            let worlds = await axios.get(`team/${rootState.team.team.teamId}/worlds`);
             commit('setWorlds', worlds.data.message);
         },
         async getCurrentWorld({commit}, worldId) {

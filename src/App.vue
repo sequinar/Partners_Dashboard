@@ -26,7 +26,10 @@ onMounted(async () => {
   await auth.getTokenSilently().then((data) => {
     store.commit('updateAccessToken', data);
   });
-  await store.dispatch('team/getTeam');
+  let team = await store.dispatch('team/getTeam');
+  if(!team.data[0]) {
+    await store.dispatch('team/createTeam');
+  } 
   await store.dispatch('worlds/getWorlds');
   loading.value = false;
 })
