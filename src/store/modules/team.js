@@ -9,7 +9,7 @@ const store = {
     },
     mutations: {
         setTeam(state, team) {
-            state.team = team[0];
+            state.team = Array.isArray(team) ? team[0] : team;
         },
         setMembers(state, members) {
             state.members = members;
@@ -19,17 +19,15 @@ const store = {
         },
     },
     actions: {
-        async createTeam({dispatch, rootState}) {
-            await axios.post('/team',{teamName: `${rootState.user.nickname} team`, teamLicenses: 5});
-            dispatch('getTeam');
+        async createTeam({rootState, commit}) {
+            let team = await axios.post('/team',{teamName: `${rootState.user.nickname} team`, teamLicenses: 5});
+            commit('setTeam', team.data);
+            return team;
         },
-        async getTeam({commit, dispatch}) {
+        async getTeam({commit}) {
             const team = await axios.get('/team');
-            if(team.data.lenght === 0) {
-                dispatch('createTeam');
-            } else {
-                commit('setTeam', team.data);
-            }
+            commit('setTeam', team.data);
+            return team;
         },
         async getMembers({commit, state}, params) {
             const members = await axios.get(`team/${state.team.id}/users`, {params: params})
