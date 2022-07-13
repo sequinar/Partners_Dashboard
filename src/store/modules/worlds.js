@@ -20,18 +20,19 @@ const store = {
         }
     },
     actions: {
-        async createWorld({dispatch, rootState}, data) {
-            let response = await axios.post(`team/${rootState.team.team.id}/worlds`, {
-                worldname: data.name, 
-                worlddescription: data.descrition, 
-                customizations: data.customizations, 
-                thumbnail: data.thumbnail 
-            });
-            dispatch('getWorlds');
-            dispatch('showAlert', {
-                status: response.status,
-                messageSuccess: 'World created successfully'
-            }, {root: true})
+        async createWorld({dispatch, rootState, commit}, data) {
+            try{
+                await axios.post(`team/${rootState.team.team.id}/worlds`, {
+                    worldname: data.name, 
+                    worlddescription: data.descrition, 
+                    customizations: data.customizations, 
+                    thumbnail: data.thumbnail 
+                });
+                dispatch('getWorlds');
+                commit('setMessageSuccess', 'World created successfully', {root: true})
+            } catch (err) {
+                commit('setMessageError', err.response.data.message, {root: true})
+            }
         },
         async getWorlds({commit, rootState}) {
             let worlds = await axios.get(`team/${rootState.team.team.id}/worlds`);
@@ -53,21 +54,23 @@ const store = {
             await axios.post(`world/${data.id}/stream-status/${data.status}`);
             dispatch('getCurrentWorld', data.id);
         },
-        async updateBanners({dispatch}, data) {
-            let response = await axios.post(`world/${data.id}/world-banner`, data.formData);
-            dispatch('getCurrentWorld', data.id);
-            dispatch('showAlert', {
-                status: response.status,
-                messageSuccess: 'Image uploaded successfully'
-            }, {root: true})
+        async updateBanners({dispatch, commit}, data) {
+            try{
+                await axios.post(`world/${data.id}/world-banner`, data.formData);
+                dispatch('getCurrentWorld', data.id);
+                commit('setMessageSuccess', 'Image uploaded successfully', {root: true})
+            } catch (err) {
+                commit('setMessageError', err.response.data.message, {root: true})
+            }
         },
-        async deleteBanner({dispatch}, data) {
-            let response = await axios.delete(`/world/${data.id}/world-banner/${data.bannerId}`)
-            dispatch('getCurrentWorld', data.id);
-            dispatch('showAlert', {
-                status: response.status,
-                messageSuccess: 'Image deleted successfully'
-            }, {root: true})
+        async deleteBanner({dispatch, commit}, data) {
+            try{
+                await axios.delete(`/world/${data.id}/world-banner/${data.bannerId}`)
+                dispatch('getCurrentWorld', data.id);
+                commit('setMessageSuccess', 'Image deleted successfully', {root: true})
+            } catch (err) {
+                commit('setMessageError', err.response.data.message, {root: true})
+            }
         }
     },
     getters: {},

@@ -4,7 +4,6 @@ import Worlds from './modules/worlds'
 import axios from '../axios/index'
 import Auth0 from '@/auth0/index';
 
-// Create a new store instance.
 const store = createStore({
   state () {
     return {
@@ -27,29 +26,23 @@ const store = createStore({
       state.messageSuccess = message;
     },
     setMessageError(state, message){
-      state.messageError = message ? message : 'Something went wrong';
+      state.messageError = message;
     } 
   },
   actions: {
-    showAlert({commit}, data) {
-      if(data.status === 200) {
-        commit('setMessageSuccess', data.messageSuccess)
-      } else {
-        commit('setMessageError', data.messageError)
-      }
-    },
-    async updateUser({dispatch, commit}, data) {
-      let response = await axios.post(`/updateprofile`, {
-        displayName: data.displayName,
-        name: data.name,
-        profileImageBase64: data.picture
-      });
-      dispatch('showAlert', {
-        status: response.status,
-        messageSuccess: 'User successefully updated'
-      })
-      let user = await Auth0.getUser();
-      commit("setUser", user);
+    async updateUser({commit}, data) {
+      try{
+        await axios.post(`/updateprofile`, {
+          displayName: data.displayName,
+          name: data.name,
+          profileImageBase64: data.picture
+        });
+        commit('setMessageSuccess', 'User successefully updated', {root: true})
+        let user = await Auth0.getUser();
+        commit("setUser", user);
+    } catch (err) {
+        commit('setMessageError', err.response.data.message, {root: true})
+    }
     }
   },
   modules: {
@@ -57,5 +50,4 @@ const store = createStore({
     worlds: Worlds
   }
 })
-
 export default store;
