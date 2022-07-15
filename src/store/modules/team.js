@@ -30,12 +30,12 @@ const store = {
             return team;
         },
         async getMembers({commit, state}, params) {
-            const members = await axios.get(`team/${state.team.id}/users`, {params: params})
+            const members = await axios.get(`team/${state.team.teamId}/users`, {params: params})
             commit('setMembers', members.data.message);
         },
         async inviteMember({ state, commit }, member) {
             try{
-                await axios.post(`team/${state.team.id}/invite-user/${member.email}`);
+                await axios.post(`team/${state.team.teamId}/invite-user/${member.email}`);
                 commit('setMessageSuccess', 'Member invited successfully', {root: true})
             } catch (err) {
                 commit('setMessageError', err.response.data.message, {root: true})
@@ -43,7 +43,7 @@ const store = {
         },
         async removeMember({ dispatch, state, commit }, id) {
             try{
-                await axios.delete(`team/${state.team.id}/remove-user/${id}`);
+                await axios.delete(`team/${state.team.teamId}/remove-user/${id}`);
                 dispatch("getMembers");
                 commit('setMessageSuccess', 'User removed successfully', {root: true})
             } catch (err) {

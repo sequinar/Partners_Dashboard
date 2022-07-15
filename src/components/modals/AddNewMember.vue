@@ -23,7 +23,7 @@
           :rules="rules"
           @submit.prevent
         >
-          <el-row :gutter="25">
+          <!-- <el-row :gutter="25">
             <el-col :span="12">
               <el-form-item
                 label="Name"
@@ -46,7 +46,7 @@
                 />
               </el-form-item>
             </el-col>
-          </el-row>
+          </el-row> -->
           <el-row>
             <el-col :span="24">
               <el-form-item
@@ -148,7 +148,7 @@ const submitMemberForm = async () => {
         right: 0;
         background-color: #fff;
         box-shadow: 0 0 10px 0 rgba(28, 28, 28, 0.5);
-        z-index: 999;
+        z-index: 9999;
         border-radius: 3px;
 
         &--body {
