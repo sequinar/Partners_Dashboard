@@ -78,6 +78,7 @@
           </el-col>
           <el-col :span="12">
             <el-button
+              class="cancel"
               size="large"
               @click="isOpen = false"
             >
@@ -167,6 +168,16 @@ const submitMemberForm = async () => {
 
         button {
             width: 100%;
+        }
+
+        .cancel{
+          color: var(--el-color-primary);
+          border-color: var(--el-color-primary);
+
+          &:hover {
+            background-color: rgba(204,176,244,0.1);
+            border-color: var(--el-color-primary);
+          }
         }
     }
 
