@@ -9,7 +9,7 @@
         type="primary"
         text
         :icon="Close"
-        @click="emits('close')"
+        @click="closeOnboarding"
       />
       <el-carousel
         :autoplay="false"
@@ -59,14 +59,19 @@ const props = defineProps({
     type: Boolean
   },
   top: {
-    type: String,
-    default: () => "0px"
+    type: Number,
+    default: () => 0
   }
 })
 const leftGap = computed(() => `${props.isCollapsed ? 'left-90' : 'left-310'}`);
 
 const onChange = (index) => {
     emits('change', index);
+}
+
+const closeOnboarding = () => {
+  emits('close');
+  onChange(0);
 }
 
 </script>

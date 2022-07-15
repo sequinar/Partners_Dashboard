@@ -46,11 +46,11 @@
   />
 </template>
 <script setup>
-import { ref, defineAsyncComponent } from 'vue'
+import { ref, defineAsyncComponent } from 'vue';
 import { useRouter } from 'vue-router';
 import { useOpenWorld } from "@/composables/OpenWorld";
 import { useStore } from 'vuex';
-import { ElMessage } from 'element-plus'
+import { ElMessage } from 'element-plus';
 
 const WorldLoadingModal = defineAsyncComponent(() =>
   import('../components/modals/WorldLoadingModal.vue')
