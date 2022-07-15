@@ -8,11 +8,13 @@
       :src="props.world.thumbnail_link"
       class="image"
     >
-    <dropdown>
+    <dropdown @click.stop>
       <li @click.stop="router.push(`/settings/${props.world.public_id}`)">
         Settings
       </li>
-      <li>Share</li>
+      <li @click="copyLink(props.world.public_id)">
+        Share
+      </li>
       <li>Unpublish</li>
     </dropdown>
     <div class="worldItem--footer">
@@ -49,6 +51,7 @@ import { ref, defineAsyncComponent } from 'vue'
 import { useRouter } from 'vue-router';
 import { useOpenWorld } from "@/composables/OpenWorld";
 import { useStore } from 'vuex';
+import { ElMessage } from 'element-plus'
 
 const WorldLoadingModal = defineAsyncComponent(() =>
   import('../components/modals/WorldLoadingModal.vue')
@@ -59,7 +62,7 @@ const Dropdown = defineAsyncComponent(() =>
 )
 
 const store = useStore();
-const router = useRouter()
+const router = useRouter();
 const { openWorld, isWorldLoadingModal } = useOpenWorld(store);
 const props = defineProps({
   world: {
@@ -68,6 +71,11 @@ const props = defineProps({
   }
 });
 const isOnline = ref(true);
+
+const copyLink = (id) => {
+    navigator.clipboard.writeText(`${window.document.location.href}settings/${id}`);
+    ElMessage.success("Copied");
+}
 </script>
 
 <style scoped lang="scss">

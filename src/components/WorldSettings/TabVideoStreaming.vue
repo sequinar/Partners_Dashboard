@@ -107,7 +107,7 @@
 import VideoUpload from './components/VideoUpload.vue';
 import VideoPreview from './components/VideoPreview.vue';
 import { ref } from 'vue';
-import { ElMessage } from 'element-plus'
+import { ElMessage } from 'element-plus';
 
 const props = defineProps({
   world: {
