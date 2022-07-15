@@ -24,7 +24,7 @@
       <el-form-item
         label="Name"
         prop="nickname"
-      >
+      > 
         <el-input
           v-model="user.nickname"
           size="large"
@@ -122,14 +122,14 @@
   </div>
 </template>
 <script setup>
-import { reactive, ref, computed } from 'vue';
+import { reactive, ref } from 'vue';
 import UserAvatar from './UserAvatar.vue';
 import { useStore } from 'vuex';
 
 const store = useStore();
 const emit = defineEmits(['close']);
 
-const user = computed(() => store.state.user)
+const user = ref({...store.state.user});
 const nameForm = ref();
 const passForm = ref();
 const passwordUpdate = reactive({
@@ -184,8 +184,8 @@ const submitNameForm = async () => {
     await nameForm.value.validate((valid, fields) => {
         if (valid) {
             store.dispatch('updateUser', {
-                displayName: user.value.nickname,
-                name: user.value.name
+                displayName: user.value.name,
+                name: user.value.nickname
             })
         } else {
             console.log('error submit!', fields)
