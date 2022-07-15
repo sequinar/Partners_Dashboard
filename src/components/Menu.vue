@@ -102,7 +102,7 @@ const rectTopInsruction = computed(() => {
 function openMenu() {
     if (isOnboarding.value) return;
     isCollapse.value = false;
-};
+}
 
 function collapseMenu() {
     if (blockCollapse.value) return;

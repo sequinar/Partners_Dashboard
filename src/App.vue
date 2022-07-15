@@ -30,7 +30,6 @@ onMounted(async () => {
   if(!team.data[0]) {
     await store.dispatch('team/createTeam');
   } 
-  await store.dispatch('worlds/getWorlds');
   loading.value = false;
 })
 

@@ -3,7 +3,7 @@ const store = {
     namespaced: true,
     state() {
         return {
-            worlds: [],
+            worlds: {},
             currentWorld: null,
             worldBanners: []
         };
@@ -34,8 +34,8 @@ const store = {
                 commit('setMessageError', err.response.data.message, {root: true})
             }
         },
-        async getWorlds({commit, rootState}) {
-            let worlds = await axios.get(`team/${rootState.team.team.teamId}/worlds`);
+        async getWorlds({commit, rootState}, params) {
+            let worlds = await axios.get(`team/${rootState.team.team.teamId}/worlds`, {params: params});
             commit('setWorlds', worlds.data.message);
         },
         async getCurrentWorld({commit}, worldId) {

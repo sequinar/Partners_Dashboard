@@ -52,7 +52,7 @@ const props = defineProps({
     banner: {
         type: Object,
         default: () => {
-            banner_url: ''
+          ''
         }
     },
     columns: {
@@ -70,7 +70,7 @@ const clearBanner = () => {
 }
 
 const copyLink = () => {
-    navigator.clipboard.writeText(props.url);
+    navigator.clipboard.writeText(props.banner.banner_url);
     ElMessage.success("Copied")
 }
 </script>

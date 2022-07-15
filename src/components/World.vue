@@ -15,7 +15,6 @@
       <li @click="copyLink(props.world.public_id)">
         Share
       </li>
-      <li>Unpublish</li>
     </dropdown>
     <div class="worldItem--footer">
       <h3>{{ props.world.worldname }}</h3>
@@ -78,10 +77,17 @@ const copyLink = (id) => {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .worldItem {
   position: relative;
   cursor: pointer;
+
+  .el-card__body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+  }
 
   img {
     width: 100%;

@@ -96,7 +96,7 @@
         >
           Preview World
         </el-button>
-        <small>* The sizes are a scaled representation of the actua dimensions of the ads inside the
+        <small>* The sizes are a scaled representation of the actual dimensions of the ads inside the
           world.</small>
       </el-col>
     </el-row>
