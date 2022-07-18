@@ -66,7 +66,7 @@
 
 <script setup>
 import { ArrowDown } from '@element-plus/icons-vue';
-import { ref, computed, defineAsyncComponent, watch } from "vue";
+import { ref, computed, defineAsyncComponent, watch, inject } from "vue";
 import { useStore } from 'vuex';
 import useDebounce from '../composables/debounce';
 
@@ -78,6 +78,7 @@ const store = useStore();
 const user = computed(() => store.state.user);
 const search = ref('');
 const drawer = ref(false);
+const auth = inject('Auth');
 
 const logOut = () => {
     auth.logout();
