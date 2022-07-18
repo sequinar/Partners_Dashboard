@@ -20,7 +20,6 @@
         v-model="search"
         size="large"
         placeholder="Search for a team member"
-        @input="searchMember"
       >
         <template #prefix>
           <img
@@ -35,7 +34,7 @@
   <el-row class="teamsContainer">
     <el-table
       v-loading="loading"
-      :data="filteredTableData"
+      :data="members?.data"
       style="width: 100%"
     >
       <el-table-column
@@ -98,11 +97,11 @@
     </el-table>
   </el-row>
   <el-pagination
-    v-if="filteredTableData"
+    v-if="members"
     v-model:currentPage="page"
     class="mt-10"
     background
-    :total="tableData.meta.totalCount"
+    :total="members.meta.totalCount"
     :page-size="limit"
     layout="prev, pager, next"
     hide-on-single-page
@@ -111,6 +110,7 @@
 
 <script setup>
 import useUtils from '@/composables/utils';
+import useDebounce from '../composables/debounce';
 import { ref, computed, onMounted, watch, defineAsyncComponent } from 'vue';
 import { useStore } from 'vuex';
 import { ElMessage } from 'element-plus';
@@ -126,12 +126,11 @@ const { getTimeSince } = useUtils();
 const loading = ref(true)
 const store = useStore();
 const search = ref('');
-let filteredTableData = ref(null);
 let limit = ref(10);
 let page = ref(1);
 
 const userID = computed(() => store.state.user.sub.split('|')[1]);
-const tableData = computed(() => store.state.team.members);
+const members = computed(() => store.state.team.members);
 
 const removeMember = (id) => {
     store.dispatch('team/removeMember', id);
@@ -144,18 +143,12 @@ const resendInvitation = async (member) => {
     ElMessage.success("Member has been invited");
 }
 
-const searchMember = () => {
-    filteredTableData.value = tableData.value.data.filter(member => {
-        return member.email.indexOf(search.value) !== -1;
-    })
-}
-
 onMounted(async () => {
     await store.dispatch('team/getMembers', {
         limit: limit.value,
-        page: page.value
+        page: page.value,
+        filter: ''
     });
-    filteredTableData.value = tableData.value.data;
     loading.value = false;
 })
 
@@ -163,11 +156,20 @@ watch(page, async (newPage) => {
     loading.value = true;
     await store.dispatch('team/getMembers', {
         limit: limit.value,
-        page: newPage
+        page: newPage,
+        filter: search.value
     });
-    filteredTableData.value = tableData.value.data;
     loading.value = false;
 })
+watch(search, useDebounce(async (newVal) => {
+  loading.value = true;
+    await store.dispatch('team/getMembers', {
+        limit: limit.value,
+        page: page.value,
+        filter: newVal
+    });
+    loading.value = false;
+}, 500))
 </script>
 
 <style lang="scss">

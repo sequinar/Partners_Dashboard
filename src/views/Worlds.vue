@@ -50,7 +50,8 @@ const page = ref(1);
 onMounted(async () => {
   await store.dispatch('worlds/getWorlds', {
     limit: limit.value,
-    page: page.value
+    page: page.value,
+    filter: ''
   });
   loading.value = false;
 })
@@ -59,7 +60,8 @@ watch(page, async (newPage) => {
     loading.value = true;
     await store.dispatch('worlds/getWorlds', {
       limit: limit.value,
-      page: newPage
+      page: newPage,
+      filter: ''
     });
     loading.value = false;
 })

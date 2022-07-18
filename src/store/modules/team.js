@@ -4,7 +4,7 @@ const store = {
     state() {
         return {
             team: null,
-            members: [],
+            members: null,
         };
     },
     mutations: {

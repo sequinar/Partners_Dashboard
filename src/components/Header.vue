@@ -2,7 +2,7 @@
   <el-row class="header">
     <el-col :span="12">
       <el-input
-        v-model="search"
+        v-model.trim="search"
         size="large"
         placeholder="Search Worlds"
       >
@@ -66,8 +66,9 @@
 
 <script setup>
 import { ArrowDown } from '@element-plus/icons-vue';
-import { ref, computed, defineAsyncComponent } from "vue";
+import { ref, computed, defineAsyncComponent, watch } from "vue";
 import { useStore } from 'vuex';
+import useDebounce from '../composables/debounce';
 
 const AccountSettings = defineAsyncComponent(() =>
   import('./AccountSettings.vue')
@@ -75,13 +76,20 @@ const AccountSettings = defineAsyncComponent(() =>
 
 const store = useStore();
 const user = computed(() => store.state.user);
-const search = ref("");
+const search = ref('');
 const drawer = ref(false);
 
 const logOut = () => {
     auth.logout();
 }
 
+watch(search, useDebounce((newVal) => {
+  store.dispatch('worlds/getWorlds', {
+      limit: 10,
+      page: 1,
+      filter: newVal
+    });
+}, 500))
 </script>
 
 <style scoped lang="scss">
