@@ -30,17 +30,23 @@ const store = createStore({
     } 
   },
   actions: {
-    async updateUser({commit}, data) {
+    async getUser({commit}) {
+      let token = await Auth0.getTokenSilently({ ignoreCache: true});
+      commit("updateAccessToken", token);
+      let user = await Auth0.getUser();
+      commit("setUser", user);
+    },
+    async updateUser({commit, dispatch}, data) {
       try{
         await axios.post(`/updateprofile`, {
-          displayName: data.displayName,
+          userName: data.userName,
           name: data.name,
           profileImageBase64: data.picture
         });
         commit('setMessageSuccess', 'User successefully updated', {root: true})
-        let user = await Auth0.getUser();
-        commit("setUser", user);
+        dispatch("getUser");
     } catch (err) {
+        console.error(err);
         commit('setMessageError', err.response.data.message, {root: true})
     }
     }

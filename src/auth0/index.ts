@@ -161,13 +161,15 @@ async function getUser() {
 interface Auth0Plugin {
     init(options: Auth0PluginOptions): Promise<Plugin>;
     routeGuard: NavigationGuardWithThis<undefined>,
-    getUser: any
+    getUser: any,
+    getTokenSilently
 }
 
 const Auth0: Auth0Plugin = {
   init,
   routeGuard,
-  getUser
+  getUser,
+  getTokenSilently
 };
 
 export default Auth0;

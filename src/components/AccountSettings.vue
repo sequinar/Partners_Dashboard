@@ -23,10 +23,10 @@
     >
       <el-form-item
         label="Name"
-        prop="nickname"
+        prop="name"
       > 
         <el-input
-          v-model="user.nickname"
+          v-model="user.name"
           size="large"
           maxlength="25"
           show-word-limit
@@ -34,10 +34,10 @@
       </el-form-item>
       <el-form-item
         label="User name"
-        prop="name"
+        prop="nickname"
       >
         <el-input
-          v-model="user.name"
+          v-model="user.nickname"
           size="large"
           maxlength="25"
           show-word-limit
@@ -128,7 +128,6 @@ import { useStore } from 'vuex';
 
 const store = useStore();
 const emit = defineEmits(['close']);
-
 const user = ref({...store.state.user});
 const nameForm = ref();
 const passForm = ref();
@@ -184,8 +183,8 @@ const submitNameForm = async () => {
     await nameForm.value.validate((valid, fields) => {
         if (valid) {
             store.dispatch('updateUser', {
-                displayName: user.value.name,
-                name: user.value.nickname
+                userName: user.value.nickname,
+                name: user.value.name
             })
         } else {
             console.log('error submit!', fields)
