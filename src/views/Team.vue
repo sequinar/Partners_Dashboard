@@ -200,6 +200,7 @@ watch(search, useDebounce(async (newVal) => {
         tr,
         .el-table__cell {
             background-color: transparent;
+            z-index: unset;
         }
 
         small {
