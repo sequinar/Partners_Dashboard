@@ -206,7 +206,7 @@ const submitPassForm = async () => {
 
 <style lang="scss">
 .accountSetting {
-    width: 325px;
+    width: 335px;
     margin: 0 auto;
 
     .el-avatar {
