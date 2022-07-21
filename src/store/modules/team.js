@@ -3,8 +3,8 @@ const store = {
     namespaced: true,
     state() {
         return {
-            team: null,
-            members: null,
+            team: null, 
+            members: null, // {data: [], meta: {}}
         };
     },
     mutations: {
@@ -51,7 +51,11 @@ const store = {
             }
         },
     },
-    getters: {},
+    getters: {
+        getMemberByEmail: (state) => (email) => {
+            return state.members.data.find(member => member.email === email);
+        }
+    },
 };
 
 export default store;

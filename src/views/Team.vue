@@ -82,7 +82,7 @@
             Resend Invitation
           </el-button>
           <PermissionModal
-            v-else-if="userID !== scope.row.uniqueId"
+            v-else-if="showRemoveButton(scope.row)"
             @confirm="removeMember(scope.row.user_id)"
           >
             <el-button
@@ -134,6 +134,10 @@ const members = computed(() => store.state.team.members);
 
 const removeMember = (id) => {
     store.dispatch('team/removeMember', id);
+}
+
+const showRemoveButton = (user) => {
+  return userID.value !== user.uniqueId && user.teamRole !== 'Super Admin';
 }
 
 const resendInvitation = async (member) => {
