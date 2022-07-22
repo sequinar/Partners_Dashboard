@@ -151,7 +151,6 @@ const resendInvitation = async (member) => {
     await store.dispatch('team/inviteMember', {
         ...member,
     })
-    ElMessage.success("Member has been invited");
 }
 
 onMounted(async () => {

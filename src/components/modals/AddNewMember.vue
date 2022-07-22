@@ -124,17 +124,16 @@ const rules = reactive({
 })
 
 const submitMemberForm = async () => {
-    await memberForm.value.validate((valid, fields) => {
+    await memberForm.value.validate(async (valid, fields) => {
       if(store.getters['team/getMemberByEmail'](member.email)) {
         ElMessage.error("Member alredy exist");
       }
       else if (valid) {
-        store.dispatch('team/inviteMember', {
+        isOpen.value = false;
+        await store.dispatch('team/inviteMember', {
           ...member,
         })
-        emit('close');
-        ElMessage.success("Member has been invited");
-        isOpen.value = false;
+        store.dispatch('team/getMembers');
       } else {
         console.log('error submit!', fields)
       }
