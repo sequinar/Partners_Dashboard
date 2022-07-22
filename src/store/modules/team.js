@@ -3,8 +3,8 @@ const store = {
     namespaced: true,
     state() {
         return {
-            team: null,
-            members: null,
+            team: null, 
+            members: null, // {data: [], meta: {}}
         };
     },
     mutations: {
@@ -29,8 +29,12 @@ const store = {
             commit('setTeam', team.data);
             return team;
         },
-        async getMembers({commit, state}, params) {
-            const members = await axios.get(`team/${state.team.teamId}/users`, {params: params})
+        async getMembers({commit, state}, params = {}) {
+            const members = await axios.get(`team/${state.team.teamId}/users`, {params: {
+                limit: params.limit || 10,
+                page: params.page || 1,
+                filter: params.filter || ''
+            }})
             commit('setMembers', members.data.message);
         },
         async inviteMember({ state, commit }, member) {
@@ -44,14 +48,17 @@ const store = {
         async removeMember({ dispatch, state, commit }, id) {
             try{
                 await axios.delete(`team/${state.team.teamId}/remove-user/${id}`);
-                dispatch("getMembers");
                 commit('setMessageSuccess', 'User removed successfully', {root: true})
             } catch (err) {
                 commit('setMessageError', err.response.data.message, {root: true})
             }
         },
     },
-    getters: {},
+    getters: {
+        getMemberByEmail: (state) => (email) => {
+            return state.members.data.find(member => member.email === email);
+        }
+    },
 };
 
 export default store;

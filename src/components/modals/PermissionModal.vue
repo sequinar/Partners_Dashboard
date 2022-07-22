@@ -52,7 +52,6 @@ const slotClick = () => {
 
 <style lang="scss">
 .permissionModal {
-    text-align: left;
 
     &__body {
         position: absolute;
@@ -65,6 +64,7 @@ const slotClick = () => {
         box-shadow: 0 0 10px 0 rgba(28, 28, 28, 0.12);
         padding: 20px;
         font-size: 12px;
+        text-align: left;
 
         h4 {
             margin: 0;
