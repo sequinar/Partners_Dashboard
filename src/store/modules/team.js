@@ -44,7 +44,6 @@ const store = {
         async removeMember({ dispatch, state, commit }, id) {
             try{
                 await axios.delete(`team/${state.team.teamId}/remove-user/${id}`);
-                dispatch("getMembers");
                 commit('setMessageSuccess', 'User removed successfully', {root: true})
             } catch (err) {
                 commit('setMessageError', err.response.data.message, {root: true})

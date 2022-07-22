@@ -83,7 +83,7 @@
           </el-button>
           <PermissionModal
             v-else-if="showRemoveButton(scope.row)"
-            @confirm="removeMember(scope.row.user_id)"
+            @confirm="removeMember(scope.row.userId)"
           >
             <el-button
               type="danger"
@@ -132,8 +132,15 @@ let page = ref(1);
 const userID = computed(() => store.state.user.sub.split('|')[1]);
 const members = computed(() => store.state.team.members);
 
-const removeMember = (id) => {
-    store.dispatch('team/removeMember', id);
+const removeMember = async (id) => {
+  loading.value = true;
+    await store.dispatch('team/removeMember', id);
+    await store.dispatch('team/getMembers', {
+        limit: limit.value,
+        page: page.value,
+        filter: ''
+    });
+    loading.value = false;
 }
 
 const showRemoveButton = (user) => {

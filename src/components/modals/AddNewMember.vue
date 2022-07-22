@@ -129,13 +129,14 @@ const submitMemberForm = async () => {
         ElMessage.error("Member alredy exist");
       }
       else if (valid) {
-          store.dispatch('team/inviteMember', {
-              ...member,
-          })
-          emit('close');
-          ElMessage.success("Member has been invited");
+        store.dispatch('team/inviteMember', {
+          ...member,
+        })
+        emit('close');
+        ElMessage.success("Member has been invited");
+        isOpen.value = false;
       } else {
-          console.log('error submit!', fields)
+        console.log('error submit!', fields)
       }
     })
 }
