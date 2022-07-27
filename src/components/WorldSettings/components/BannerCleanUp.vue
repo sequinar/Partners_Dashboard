@@ -77,8 +77,7 @@ const copyLink = () => {
 
 <style lang="scss">
 .bannerCleanUp {
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 20px 0;
 
     .el-input.is-disabled .el-input__wrapper,
     .el-input .el-input-group__append {

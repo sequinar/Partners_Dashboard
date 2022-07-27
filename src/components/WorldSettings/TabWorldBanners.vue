@@ -1,16 +1,20 @@
 <template>
   <div class="worldBanners">
-    <el-row class="leaderboard">
-      <h3>Leaderboard <span>Upload a </span>720px by 90px <span>PNG, JPG.</span></h3>
+    <h3>Leaderboard <span>Upload a </span>720px by 90px <span>PNG, JPG.</span></h3>
+    <el-row
+      class="leaderboard"
+      :gutter="30"
+    >
       <el-col
-        v-for="(banner, index) in 3"
+        v-for="(banner, index) in 4"
         :key="'Leaderboard' + index"
+        :span="12"
       >
         <BannerUpload
           width="100%"
           height="72px"
           :image="banners.leaderboard[index] ? banners.leaderboard[index] : null"
-          @image-update="imageUpdate($event, 'Leaderboard', '720x90', index)"
+          @image-update="imageUpdate($event, 'leaderboard', '720x90', index)"
         />
         <BannerCleanUp
           :banner="banners.leaderboard[index]"
@@ -18,79 +22,106 @@
         />
       </el-col>
     </el-row>
+    <h3>Square <span>Upload a </span>512px by 512px <span>PNG, JPG.</span></h3>
     <el-row
       :gutter="30"
-      class="medium"
+      class="square"
     >
-      <el-col :span="24">
-        <h3>Medium Rectangle <span>Upload a </span>300px by 250px <span>PNG, JPG.</span></h3>
-      </el-col>
       <el-col
-        v-for="(banner, index) in 2"
-        :key="'Medium_Rectangle' + index"
-        :span="12"
+        v-for="(banner, index) in 4"
+        :key="'Square' + index"
+        :span="6"
       >
         <BannerUpload
           width="100%"
-          height="230px"
-          :image="banners.medium[index] ? banners.medium[index] : null"
-          @image-update="imageUpdate($event, 'Medium Rectangle', '300x250', index)"
+          height="250px"
+          :image="banners.square[index] ? banners.square[index] : null"
+          @image-update="imageUpdate($event, 'square', '512x512', index)"
         />
         <BannerCleanUp
-          :banner="banners.medium[index]"
+          :banner="banners.square[index]"
           :columns="[24, 24]"
           @delete="deleteBanner"
         />
       </el-col>
     </el-row>
+    <h3>TV Screens <span>Upload a </span>1920px by 1080px <span>PNG, JPG.</span></h3>
     <el-row
-      :gutter="20"
+      :gutter="30"
+      class="square"
+    >
+      <el-col
+        v-for="(banner, index) in 4"
+        :key="'TV_Screens' + index"
+        :span="12"
+      >
+        <BannerUpload
+          width="100%"
+          height="300px"
+          :image="banners.tv_screens[index] ? banners.tv_screens[index] : null"
+          @image-update="imageUpdate($event, 'tv_screens', '1920x1080', index)"
+        />
+        <BannerCleanUp
+          :banner="banners.tv_screens[index]"
+          :columns="[24, 24]"
+          @delete="deleteBanner"
+        />
+      </el-col>
+    </el-row>
+    <h3>Rectangle <span>Upload a </span>300px by 250px <span>PNG, JPG.</span></h3>
+    <el-row
+      :gutter="30"
+      class="square"
+    >
+      <el-col
+        v-for="(banner, index) in 4"
+        :key="'Rectangle' + index"
+        :span="6"
+      >
+        <BannerUpload
+          width="100%"
+          height="200px"
+          :image="banners.rectangle[index] ? banners.rectangle[index] : null"
+          @image-update="imageUpdate($event, 'rectangle', '300x250', index)"
+        />
+        <BannerCleanUp
+          :banner="banners.rectangle[index]"
+          :columns="[24, 24]"
+          @delete="deleteBanner"
+        />
+      </el-col>
+    </el-row>
+    <h3>Skyscrapper <span>Upload a</span> 160px by 600px <span>PNG, JPG.</span></h3>
+    <el-row
+      :gutter="72"
       class="skyscrapper"
     >
-      <el-col :span="24">
-        <h3>Skyscrapper <span>Upload a</span> 160px by 600px <span>PNG, JPG.</span></h3>
-      </el-col>
       <template
-        v-for="(banner, index) in 3"
+        v-for="(banner, index) in 4"
         :key="'Skyscrapper' + index"
       >
-        <el-col :span="1">
-          <span class="counter">{{ banner }}.</span>
-        </el-col>
-        <el-col :span="7">
+        <el-col :span="6">
           <BannerUpload
-            width="100%"
+            width="160px"
             height="600px"
             :image="banners.skyscrapper[index] ? banners.skyscrapper[index] : null"
-            @image-update="imageUpdate($event, 'Skyscrapper', '160x600', index)"
+            @image-update="imageUpdate($event, 'skyscrapper', '160x600', index)"
           />
-        </el-col>
-      </template>
-    </el-row>
-    <el-row class="skyscrapper__cleanUp">
-      <template
-        v-for="(banner, index) in 3"
-        :key="'el-col'+ banner"
-      >
-        <el-col
-          :span="1"
-          class="d-flex align-center"
-        >
-          <span class="counter">{{ banner }}.</span>
-        </el-col>
-        <el-col :span="23">
           <BannerCleanUp
             :banner="banners.skyscrapper[index]"
-            :columns="[17, 7]"
+            :columns="[24, 24]"
             @delete="deleteBanner"
           />
         </el-col>
       </template>
     </el-row>
     <el-row>
-      <el-col :span="24">
+      <el-col
+        :span="24"
+        class="d-flex direction-column align-center justify-center"
+      >
         <el-button
-          class="previewWorld full-width"
+          class="previewWorld"
           type="primary"
           size="large"
         >
@@ -121,14 +152,16 @@ const props = defineProps({
 
 const banners = ref({
     'leaderboard': {},
-    'medium': {},
+    'square': {},
+    'tv_screens': {},
+    'rectangle': {},
     'skyscrapper': {}
 })
 
 const setBanners = () => {
     if (!props.world.banner_urls) return;
     props.world.banner_urls.forEach(banner => {
-        banners.value[banner.placement.split(' ')[0].toLowerCase()][banner.position] = banner;
+        banners.value[banner.placement][banner.position] = banner;
     })
 }
 
@@ -143,7 +176,7 @@ const imageUpdate = (formData, placement, size, index) => {
 }
 
 const deleteBanner = (banner) => {
-    banners.value[banner.placement.split(' ')[0].toLowerCase()][banner.position] = null;
+    banners.value[banner.placement][banner.position] = null;
 }
 onMounted(() => {
     setBanners();
@@ -156,6 +189,10 @@ watch(() => props.world.banner_urls, () => {
 </script>
 
 <style lang="scss">
+.el-button--primary {
+  margin-top: 10px;
+}
+
 .worldBanners {
     h3 {
         font-size: 14px;
@@ -174,6 +211,8 @@ watch(() => props.world.banner_urls, () => {
 
     .previewWorld {
         margin-top: 50px;
+        margin-bottom: 10px;
+        width: 580px;
     }
 }
 
@@ -186,13 +225,9 @@ watch(() => props.world.banner_urls, () => {
         margin-top: -5px;
         margin-bottom: 10px;
     }
-}
 
-.medium {
-    margin-bottom: 15px;
-
-    .el-button {
-        margin-top: 10px;
+    .el-button--primary {
+      margin-top: 0;
     }
 }
 

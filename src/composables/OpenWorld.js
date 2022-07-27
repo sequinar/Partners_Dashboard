@@ -62,10 +62,15 @@ const getSessionApiCall = (id) => {
       });
   };
   
-  const openWorld = (type, id) => {
+  const openWorld = (type, world) => {
     isWorldLoadingModal.value = true;
     openWorldType.value = type;
-    openWorldUrl = ref(`sequinworld://+world-id:${id}+auth:${store.state.accessToken}`);
+    if(world.template_name === 'Camelot'){
+      openWorldUrl = ref(`sequincamelot://+world-id:${world.public_id}+auth:${store.state.accessToken}`);
+    }
+    else {
+      openWorldUrl = ref(`sequinworld://+world-id:${world.public_id}+auth:${store.state.accessToken}`);
+    }
     startNewSessionApiCall();
   };
 

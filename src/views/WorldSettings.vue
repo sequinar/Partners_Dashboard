@@ -77,7 +77,7 @@ onMounted(async () => {
     color: #1c1c1c;
 
     &__container {
-        width: 600px;
+        width: 1080px;
 
         h1 {
             font-size: 30px;

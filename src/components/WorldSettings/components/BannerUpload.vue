@@ -99,6 +99,7 @@ const handleExceed = (files) => {
     position: relative;
     color: #c8c8c8;
     border-radius: 5px;
+    margin: 0 auto;
 
     &>img {
         width: 100%;

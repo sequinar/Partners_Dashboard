@@ -48,7 +48,7 @@
             </div>
             <div>
               <p class="ma-0">
-                {{ scope.row.name }}
+                {{ scope.row.name || scope.row.userName }}
               </p>
               <small>{{ scope.row.email }}</small>
             </div>
