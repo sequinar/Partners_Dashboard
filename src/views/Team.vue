@@ -34,7 +34,7 @@
   <el-row class="teamsContainer">
     <el-table
       v-loading="loading"
-      :data="members?.data"
+      :data="sortedMembers"
       style="width: 100%"
     >
       <el-table-column
@@ -130,6 +130,8 @@ let page = ref(1);
 
 const userID = computed(() => store.state.user.sub.split('|')[1]);
 const members = computed(() => store.state.team.members);
+// eslint-disable-next-line vue/no-side-effects-in-computed-properties
+const sortedMembers = computed(() => members.value?.data.sort((a,b)=>b.teamRole.localeCompare(a.teamRole)))
 
 const removeMember = async (id) => {
   loading.value = true;
