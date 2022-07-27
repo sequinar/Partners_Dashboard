@@ -2,7 +2,7 @@
   <el-card
     class="worldItem"
     :body-style="{ padding: '0px' }"
-    @click="openWorld('view', props.world.public_id)"
+    @click="openWorld('view', props.world)"
   >
     <img
       :src="props.world.thumbnail_link"
