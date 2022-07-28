@@ -46,11 +46,11 @@
   />
 </template>
 <script setup>
-import { ref, defineAsyncComponent } from 'vue';
-import { useRouter } from 'vue-router';
-import { useOpenWorld } from "@/composables/OpenWorld";
-import { useStore } from 'vuex';
-import { ElMessage } from 'element-plus';
+import { defineAsyncComponent } from 'vue'
+import { useRouter } from 'vue-router'
+import { useOpenWorld } from '@/composables/OpenWorld'
+import { useStore } from 'vuex'
+import { ElMessage } from 'element-plus'
 
 const WorldLoadingModal = defineAsyncComponent(() =>
   import('../components/modals/WorldLoadingModal.vue')
@@ -60,20 +60,20 @@ const Dropdown = defineAsyncComponent(() =>
   import('./Dropdown.vue')
 )
 
-const store = useStore();
-const router = useRouter();
-const { openWorld, isWorldLoadingModal } = useOpenWorld(store);
+const store = useStore()
+const router = useRouter()
+const { openWorld, isWorldLoadingModal } = useOpenWorld(store)
 const props = defineProps({
   world: {
     type: Object,
     default: () => { }
   }
-});
-const isOnline = ref(true);
+})
+// const isOnline = ref(true)
 
 const copyLink = (id) => {
-    navigator.clipboard.writeText(`${window.document.location.href}settings/${id}`);
-    ElMessage.success("Copied");
+  navigator.clipboard.writeText(`${window.document.location.href}settings/${id}`)
+  ElMessage.success('Copied')
 }
 </script>
 

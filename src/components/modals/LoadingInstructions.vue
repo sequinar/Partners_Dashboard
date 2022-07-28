@@ -130,18 +130,18 @@
 </template>
 
 <script setup>
-const emits = defineEmits(["close", "openWorld"]);
-const isWindows = (window.navigator.userAgent.indexOf("Windows") !== -1);
+const emits = defineEmits(['close', 'openWorld'])
+const isWindows = (window.navigator.userAgent.indexOf('Windows') !== -1)
 const props = defineProps({
-    showInstaractions: {
-        type: Boolean,
-        default: false
-    },
-    world: {
-        type: Object,
-        required: true
-    }
-});
+  showInstaractions: {
+    type: Boolean,
+    default: false
+  },
+  world: {
+    type: Object,
+    required: true
+  }
+})
 </script>
 
 <style lang="scss" scoped>

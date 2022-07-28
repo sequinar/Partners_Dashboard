@@ -34,36 +34,36 @@
 </template>
 
 <script setup>
-import { ref, computed, defineAsyncComponent, onMounted, watch } from 'vue';
-import { useStore } from 'vuex';
+import { ref, computed, defineAsyncComponent, onMounted, watch } from 'vue'
+import { useStore } from 'vuex'
 
 const World = defineAsyncComponent(() =>
   import('../components/World.vue')
 )
 
-const store = useStore();
-const worlds = computed(() => store.state.worlds.worlds);
-const loading = ref(true);
-const limit = ref(8);
-const page = ref(1);
+const store = useStore()
+const worlds = computed(() => store.state.worlds.worlds)
+const loading = ref(true)
+const limit = ref(8)
+const page = ref(1)
 
 onMounted(async () => {
   await store.dispatch('worlds/getWorlds', {
     limit: limit.value,
     page: page.value,
     filter: ''
-  });
-  loading.value = false;
+  })
+  loading.value = false
 })
 
 watch(page, async (newPage) => {
-    loading.value = true;
-    await store.dispatch('worlds/getWorlds', {
-      limit: limit.value,
-      page: newPage,
-      filter: ''
-    });
-    loading.value = false;
+  loading.value = true
+  await store.dispatch('worlds/getWorlds', {
+    limit: limit.value,
+    page: newPage,
+    filter: ''
+  })
+  loading.value = false
 })
 </script>
 

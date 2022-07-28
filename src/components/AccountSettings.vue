@@ -24,7 +24,7 @@
       <el-form-item
         label="Name"
         prop="name"
-      > 
+      >
         <el-input
           v-model="user.name"
           size="large"
@@ -122,85 +122,85 @@
   </div>
 </template>
 <script setup>
-import { reactive, ref } from 'vue';
-import UserAvatar from './UserAvatar.vue';
-import { useStore } from 'vuex';
+import { reactive, ref } from 'vue'
+import UserAvatar from './UserAvatar.vue'
+import { useStore } from 'vuex'
 
-const store = useStore();
-const emit = defineEmits(['close']);
-const user = ref({...store.state.user});
-const nameForm = ref();
-const passForm = ref();
+const store = useStore()
+const emit = defineEmits(['close'])
+const user = ref({ ...store.state.user })
+const nameForm = ref()
+const passForm = ref()
 const passwordUpdate = reactive({
-    currentPass: '',
-    pass: '',
-    checkPass: '',
+  currentPass: '',
+  pass: '',
+  checkPass: ''
 })
 
 const validatePass = (rule, value, callback) => {
-    if (value === '') {
-        callback(new Error('Please input the password'))
-    } else {
-        if (passwordUpdate.pass !== '') {
-            if (!passForm.value) return
-            passForm.value.validateField('checkPass', () => null)
-        }
-        callback()
+  if (value === '') {
+    callback(new Error('Please input the password'))
+  } else {
+    if (passwordUpdate.pass !== '') {
+      if (!passForm.value) return
+      passForm.value.validateField('checkPass', () => null)
     }
+    callback()
+  }
 }
 const validatePass2 = (rule, value, callback) => {
-    if (value === '') {
-        callback(new Error('Please input the password again'))
-    } else if (value !== passwordUpdate.pass) {
-        callback(new Error("Two inputs don't match!"))
-    } else {
-        callback()
-    }
+  if (value === '') {
+    callback(new Error('Please input the password again'))
+  } else if (value !== passwordUpdate.pass) {
+    callback(new Error("Two inputs don't match!"))
+  } else {
+    callback()
+  }
 }
 
-//Need to copy same rules because of Element UI bug: prop and v-model should be the same
+// Need to copy same rules because of Element UI bug: prop and v-model should be the same
 const rules = reactive({
-    name: [
-        { required: true, message: 'Please input your name', trigger: 'blur' },
-        { min: 3, max: 25, message: 'Length should be 3 to 25', trigger: 'change' },
-    ],
-    nickname: [
-        { required: true, message: 'Please input your name', trigger: 'blur' },
-        { min: 3, max: 25, message: 'Length should be 3 to 25', trigger: 'change' },
-    ],
-    email: [
-        { required: true, message: 'Email is required', trigger: 'blur' },
-        { type: 'email', message: 'Please enter a valid email address', trigger: 'blur' },
-    ],
+  name: [
+    { required: true, message: 'Please input your name', trigger: 'blur' },
+    { min: 3, max: 25, message: 'Length should be 3 to 25', trigger: 'change' }
+  ],
+  nickname: [
+    { required: true, message: 'Please input your name', trigger: 'blur' },
+    { min: 3, max: 25, message: 'Length should be 3 to 25', trigger: 'change' }
+  ],
+  email: [
+    { required: true, message: 'Email is required', trigger: 'blur' },
+    { type: 'email', message: 'Please enter a valid email address', trigger: 'blur' }
+  ]
 })
 
 const rulesPass = reactive({
-    pass: [{ validator: validatePass, trigger: 'blur' }],
-    checkPass: [{ validator: validatePass2, trigger: 'blur' }],
+  pass: [{ validator: validatePass, trigger: 'blur' }],
+  checkPass: [{ validator: validatePass2, trigger: 'blur' }]
 })
 
 const submitNameForm = async () => {
-    await nameForm.value.validate((valid, fields) => {
-        if (valid) {
-            store.dispatch('updateUser', {
-                userName: user.value.nickname,
-                name: user.value.name
-            })
-        } else {
-            console.log('error submit!', fields)
-        }
-    })
+  await nameForm.value.validate((valid, fields) => {
+    if (valid) {
+      store.dispatch('updateUser', {
+        userName: user.value.nickname,
+        name: user.value.name
+      })
+    } else {
+      console.log('error submit!', fields)
+    }
+  })
 }
 const submitPassForm = async () => {
-    await passForm.value.validate((valid, fields) => {
-        if (valid) {
-            store.dispatch('updateUser', {
-                password: passwordUpdate.value.pass
-            })
-        } else {
-            console.log('error submit!', fields)
-        }
-    })
+  await passForm.value.validate((valid, fields) => {
+    if (valid) {
+      store.dispatch('updateUser', {
+        password: passwordUpdate.value.pass
+      })
+    } else {
+      console.log('error submit!', fields)
+    }
+  })
 }
 </script>
 
