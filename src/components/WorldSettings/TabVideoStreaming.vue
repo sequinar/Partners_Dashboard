@@ -10,6 +10,25 @@
           disabled
         />
         <h3 class="mt-30">
+          Stream URL
+        </h3>
+        <el-row :gutter="15">
+          <el-col :span="19">
+            <el-input v-model="streamUrl" readonly/>
+          </el-col>
+          <el-col :span="5">
+            <el-button
+              class="full-width"
+              type="primary"
+              size="large"
+              :disabled="!streamUrl"
+              @click="copyText(streamUrl)"
+            >
+              Copy
+            </el-button>
+          </el-col>
+        </el-row>
+        <h3 class="mt-30">
           Stream key (paste in encoder)
         </h3>
         <el-row :gutter="15">
@@ -28,25 +47,6 @@
               size="large"
               :disabled="!streamKey"
               @click="copyText(streamKey)"
-            >
-              Copy
-            </el-button>
-          </el-col>
-        </el-row>
-        <h3 class="mt-30">
-          Stream URL
-        </h3>
-        <el-row :gutter="15">
-          <el-col :span="19">
-            <el-input v-model="streamUrl" readonly/>
-          </el-col>
-          <el-col :span="5">
-            <el-button
-              class="full-width"
-              type="primary"
-              size="large"
-              :disabled="!streamUrl"
-              @click="copyText(streamUrl)"
             >
               Copy
             </el-button>
@@ -121,7 +121,7 @@ const props = defineProps({
 const route = useRoute()
 const store = useStore()
 const streamTypeDefault = ref('')
-const streamKey = ref(props.world?.stream_key)
+const streamKey = ref(props.world?.livestream)
 const streamUrl = ref(props.world?.streaming_url)
 const streamStatus = ref(props.world?.streaming_status)
 // const backUpUrl = ref('This is a long streaming link?backup=1');
