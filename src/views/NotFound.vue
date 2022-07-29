@@ -33,11 +33,11 @@
 </template>
 
 <script setup>
-import router from '../router';
+import router from '../router'
 
 const goHome = () => {
-  router.push('/');
-};
+  router.push('/')
+}
 
 </script>
 

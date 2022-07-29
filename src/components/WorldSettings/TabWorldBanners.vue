@@ -135,65 +135,64 @@
 </template>
 
 <script setup>
-import BannerUpload from './components/BannerUpload.vue';
-import BannerCleanUp from './components/BannerCleanUp.vue';
-import { useStore } from 'vuex';
-import { useRoute } from 'vue-router';
-import { ref, onMounted, watch } from 'vue';
+import BannerUpload from './components/BannerUpload.vue'
+import BannerCleanUp from './components/BannerCleanUp.vue'
+import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
+import { ref, onMounted, watch } from 'vue'
 
-const route = useRoute();
-const store = useStore();
+const route = useRoute()
+const store = useStore()
 const props = defineProps({
   world: {
     type: Object,
     default: () => {}
   }
-});
+})
 
 const banners = ref({
-    'leaderboard': {},
-    'square': {},
-    'tv_screens': {},
-    'rectangle': {},
-    'skyscrapper': {}
+  leaderboard: {},
+  square: {},
+  tv_screens: {},
+  rectangle: {},
+  skyscrapper: {}
 })
 
 const setBanners = () => {
-    if (!props.world.banner_urls) return;
-    props.world.banner_urls.forEach(banner => {
-        banners.value[banner.placement][banner.position] = banner;
-    })
+  if (!props.world.banner_urls) return
+  props.world.banner_urls.forEach(banner => {
+    banners.value[banner.placement][banner.position] = banner
+  })
 }
 
 const imageUpdate = (formData, placement, size, index) => {
-    formData.append("placement", placement);
-    formData.append("size", size);
-    formData.append("position", index);
-    store.dispatch('worlds/updateBanners', {
-        id: route.params.id,
-        formData: formData
-    })
+  formData.append('placement', placement)
+  formData.append('size', size)
+  formData.append('position', index)
+  store.dispatch('worlds/updateBanners', {
+    id: route.params.id,
+    formData
+  })
 }
 
 const deleteBanner = (banner) => {
-    banners.value[banner.placement][banner.position] = null;
+  banners.value[banner.placement][banner.position] = null
 }
 onMounted(() => {
-    setBanners();
+  setBanners()
 })
 
 watch(() => props.world.banner_urls, () => {
-    setBanners();
+  setBanners()
 })
 
 </script>
 
 <style lang="scss">
-.el-button--primary {
-  margin-top: 10px;
-}
-
 .worldBanners {
+  .el-button--primary {
+    margin-top: 10px;
+  }
     h3 {
         font-size: 14px;
         font-family: 'Montserrat-Bold';

@@ -41,54 +41,52 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import { genFileId } from 'element-plus';
-import { ElMessage } from 'element-plus';
+import { ref, computed } from 'vue'
+import { genFileId, ElMessage } from 'element-plus'
 
-const uploadRef = ref(null);
+const uploadRef = ref(null)
 const props = defineProps({
-    width: {
-        type: String,
-        required: true,
-    },
-    height: {
-        type: String,
-        required: true
-    },
-    image: {
-        type: Object,
-        default: () => {}
-    }
+  width: {
+    type: String,
+    required: true
+  },
+  height: {
+    type: String,
+    required: true
+  },
+  image: {
+    type: Object,
+    default: () => {}
+  }
 })
-let img = ref(null);
-let bannerRef = ref(null);
+const img = ref(null)
+const bannerRef = ref(null)
 
-const emits = defineEmits(['imageUpdate']);
+const emits = defineEmits(['imageUpdate'])
 
-const bannerWidth = computed(() => bannerRef.value ? bannerRef.value.offsetWidth : null);
+const bannerWidth = computed(() => bannerRef.value ? bannerRef.value.offsetWidth : null)
 
 const uploadSuccess = (res) => {
-    if (res.raw.type == 'image/jpeg' || res.raw.type == 'image/png') {
-        img.value = URL.createObjectURL(res.raw);
-        let fd = new FormData();
-        fd.append("bannerImage", res.raw);
-        if (props.image?.banner_id) fd.append("bannerId", props.image.banner_id);
-        emits('imageUpdate', fd);
-    } else {
-        ElMessage.error('Image must be JPG or PNG format!')
-    }
-
-};
+  if (res.raw.type === 'image/jpeg' || res.raw.type === 'image/png') {
+    img.value = URL.createObjectURL(res.raw)
+    const fd = new FormData()
+    fd.append('bannerImage', res.raw)
+    if (props.image?.banner_id) fd.append('bannerId', props.image.banner_id)
+    emits('imageUpdate', fd)
+  } else {
+    ElMessage.error('Image must be JPG or PNG format!')
+  }
+}
 
 const uploadImage = () => {
-    bannerRef.value.querySelector('.el-upload__text').click();
+  bannerRef.value.querySelector('.el-upload__text').click()
 }
 
 const handleExceed = (files) => {
-    uploadRef.value.clearFiles()
-    const file = files[0];
-    file.uid = genFileId()
-    uploadRef.value.handleStart(file);
+  uploadRef.value.clearFiles()
+  const file = files[0]
+  file.uid = genFileId()
+  uploadRef.value.handleStart(file)
 }
 
 </script>

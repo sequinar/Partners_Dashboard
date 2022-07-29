@@ -5,6 +5,7 @@
         v-model.trim="search"
         size="large"
         placeholder="Search Worlds"
+        autocomplete="off"
       >
         <template #prefix>
           <img
@@ -65,31 +66,31 @@
 </template>
 
 <script setup>
-import { ArrowDown } from '@element-plus/icons-vue';
-import { ref, computed, defineAsyncComponent, watch, inject } from "vue";
-import { useStore } from 'vuex';
-import useDebounce from '../composables/debounce';
+import { ArrowDown } from '@element-plus/icons-vue'
+import { ref, computed, defineAsyncComponent, watch, inject } from 'vue'
+import { useStore } from 'vuex'
+import useDebounce from '../composables/debounce'
 
 const AccountSettings = defineAsyncComponent(() =>
   import('./AccountSettings.vue')
 )
 
-const store = useStore();
-const user = computed(() => store.state.user);
-const search = ref('');
-const drawer = ref(false);
-const auth = inject('Auth');
+const store = useStore()
+const user = computed(() => store.state.user)
+const search = ref('')
+const drawer = ref(false)
+const auth = inject('Auth')
 
 const logOut = () => {
-    auth.logout();
+  auth.logout()
 }
 
 watch(search, useDebounce((newVal) => {
   store.dispatch('worlds/getWorlds', {
-      limit: 10,
-      page: 1,
-      filter: newVal
-    });
+    limit: 10,
+    page: 1,
+    filter: newVal
+  })
 }, 500))
 </script>
 

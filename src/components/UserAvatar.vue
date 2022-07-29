@@ -24,20 +24,20 @@
 <script setup>
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { useStore } from 'vuex';
+import { useStore } from 'vuex'
 
-const store = useStore();
+const store = useStore()
 
 const props = defineProps({
   userAvatar: {
     type: String,
     default: ''
   }
-});
-const imageUrl = ref(props.userAvatar);
+})
+const imageUrl = ref(props.userAvatar)
 
 const handleAvatarSuccess = (res) => {
-  if (res.raw.type == 'image/jpeg' || res.raw.type == 'image/png') {
+  if (res.raw.type === 'image/jpeg' || res.raw.type === 'image/png') {
     imageUrl.value = URL.createObjectURL(res.raw)
     toDataURL(imageUrl.value)
       .then(dataUrl => {

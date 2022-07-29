@@ -27,10 +27,10 @@
 </template>
 
 <script setup>
-import LoadingInstructions from './LoadingInstructions.vue';
-import { ref } from 'vue';
+import LoadingInstructions from './LoadingInstructions.vue'
+import { ref } from 'vue'
 
-//const props = defineProps(['showModal', 'world'])
+// const props = defineProps(['showModal', 'world'])
 const props = defineProps({
   showModal: {
     type: Boolean
@@ -40,12 +40,12 @@ const props = defineProps({
     default: () => {}
   }
 })
-const emits = defineEmits(['close']);
-let showInstaractions = ref(false);
+const emits = defineEmits(['close'])
+const showInstaractions = ref(false)
 
 const downloadWorld = () => {
-    showInstaractions.value = true;
-    emits('close');
+  showInstaractions.value = true
+  emits('close')
 }
 </script>
 

@@ -39,9 +39,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, defineAsyncComponent } from 'vue';
-import { useRoute } from 'vue-router';
-import { useStore } from 'vuex';
+import { ref, onMounted, computed, defineAsyncComponent } from 'vue'
+import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
 
 const VideoStreaming = defineAsyncComponent(() =>
   import('../components/WorldSettings/TabVideoStreaming.vue')
@@ -50,23 +50,23 @@ const WorldBanners = defineAsyncComponent(() =>
   import('../components/WorldSettings/TabWorldBanners.vue')
 )
 
-const store = useStore();
-const route = useRoute();
-const activeName = ref('first');
+const store = useStore()
+const route = useRoute()
+const activeName = ref('first')
 const world = computed(() => store.state.worlds.currentWorld)
 
-let loading = ref(true);
+const loading = ref(true)
 
 const switchChat = (status) => {
-    store.dispatch('worlds/updateChatStatus', {
-        id: route.params.id,
-        status: status
-    })
+  store.dispatch('worlds/updateChatStatus', {
+    id: route.params.id,
+    status
+  })
 }
 
 onMounted(async () => {
-    await store.dispatch('worlds/getCurrentWorld', route.params.id);
-    loading.value = false;
+  await store.dispatch('worlds/getCurrentWorld', route.params.id)
+  loading.value = false
 })
 </script>
 

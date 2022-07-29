@@ -67,32 +67,32 @@ import { ElMessage } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
 import useUtils from '@/composables/utils.js'
 
-const uploadVideoRef = ref(null);
-const fileList = ref([]);
-const { getTimeSince } = useUtils();
-const emits = defineEmits(['onPreview']);
+const uploadVideoRef = ref(null)
+const fileList = ref([])
+const { getTimeSince } = useUtils()
+const emits = defineEmits(['onPreview'])
 
 const uploadVideo = () => {
-    document.querySelector('.videoUpload__text').click();
+  document.querySelector('.videoUpload__text').click()
 }
 
 const onProgress = (event, file) => {
-    console.log(event, file);
+  console.log(event, file)
 }
 
 const onChange = (file) => {
-    file.changed = Date.now();
+  file.changed = Date.now()
 }
 
 const onPreview = (file) => {
-    emits('onPreview', file);
+  emits('onPreview', file)
 }
 
 const handleExceed = (files, uploadFiles) => {
-    ElMessage.warning(
+  ElMessage.warning(
         `The limit is 5, you selected ${files.length} files this time, add up to ${files.length + uploadFiles.length
         } totally`
-    )
+  )
 }
 </script>
 
@@ -111,7 +111,6 @@ const handleExceed = (files, uploadFiles) => {
             font-family: 'Montserrat-Bold';
         }
     }
-
 
     &__list {
         padding: 0;

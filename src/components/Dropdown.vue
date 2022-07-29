@@ -22,12 +22,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref } from 'vue'
 
-let showDropdown = ref(false);
+const showDropdown = ref(false)
 
 window.addEventListener('click', () => {
-    if (showDropdown.value) showDropdown.value = false;
+  if (showDropdown.value) showDropdown.value = false
 })
 </script>
 
