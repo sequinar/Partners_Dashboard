@@ -128,7 +128,7 @@ const search = ref('')
 const limit = ref(10)
 const page = ref(1)
 
-const userID = computed(() => store.state.user.sub.split('|')[1])
+const userID = computed(() => store.state.user.sub ? store.state.user.sub.split('|')[1] : store.state.user.user_id.split('|')[1])
 const members = computed(() => store.state.team.members)
 // eslint-disable-next-line vue/no-side-effects-in-computed-properties
 const sortedMembers = computed(() => members.value?.data.sort((a, b) => b.teamRole.localeCompare(a.teamRole)))
