@@ -51,7 +51,7 @@ const store = {
       dispatch('getCurrentWorld', data.id)
     },
     async updateStreamStatus ({ dispatch }, data) {
-      await axios.post(`world/${data.id}/stream-status/${data.status}`)
+      await axios.post(`world/${data.id}/update-stream-status/${data.status}`)
       dispatch('getCurrentWorld', data.id)
     },
     async updateBanners ({ dispatch, commit }, data) {

@@ -2,7 +2,6 @@ import { createStore } from 'vuex'
 import Team from './modules/team'
 import Worlds from './modules/worlds'
 import axios from '../axios/index'
-import Auth0 from '@/auth0/index'
 
 const store = createStore({
   state () {
@@ -30,11 +29,9 @@ const store = createStore({
     }
   },
   actions: {
-    async getUser ({ commit }) {
-      const token = await Auth0.getTokenSilently({ ignoreCache: true })
-      commit('updateAccessToken', token)
-      const user = await Auth0.getUser()
-      commit('setUser', user)
+    async getUser ({ commit, getters }) {
+      const user = await axios.get(`/user-profile/${getters.getAuth0UserId}`)
+      commit('setUser', user.data.data)
     },
     async updateUser ({ commit, dispatch }, data) {
       try {
@@ -49,6 +46,11 @@ const store = createStore({
         console.error(err)
         commit('setMessageError', err.response.data.message, { root: true })
       }
+    }
+  },
+  getters: {
+    getAuth0UserId: (state) => {
+      return state.user.sub || state.user.user_id
     }
   },
   modules: {

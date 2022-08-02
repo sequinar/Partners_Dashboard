@@ -35,6 +35,7 @@ onMounted(async () => {
   await auth.getTokenSilently().then((data) => {
     store.commit('updateAccessToken', data)
   })
+  store.dispatch('getUser')
   const team = await store.dispatch('team/getTeam')
   if (!team.data[0]) {
     await store.dispatch('team/createTeam')
