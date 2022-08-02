@@ -36,42 +36,42 @@
 </template>
 
 <script setup>
-import { DocumentCopy } from '@element-plus/icons-vue';
+import { DocumentCopy } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
-import { useStore } from 'vuex';
-import { useRoute } from 'vue-router';
-import { computed } from 'vue';
+import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
+import { computed } from 'vue'
 
-const route = useRoute();
-const store = useStore();
-const emits = defineEmits(['delete']);
+const route = useRoute()
+const store = useStore()
+const emits = defineEmits(['delete'])
 
-const url = computed(() => props.banner ? props.banner.banner_url : '');
+const url = computed(() => props.banner ? props.banner.banner_url : '')
 
 const props = defineProps({
-    banner: {
-        type: Object,
-        default: () => {
-          ''
-        }
-    },
-    columns: {
-        type: Array,
-        default: () => [18, 6]
+  banner: {
+    type: Object,
+    default: () => {
+      ''
     }
-});
+  },
+  columns: {
+    type: Array,
+    default: () => [18, 6]
+  }
+})
 
 const clearBanner = () => {
-    emits('delete', props.banner);
-    store.dispatch("worlds/deleteBanner", {
-        id: route.params.id,
-        bannerId: props.banner.banner_id
-    })
+  emits('delete', props.banner)
+  store.dispatch('worlds/deleteBanner', {
+    id: route.params.id,
+    bannerId: props.banner.banner_id
+  })
 }
 
 const copyLink = () => {
-    navigator.clipboard.writeText(props.banner.banner_url);
-    ElMessage.success("Copied")
+  navigator.clipboard.writeText(props.banner.banner_url)
+  ElMessage.success('Copied')
 }
 </script>
 

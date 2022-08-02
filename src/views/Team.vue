@@ -109,10 +109,10 @@
 </template>
 
 <script setup>
-import useUtils from '@/composables/utils';
-import useDebounce from '../composables/debounce';
-import { ref, computed, onMounted, watch, defineAsyncComponent } from 'vue';
-import { useStore } from 'vuex';
+import useUtils from '@/composables/utils'
+import useDebounce from '../composables/debounce'
+import { ref, computed, onMounted, watch, defineAsyncComponent } from 'vue'
+import { useStore } from 'vuex'
 
 const PermissionModal = defineAsyncComponent(() =>
   import('../components/modals/PermissionModal.vue')
@@ -121,65 +121,65 @@ const AddNewMember = defineAsyncComponent(() =>
   import('../components/modals/AddNewMember.vue')
 )
 
-const { getTimeSince } = useUtils();
+const { getTimeSince } = useUtils()
 const loading = ref(true)
-const store = useStore();
-const search = ref('');
-let limit = ref(10);
-let page = ref(1);
+const store = useStore()
+const search = ref('')
+const limit = ref(10)
+const page = ref(1)
 
-const userID = computed(() => store.state.user.sub.split('|')[1]);
-const members = computed(() => store.state.team.members);
+const userID = computed(() => store.state.user.sub.split('|')[1])
+const members = computed(() => store.state.team.members)
 // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-const sortedMembers = computed(() => members.value?.data.sort((a,b)=>b.teamRole.localeCompare(a.teamRole)))
+const sortedMembers = computed(() => members.value?.data.sort((a, b) => b.teamRole.localeCompare(a.teamRole)))
 
 const removeMember = async (id) => {
-  loading.value = true;
-    await store.dispatch('team/removeMember', id);
-    await store.dispatch('team/getMembers', {
-        limit: limit.value,
-        page: page.value,
-        filter: ''
-    });
-    loading.value = false;
+  loading.value = true
+  await store.dispatch('team/removeMember', id)
+  await store.dispatch('team/getMembers', {
+    limit: limit.value,
+    page: page.value,
+    filter: ''
+  })
+  loading.value = false
 }
 
 const showRemoveButton = (user) => {
-  return userID.value !== user.uniqueId && user.teamRole !== 'Super Admin';
+  return userID.value !== user.uniqueId && user.teamRole !== 'Super Admin'
 }
 
 const resendInvitation = async (member) => {
-    await store.dispatch('team/inviteMember', {
-        ...member,
-    })
+  await store.dispatch('team/inviteMember', {
+    ...member
+  })
 }
 
 onMounted(async () => {
-    await store.dispatch('team/getMembers', {
-        limit: limit.value,
-        page: page.value,
-        filter: ''
-    });
-    loading.value = false;
+  await store.dispatch('team/getMembers', {
+    limit: limit.value,
+    page: page.value,
+    filter: ''
+  })
+  loading.value = false
 })
 
 watch(page, async (newPage) => {
-    loading.value = true;
-    await store.dispatch('team/getMembers', {
-        limit: limit.value,
-        page: newPage,
-        filter: search.value
-    });
-    loading.value = false;
+  loading.value = true
+  await store.dispatch('team/getMembers', {
+    limit: limit.value,
+    page: newPage,
+    filter: search.value
+  })
+  loading.value = false
 })
 watch(search, useDebounce(async (newVal) => {
-  loading.value = true;
-    await store.dispatch('team/getMembers', {
-        limit: limit.value,
-        page: page.value,
-        filter: newVal
-    });
-    loading.value = false;
+  loading.value = true
+  await store.dispatch('team/getMembers', {
+    limit: limit.value,
+    page: page.value,
+    filter: newVal
+  })
+  loading.value = false
 }, 500))
 </script>
 

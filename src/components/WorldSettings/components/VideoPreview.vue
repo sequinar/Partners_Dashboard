@@ -44,20 +44,20 @@
 <script setup>
 import { DocumentCopy } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
-import {ref} from 'vue'
+import { ref } from 'vue'
 
 const props = defineProps({
-    video: {
-        type: Object,
-        default: () => {}
-    }
+  video: {
+    type: Object,
+    default: () => {}
+  }
 })
 
-const videoLink = ref(props.video.name);
+const videoLink = ref(props.video.name)
 
 const copyLink = function () {
-    navigator.clipboard.writeText(props.video.url);
-    ElMessage.success("Copied")
+  navigator.clipboard.writeText(props.video.url)
+  ElMessage.success('Copied')
 }
 
 </script>

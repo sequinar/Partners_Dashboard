@@ -81,7 +81,7 @@
 </template>
 
 <script setup>
-import { ref, computed, defineAsyncComponent } from "vue"
+import { ref, computed, defineAsyncComponent } from 'vue'
 import { useRouter } from 'vue-router'
 
 const Onboarding = defineAsyncComponent(() =>
@@ -90,43 +90,43 @@ const Onboarding = defineAsyncComponent(() =>
 
 const router = useRouter()
 
-let isCollapse = ref(true);
-let blockCollapse = ref(false);
-let onboardingSlide = ref(0);
-const isOnboarding = ref(false);
+const isCollapse = ref(true)
+const blockCollapse = ref(false)
+const onboardingSlide = ref(0)
+const isOnboarding = ref(false)
 
 const rectTopInsruction = computed(() => {
-    return document.querySelectorAll('.el-menu-item')[onboardingSlide.value].getBoundingClientRect().top;
+  return document.querySelectorAll('.el-menu-item')[onboardingSlide.value].getBoundingClientRect().top
 })
 
-function openMenu() {
-    if (isOnboarding.value) return;
-    isCollapse.value = false;
+function openMenu () {
+  if (isOnboarding.value) return
+  isCollapse.value = false
 }
 
-function collapseMenu() {
-    if (blockCollapse.value) return;
-    isCollapse.value = true;
+function collapseMenu () {
+  if (blockCollapse.value) return
+  isCollapse.value = true
 }
 
-function toggleCollapse() {
-    blockCollapse.value = !blockCollapse.value;
-    if (!blockCollapse.value) isCollapse.value = true;
+function toggleCollapse () {
+  blockCollapse.value = !blockCollapse.value
+  if (!blockCollapse.value) isCollapse.value = true
 }
 
-function goTo(route) {
-    if (isOnboarding.value) return;
-    router.push(route);
+function goTo (route) {
+  if (isOnboarding.value) return
+  router.push(route)
 }
 
-function slideChange(index) {
-    onboardingSlide.value = index;
+function slideChange (index) {
+  onboardingSlide.value = index
 }
 
-function showIntruction(index) {
-    return {
-        'instruction': isOnboarding.value && onboardingSlide.value === index
-    }
+function showIntruction (index) {
+  return {
+    instruction: isOnboarding.value && onboardingSlide.value === index
+  }
 }
 </script>
 

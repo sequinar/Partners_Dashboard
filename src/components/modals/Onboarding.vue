@@ -48,9 +48,9 @@
 
 <script setup>
 import { Close } from '@element-plus/icons-vue'
-import { computed } from 'vue';
+import { computed } from 'vue'
 
-const emits = defineEmits(['close', 'change']);
+const emits = defineEmits(['close', 'change'])
 const props = defineProps({
   isOpen: {
     type: Boolean
@@ -63,15 +63,15 @@ const props = defineProps({
     default: () => 0
   }
 })
-const leftGap = computed(() => `${props.isCollapsed ? 'left-90' : 'left-310'}`);
+const leftGap = computed(() => `${props.isCollapsed ? 'left-90' : 'left-310'}`)
 
 const onChange = (index) => {
-    emits('change', index);
+  emits('change', index)
 }
 
 const closeOnboarding = () => {
-  emits('close');
-  onChange(0);
+  emits('close')
+  onChange(0)
 }
 
 </script>

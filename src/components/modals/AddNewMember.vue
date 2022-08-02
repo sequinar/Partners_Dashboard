@@ -92,52 +92,51 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref } from 'vue'
 import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
-import { Plus } from '@element-plus/icons-vue';
+import { Plus } from '@element-plus/icons-vue'
 
-const store = useStore();
-const memberForm = ref();
+const store = useStore()
+const memberForm = ref()
 const member = reactive({
-    name: '',
-    last_name: '',
-    email: '',
+  name: '',
+  last_name: '',
+  email: ''
 })
 
-let isOpen = ref(false);
+const isOpen = ref(false)
 
-//Need to copy same rules because of Element UI bug: prop and v-model should be the same
+// Need to copy same rules because of Element UI bug: prop and v-model should be the same
 const rules = reactive({
-    name: [
-        { required: true, message: 'Please input member name', trigger: 'blur' },
-        { min: 3, max: 25, message: 'Length should be 3 to 25', trigger: 'change' },
-    ],
-    last_name: [
-        { required: true, message: 'Please input member last name', trigger: 'blur' },
-        { min: 3, max: 25, message: 'Length should be 3 to 25', trigger: 'change' },
-    ],
-    email: [
-        { required: true, message: 'Email is required', trigger: 'blur' },
-        { type: 'email', message: 'Please enter a valid email address', trigger: 'blur' },
-    ],
+  name: [
+    { required: true, message: 'Please input member name', trigger: 'blur' },
+    { min: 3, max: 25, message: 'Length should be 3 to 25', trigger: 'change' }
+  ],
+  last_name: [
+    { required: true, message: 'Please input member last name', trigger: 'blur' },
+    { min: 3, max: 25, message: 'Length should be 3 to 25', trigger: 'change' }
+  ],
+  email: [
+    { required: true, message: 'Email is required', trigger: 'blur' },
+    { type: 'email', message: 'Please enter a valid email address', trigger: 'blur' }
+  ]
 })
 
 const submitMemberForm = async () => {
-    await memberForm.value.validate(async (valid, fields) => {
-      if(store.getters['team/getMemberByEmail'](member.email)) {
-        ElMessage.error("Member alredy exist");
-      }
-      else if (valid) {
-        isOpen.value = false;
-        await store.dispatch('team/inviteMember', {
-          ...member,
-        })
-        store.dispatch('team/getMembers');
-      } else {
-        console.log('error submit!', fields)
-      }
-    })
+  await memberForm.value.validate(async (valid, fields) => {
+    if (store.getters['team/getMemberByEmail'](member.email)) {
+      ElMessage.error('Member alredy exist')
+    } else if (valid) {
+      isOpen.value = false
+      await store.dispatch('team/inviteMember', {
+        ...member
+      })
+      store.dispatch('team/getMembers')
+    } else {
+      console.log('error submit!', fields)
+    }
+  })
 }
 </script>
 

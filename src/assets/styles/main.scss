@@ -65,23 +65,27 @@ input {
 }
 
 .d-flex {
-    display: flex;
+    display: flex !important;
 }
 
 .direction-column {
-    flex-direction: column;
+    flex-direction: column !important;
 }
 
 .justify-center {
-    justify-content: center;
+    justify-content: center !important;
 }
 
 .justify-between {
-    justify-content: space-between;
+    justify-content: space-between !important;
+}
+
+.justify-start {
+    justify-content: flex-start !important;
 }
 
 .align-center {
-    align-items: center;
+    align-items: center !important;
 }
 
 .full-width {

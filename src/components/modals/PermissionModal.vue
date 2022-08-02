@@ -34,19 +34,19 @@
 import { ref } from 'vue'
 
 const emits = defineEmits(['confirm'])
-let showModal = ref(false);
+const showModal = ref(false)
 
 const onRemove = () => {
-    emits('confirm');
-    showModal.value = false;
+  emits('confirm')
+  showModal.value = false
 }
 
 const onCancel = () => {
-    showModal.value = false;
+  showModal.value = false
 }
 
 const slotClick = () => {
-    showModal.value = true;
+  showModal.value = true
 }
 </script>
 
