@@ -122,8 +122,8 @@ const route = useRoute()
 const store = useStore()
 const streamTypeDefault = ref('')
 const streamKey = ref(props.world?.livestream)
-const streamUrl = ref(props.world?.streaming_url)
-const streamStatus = ref(props.world?.streaming_status)
+const streamUrl = ref(props.world?.streaming_input_url)
+const streamStatus = ref(props.world?.stream_key)
 // const backUpUrl = ref('This is a long streaming link?backup=1');
 // const autoStart = ref(false);
 // const autoStop = ref(false);
