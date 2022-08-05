@@ -30,14 +30,16 @@ const store = {
       return team
     },
     async getMembers ({ commit, state }, params = {}) {
-      const members = await axios.get(`team/${state.team.teamId}/users`, {
-        params: {
-          limit: params.limit || 10,
-          page: params.page || 1,
-          filter: params.filter || ''
-        }
-      })
-      commit('setMembers', members.data.message)
+      if (state.team) {
+        const members = await axios.get(`team/${state.team.teamId}/users`, {
+          params: {
+            limit: params.limit || 10,
+            page: params.page || 1,
+            filter: params.filter || ''
+          }
+        })
+        commit('setMembers', members.data.message)
+      }
     },
     async inviteMember ({ state, commit }, member) {
       try {

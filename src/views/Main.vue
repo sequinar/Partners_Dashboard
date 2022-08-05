@@ -8,7 +8,7 @@
         <Header />
       </el-header>
       <el-main>
-        <router-view v-if="worlds && team" />
+        <router-view />
       </el-main>
     </el-container>
   </el-container>
@@ -23,8 +23,6 @@ import Header from '../components/Header.vue'
 
 const store = useStore()
 const auth = inject('Auth')
-const worlds = computed(() => store.state.worlds.worlds)
-const team = computed(() => store.state.team.team)
 const messageSuccess = computed(() => store.state.messageSuccess)
 const messageError = computed(() => store.state.messageError)
 
@@ -36,10 +34,8 @@ onMounted(async () => {
     store.commit('updateAccessToken', data)
   })
   store.dispatch('getUser')
-  const team = await store.dispatch('team/getTeam')
-  if (!team.data[0]) {
-    await store.dispatch('team/createTeam')
-  }
+  await store.dispatch('team/getTeam')
+  await store.dispatch('worlds/getWorlds')
   loading.value = false
 })
 
