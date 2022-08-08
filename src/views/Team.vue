@@ -65,6 +65,7 @@ import useUtils from '@/composables/utils'
 import useDebounce from '../composables/debounce'
 import { ref, computed, onMounted, watch, defineAsyncComponent } from 'vue'
 import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
 
 const PermissionModal = defineAsyncComponent(() =>
   import('../components/modals/PermissionModal.vue')
@@ -73,6 +74,7 @@ const AddNewMember = defineAsyncComponent(() =>
   import('../components/modals/AddNewMember.vue')
 )
 
+const route = useRoute()
 const { getTimeSince } = useUtils()
 const loading = ref(true)
 const store = useStore()
@@ -89,11 +91,7 @@ const sortedMembers = computed(() => members.value?.data.sort((a, b) => b.teamRo
 const removeMember = async (id) => {
   loading.value = true
   await store.dispatch('team/removeMember', id)
-  await store.dispatch('team/getMembers', {
-    limit: limit.value,
-    page: page.value,
-    filter: ''
-  })
+  await getMembers()
   loading.value = false
 }
 
@@ -107,31 +105,30 @@ const resendInvitation = async (member) => {
   })
 }
 
-onMounted(async () => {
-  await store.dispatch('team/getMembers', {
-    limit: limit.value,
-    page: page.value,
-    filter: ''
+const getMembers = async (newPage, filter) => {
+  return await store.dispatch('team/getMembers', {
+    params: {
+      limit: limit.value,
+      page: newPage || page.value,
+      filter: filter || ''
+    },
+    teamId: route.params.id
   })
+}
+
+onMounted(async () => {
+  await getMembers()
   loading.value = false
 })
 
 watch(page, async (newPage) => {
   loading.value = true
-  await store.dispatch('team/getMembers', {
-    limit: limit.value,
-    page: newPage,
-    filter: search.value
-  })
+  await getMembers(newPage, search.value)
   loading.value = false
 })
 watch(search, useDebounce(async (newVal) => {
   loading.value = true
-  await store.dispatch('team/getMembers', {
-    limit: limit.value,
-    page: page.value,
-    filter: newVal
-  })
+  await getMembers(page.value, newVal)
   loading.value = false
 }, 500))
 </script>

@@ -3,7 +3,7 @@ const store = {
   namespaced: true,
   state () {
     return {
-      worlds: null,
+      worlds: null, // {data: [], meta: {}}
       currentWorld: null,
       worldBanners: []
     }
@@ -31,7 +31,7 @@ const store = {
         dispatch('getWorlds')
         commit('setMessageSuccess', 'World created successfully', { root: true })
       } catch (err) {
-        commit('setMessageError', err.response.data.message, { root: true })
+        commit('setMessageError', err.response.data.error, { root: true })
       }
     },
     async getWorlds ({ commit, rootState }, params) {
@@ -43,14 +43,14 @@ const store = {
             filter: params?.filter || ''
           }
         })
-        commit('setWorlds', worlds.data.message)
+        commit('setWorlds', worlds.data)
       } else {
         commit('setWorlds', {})
       }
     },
     async getCurrentWorld ({ commit }, worldId) {
       const world = await axios.get(`world/${worldId}/get-world-state`)
-      commit('setCurrentWorld', world.data[0])
+      commit('setCurrentWorld', world.data.data[0])
     },
     async getBanners ({ commit }, id) {
       const banners = await axios.get(`world/${id}/world-banner`)
@@ -70,7 +70,7 @@ const store = {
         dispatch('getCurrentWorld', data.id)
         commit('setMessageSuccess', 'Image uploaded successfully', { root: true })
       } catch (err) {
-        commit('setMessageError', err.response.data.message, { root: true })
+        commit('setMessageError', err.response.data.error, { root: true })
       }
     },
     async deleteBanner ({ dispatch, commit }, data) {
@@ -79,7 +79,7 @@ const store = {
         dispatch('getCurrentWorld', data.id)
         commit('setMessageSuccess', 'Image deleted successfully', { root: true })
       } catch (err) {
-        commit('setMessageError', err.response.data.message, { root: true })
+        commit('setMessageError', err.response.data.error, { root: true })
       }
     }
   },

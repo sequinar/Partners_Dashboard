@@ -8,7 +8,7 @@
         <Header />
       </el-header>
       <el-main>
-        <router-view />
+        <router-view v-if="token"/>
       </el-main>
     </el-container>
   </el-container>
@@ -25,6 +25,7 @@ const store = useStore()
 const auth = inject('Auth')
 const messageSuccess = computed(() => store.state.messageSuccess)
 const messageError = computed(() => store.state.messageError)
+const token = computed(() => store.state.accessToken)
 
 const loading = ref(false)
 
@@ -47,7 +48,11 @@ watch(messageSuccess, (value) => {
 
 watch(messageError, (value) => {
   if (!value) return
-  ElMessage.error(value)
+  ElMessage({
+    type: 'error',
+    message: value,
+    duration: 5000
+  })
   store.commit('setMessageError', null)
 })
 </script>

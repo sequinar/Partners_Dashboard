@@ -42,7 +42,7 @@
     <el-menu-item
       index="2"
       :class="showIntruction(1)"
-      @click="goTo('/team')"
+      @click="goTo(`/team/${team.teamId}`)"
     >
       <img
         src="../assets/icons/Teams.svg"
@@ -83,18 +83,20 @@
 <script setup>
 import { ref, computed, defineAsyncComponent } from 'vue'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 
 const Onboarding = defineAsyncComponent(() =>
   import('./modals/Onboarding.vue')
 )
 
 const router = useRouter()
-
+const store = useStore()
 const isCollapse = ref(true)
 const blockCollapse = ref(false)
 const onboardingSlide = ref(0)
 const isOnboarding = ref(false)
 
+const team = computed(() => store.state.team.team)
 const rectTopInsruction = computed(() => {
   return document.querySelectorAll('.el-menu-item')[onboardingSlide.value].getBoundingClientRect().top
 })
