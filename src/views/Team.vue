@@ -106,6 +106,7 @@ const resendInvitation = async (member) => {
 }
 
 const getMembers = async (newPage, filter) => {
+  if (!route.params.id) return
   return await store.dispatch('team/getMembers', {
     params: {
       limit: limit.value,
