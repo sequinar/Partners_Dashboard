@@ -42,7 +42,7 @@
     <el-menu-item
       index="2"
       :class="showIntruction(1)"
-      @click="goTo(`/team/${team.teamId}`)"
+      @click="goTo(`/team/${team?.teamId || ''}`)"
     >
       <img
         src="../assets/icons/Teams.svg"

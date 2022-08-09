@@ -23,7 +23,7 @@ const router = createRouter({
           component: Analytics
         },
         {
-          path: 'team/:id',
+          path: 'team/:id?',
           component: Team
         },
         {
