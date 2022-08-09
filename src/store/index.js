@@ -6,7 +6,7 @@ import axios from '../axios/index'
 const store = createStore({
   state () {
     return {
-      accessToken: '',
+      accessToken: null,
       user: {},
       apiEndpoint: process.env.API_ENDPOINT,
       messageSuccess: null,
@@ -44,7 +44,7 @@ const store = createStore({
         dispatch('getUser')
       } catch (err) {
         console.error(err)
-        commit('setMessageError', err.response.data.message, { root: true })
+        commit('setMessageError', err.response.data.error, { root: true })
       }
     }
   },
