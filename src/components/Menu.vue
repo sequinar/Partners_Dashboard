@@ -3,8 +3,6 @@
     default-active="1"
     class="el-menu-vertical"
     :collapse="isCollapse"
-    @mouseenter="openMenu"
-    @mouseleave="collapseMenu"
   >
     <router-link to="/">
       <img
@@ -101,15 +99,15 @@ const rectTopInsruction = computed(() => {
   return document.querySelectorAll('.el-menu-item')[onboardingSlide.value].getBoundingClientRect().top
 })
 
-function openMenu () {
-  if (isOnboarding.value) return
-  isCollapse.value = false
-}
+// function openMenu () {
+//   if (isOnboarding.value) return
+//   isCollapse.value = false
+// }
 
-function collapseMenu () {
-  if (blockCollapse.value) return
-  isCollapse.value = true
-}
+// function collapseMenu () {
+//   if (blockCollapse.value) return
+//   isCollapse.value = true
+// }
 
 function toggleCollapse () {
   blockCollapse.value = !blockCollapse.value
