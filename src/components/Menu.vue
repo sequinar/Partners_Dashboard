@@ -102,15 +102,15 @@ const rectTopInsruction = computed(() => {
 })
 
 function openMenu (event) {
+  console.log('open', event)
   if (isOnboarding.value) return
   isCollapse.value = false
-  event.stopPropagation()
 }
 
 function collapseMenu (event) {
+  console.log('close', event)
   if (blockCollapse.value) return
   isCollapse.value = true
-  event.stopPropagation()
 }
 
 function toggleCollapse () {
