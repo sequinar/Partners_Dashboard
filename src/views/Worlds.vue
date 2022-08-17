@@ -15,7 +15,7 @@
     <el-row v-if="worlds?.data" class="worldsContainer">
       <World v-for="world in worlds.data" :key="world.world_id" :world="world" />
     </el-row>
-    <el-empty v-if="worlds && Object.keys(worlds).length === 0" description="There is nothing here yet" />
+    <el-empty v-if="worlds && Object.keys(worlds).length === 0" description="You don't have any worlds available yet." />
   </div>
 </template>
 

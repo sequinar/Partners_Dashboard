@@ -55,7 +55,7 @@
       </el-table-column>
     </el-table>
   </el-row>
-    <el-empty v-else description="You don't have a team" />
+    <el-empty v-else description="You don't have any teams available yet." />
   <el-pagination v-if="members" v-model:currentPage="page" class="mt-10" background :total="members.meta.totalCount"
     :page-size="limit" layout="prev, pager, next" hide-on-single-page />
 </template>
