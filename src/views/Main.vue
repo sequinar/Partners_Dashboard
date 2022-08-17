@@ -8,7 +8,7 @@
         <Header />
       </el-header>
       <el-main>
-        <router-view v-if="worlds && team" />
+        <router-view v-if="token"/>
       </el-main>
     </el-container>
   </el-container>
@@ -23,10 +23,9 @@ import Header from '../components/Header.vue'
 
 const store = useStore()
 const auth = inject('Auth')
-const worlds = computed(() => store.state.worlds.worlds)
-const team = computed(() => store.state.team.team)
 const messageSuccess = computed(() => store.state.messageSuccess)
 const messageError = computed(() => store.state.messageError)
+const token = computed(() => store.state.accessToken)
 
 const loading = ref(false)
 
@@ -35,10 +34,9 @@ onMounted(async () => {
   await auth.getTokenSilently().then((data) => {
     store.commit('updateAccessToken', data)
   })
-  const team = await store.dispatch('team/getTeam')
-  if (!team.data[0]) {
-    await store.dispatch('team/createTeam')
-  }
+  store.dispatch('getUser')
+  await store.dispatch('team/getTeam')
+  await store.dispatch('worlds/getWorlds')
   loading.value = false
 })
 
@@ -50,7 +48,11 @@ watch(messageSuccess, (value) => {
 
 watch(messageError, (value) => {
   if (!value) return
-  ElMessage.error(value)
+  ElMessage({
+    type: 'error',
+    message: value,
+    duration: 5000
+  })
   store.commit('setMessageError', null)
 })
 </script>

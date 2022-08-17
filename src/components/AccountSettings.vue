@@ -34,10 +34,10 @@
       </el-form-item>
       <el-form-item
         label="User name"
-        prop="nickname"
+        prop="username"
       >
         <el-input
-          v-model="user.nickname"
+          v-model="user.username"
           size="large"
           maxlength="25"
           show-word-limit
@@ -164,7 +164,7 @@ const rules = reactive({
     { required: true, message: 'Please input your name', trigger: 'blur' },
     { min: 3, max: 25, message: 'Length should be 3 to 25', trigger: 'change' }
   ],
-  nickname: [
+  username: [
     { required: true, message: 'Please input your name', trigger: 'blur' },
     { min: 3, max: 25, message: 'Length should be 3 to 25', trigger: 'change' }
   ],
@@ -183,7 +183,7 @@ const submitNameForm = async () => {
   await nameForm.value.validate((valid, fields) => {
     if (valid) {
       store.dispatch('updateUser', {
-        userName: user.value.nickname,
+        userName: user.value.username,
         name: user.value.name
       })
     } else {
