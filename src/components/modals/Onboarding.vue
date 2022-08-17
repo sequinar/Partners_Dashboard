@@ -3,7 +3,7 @@
     <div
       class="onboardingDialog--container"
       :class="leftGap"
-      :style="{ top: top + 10 + 'px' }"
+      :style="{ top: props.top + 10 + 'px' }"
     >
       <el-button
         type="primary"
@@ -55,15 +55,13 @@ const props = defineProps({
   isOpen: {
     type: Boolean
   },
-  isCollapsed: {
-    type: Boolean
-  },
   top: {
     type: Number,
     default: () => 0
   }
 })
-const leftGap = computed(() => `${props.isCollapsed ? 'left-90' : 'left-310'}`)
+const isMenuOpen = computed(() => document.querySelector('.el-menu-vertical').classList.contains('open-menu'))
+const leftGap = computed(() => `${isMenuOpen.value ? 'left-310' : 'left-90'}`)
 
 const onChange = (index) => {
   emits('change', index)
