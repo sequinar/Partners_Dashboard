@@ -66,7 +66,7 @@ export function useOpenWorld (store) {
     isWorldLoadingModal.value = true
     openWorldType.value = type
     if (world.template_name === 'Camelot') {
-      openWorldUrl = ref(`sequincamelot://+world-id:${world.public_id}+auth:${store.state.accessToken}`)
+      openWorldUrl = ref('sequincamelot://')
     } else {
       openWorldUrl = ref(`sequinworld://+world-id:${world.public_id}+auth:${store.state.accessToken}`)
     }
