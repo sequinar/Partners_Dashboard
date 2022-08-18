@@ -60,9 +60,10 @@ const store = {
       await axios.post(`world/${data.id}/update-chat-status/${data.status}`)
       dispatch('getCurrentWorld', data.id)
     },
-    async updateStreamStatus ({ dispatch }, data) {
+    async updateStreamStatus ({ dispatch, commit }, data) {
       await axios.post(`world/${data.id}/update-stream-status/${data.status}`)
       dispatch('getCurrentWorld', data.id)
+      commit('setMessageSuccess', 'Stream status updated', { root: true })
     },
     async updateBanners ({ dispatch, commit }, data) {
       try {

@@ -5,7 +5,6 @@ export function useOpenWorld (store) {
   const currentCount = ref(0)
   const openWorldType = ref('')
   const isWorldLoadingModal = ref(false)
-  // const downloadModalVisible = ref(false);
 
   let openWorldUrl = ref(null)
 
@@ -24,10 +23,6 @@ export function useOpenWorld (store) {
         if (res.data === 'WAITING') {
           if (currentCount.value === 7) {
             isWorldLoadingModal.value = false
-            // downloadModalVisible.value = true;
-            // setTimeout(() => {
-            //   downloadModalVisible.value = false;
-            // }, 20000);
           }
           setTimeout(() => {
             getSessionApiCall(id)
@@ -73,12 +68,8 @@ export function useOpenWorld (store) {
     startNewSessionApiCall()
   }
 
-  // const closeDownload = () => downloadModalVisible.value = false;
-
   return {
     isWorldLoadingModal,
-    // downloadModalVisible,
     openWorld
-    // closeDownload
   }
 }
