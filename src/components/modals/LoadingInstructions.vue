@@ -50,7 +50,7 @@
           <el-button
             type="primary"
             size="large"
-            @click="emits('openWorld')"
+            @click="openWorld('view', props.world)"
           >
             Start
           </el-button>
@@ -114,7 +114,7 @@
           <el-button
             type="primary"
             size="large"
-            @click="emits('openWorld')"
+            @click="openWorld('view', props.world)"
           >
             Start
           </el-button>
@@ -130,8 +130,9 @@
 </template>
 
 <script setup>
-const emits = defineEmits(['close', 'openWorld'])
-const isWindows = (window.navigator.userAgent.indexOf('Windows') !== -1)
+import { useOpenWorld } from '@/composables/OpenWorld'
+import { useStore } from 'vuex'
+
 const props = defineProps({
   showInstaractions: {
     type: Boolean,
@@ -142,6 +143,11 @@ const props = defineProps({
     required: true
   }
 })
+const emits = defineEmits(['close'])
+
+const store = useStore()
+const { openWorld } = useOpenWorld(store)
+const isWindows = (window.navigator.userAgent.indexOf('Windows') !== -1)
 </script>
 
 <style lang="scss" scoped>
