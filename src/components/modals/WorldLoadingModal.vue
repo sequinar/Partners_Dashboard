@@ -40,15 +40,14 @@ const props = defineProps({
   }
 })
 const isWindows = (window.navigator.userAgent.indexOf('Windows') !== -1)
-const extension = isWindows ? '.msi' : '.dmg'
 const emits = defineEmits(['close'])
 const showInstaractions = ref(false)
 
 const downloadWorld = () => {
   if (props.world.template_name === 'Camelot') {
-    window.open(`${process.env.UEAPP_DOWNLOAD_LINK}/standalone/Camelot/development/Camelot${extension}`, '_self')
+    window.open(isWindows ? process.env.CAMELOT_UEAPP_DOWNLOAD_LINK_WINDOWS : process.env.CAMELOT_UEAPP_DOWNLOAD_LINK_MAC, '_self')
   } else {
-    window.open(`${process.env.UEAPP_DOWNLOAD_LINK}/SequinWorld${extension}`, '_self')
+    window.open(isWindows ? process.env.UEAPP_DOWNLOAD_LINK_WINDOWS : process.env.UEAPP_DOWNLOAD_LINK_MAC, '_self')
   }
   showInstaractions.value = true
   emits('close')

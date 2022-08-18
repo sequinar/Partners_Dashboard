@@ -13,5 +13,13 @@ export default defineConfig({
   build: {
     target: 'esnext'
   },
-  plugins: [vue(), EnvironmentPlugin(['VUE_APP_AUTH0_DOMAIN', 'VUE_APP_AUTH0_CLIENT_KEY', 'VUE_APP_AUTH0_AUDIENCE', 'API_ENDPOINT', 'UEAPP_DOWNLOAD_LINK'])]
+  plugins: [vue(), EnvironmentPlugin([
+    'VUE_APP_AUTH0_DOMAIN',
+    'VUE_APP_AUTH0_CLIENT_KEY',
+    'VUE_APP_AUTH0_AUDIENCE',
+    'API_ENDPOINT',
+    'UEAPP_DOWNLOAD_LINK_MAC',
+    'UEAPP_DOWNLOAD_LINK_WINDOWS',
+    'CAMELOT_UEAPP_DOWNLOAD_LINK_MAC',
+    'CAMELOT_UEAPP_DOWNLOAD_LINK_WINDOWS'])]
 })
