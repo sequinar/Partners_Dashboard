@@ -68,10 +68,9 @@ export function useOpenWorld (store) {
   }
 
   const openWorld = (type, world) => {
-    isWorldLoadingModal.value = true
-    openWorldType.value = type
     if (os.includes('Mac')) {
       if (world.template_name === 'Camelot') {
+        isWorldLoadingModal.value = true
         customProtocolCheck(
           'sequincamelot://',
           () => {
@@ -81,10 +80,10 @@ export function useOpenWorld (store) {
             console.log('Custom protocol found and opened the file successfully.')
           }, 5000
         )
-      } else {
-        startNewSessionApiCall()
       }
     } else {
+      isWorldLoadingModal.value = true
+      openWorldType.value = type
       if (world.template_name === 'Camelot') {
         openWorldUrl = ref('sequincamelot://')
       } else {
