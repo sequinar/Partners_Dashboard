@@ -1,12 +1,11 @@
 import { ref } from 'vue'
 import axios from 'axios'
-import customProtocolCheck from 'custom-protocol-check'
+import customProtocolCheck from './customProtocolCheck'
 
 export function useOpenWorld (store) {
   const currentCount = ref(0)
   const openWorldType = ref('')
   const isWorldLoadingModal = ref(false)
-  const os = navigator.userAgent
 
   let openWorldUrl = ref(null)
 
@@ -51,7 +50,16 @@ export function useOpenWorld (store) {
       .then((res) => {
         openWorldUrl.value += `+session-id:${res.data.response}`
         openWorldUrl.value += `+mode:${openWorldType.value}`
-        window.open(openWorldUrl.value, '_self')
+        // window.open(openWorldUrl.value, '_self')
+        customProtocolCheck(
+          openWorldUrl.value,
+          () => {
+            console.log('Custom protocol not found.')
+          },
+          () => {
+            console.log('Custom protocol found and opened the file successfully.')
+          }, 5000
+        )
         getSessionApiCall(res.data.response)
       })
       .catch((err) => {
@@ -62,24 +70,11 @@ export function useOpenWorld (store) {
   const openWorld = (type, world) => {
     isWorldLoadingModal.value = true
     openWorldType.value = type
-    if (os.includes('Mac')) {
-      customProtocolCheck(
-        'sequincamelot://',
-        () => {
-          console.log('Custom protocol not found.')
-        },
-        () => {
-          console.log('Custom protocol found and opened the file successfully.')
-        }, 5000
-      )
+    if (world.template_name === 'Camelot') {
+      openWorldUrl = ref('sequincamelot://')
     } else {
-      if (world.template_name === 'Camelot') {
-        openWorldUrl = ref('sequincamelot://')
-      } else {
-        openWorldUrl = ref(`sequinworld://+world-id:${world.public_id}+auth:${store.state.accessToken}`)
-      }
+      openWorldUrl = ref(`sequinworld://+world-id:${world.public_id}+auth:${store.state.accessToken}`)
     }
-
     startNewSessionApiCall()
   }
 
