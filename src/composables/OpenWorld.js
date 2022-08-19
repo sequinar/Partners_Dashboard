@@ -1,10 +1,12 @@
 import { ref } from 'vue'
 import axios from 'axios'
+import customProtocolCheck from 'custom-protocol-check'
 
 export function useOpenWorld (store) {
   const currentCount = ref(0)
   const openWorldType = ref('')
   const isWorldLoadingModal = ref(false)
+  const os = navigator.userAgent
 
   let openWorldUrl = ref(null)
 
@@ -49,7 +51,19 @@ export function useOpenWorld (store) {
       .then((res) => {
         openWorldUrl.value += `+session-id:${res.data.response}`
         openWorldUrl.value += `+mode:${openWorldType.value}`
-        window.open(openWorldUrl.value, '_self')
+        if (os.includes('Mac')) {
+          customProtocolCheck(
+            openWorldUrl.value,
+            () => {
+              console.log('Custom protocol not found.', `${openWorldUrl.value}`)
+            },
+            () => {
+              console.log('Custom protocol found and opened the file successfully.')
+            }, 5000
+          )
+        } else {
+          window.open(openWorldUrl.value, '_self')
+        }
         getSessionApiCall(res.data.response)
       })
       .catch((err) => {
