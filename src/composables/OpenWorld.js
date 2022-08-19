@@ -6,6 +6,7 @@ export function useOpenWorld (store) {
   const currentCount = ref(0)
   const openWorldType = ref('')
   const isWorldLoadingModal = ref(false)
+  const os = navigator.userAgent
 
   let openWorldUrl = ref(null)
 
@@ -50,16 +51,7 @@ export function useOpenWorld (store) {
       .then((res) => {
         openWorldUrl.value += `+session-id:${res.data.response}`
         openWorldUrl.value += `+mode:${openWorldType.value}`
-        // window.open(openWorldUrl.value, '_self')
-        customProtocolCheck(
-          'sequincamelot://',
-          () => {
-            console.log('Custom protocol not found.')
-          },
-          () => {
-            console.log('Custom protocol found and opened the file successfully.')
-          }, 5000
-        )
+        window.open(openWorldUrl.value, '_self')
         getSessionApiCall(res.data.response)
       })
       .catch((err) => {
@@ -70,12 +62,37 @@ export function useOpenWorld (store) {
   const openWorld = (type, world) => {
     isWorldLoadingModal.value = true
     openWorldType.value = type
-    if (world.template_name === 'Camelot') {
-      openWorldUrl = ref('sequincamelot://')
+    if (os.includes('Mac')) {
+      if (world.template_name === 'Camelot') {
+        customProtocolCheck(
+          'sequincamelot://',
+          () => {
+            console.log('Custom protocol not found.')
+          },
+          () => {
+            console.log('Custom protocol found and opened the file successfully.')
+          }, 5000
+        )
+      } else {
+        customProtocolCheck(
+          `sequinworld://+world-id:${world.public_id}+auth:${store.state.accessToken}`,
+          () => {
+            console.log('Custom protocol not found.')
+          },
+          () => {
+            console.log('Custom protocol found and opened the file successfully.')
+          }, 5000
+        )
+      }
+      startNewSessionApiCall()
     } else {
-      openWorldUrl = ref(`sequinworld://+world-id:${world.public_id}+auth:${store.state.accessToken}`)
+      if (world.template_name === 'Camelot') {
+        openWorldUrl = ref('sequincamelot://')
+      } else {
+        openWorldUrl = ref(`sequinworld://+world-id:${world.public_id}+auth:${store.state.accessToken}`)
+      }
+      startNewSessionApiCall()
     }
-    startNewSessionApiCall()
   }
 
   return {
