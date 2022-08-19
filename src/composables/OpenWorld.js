@@ -52,7 +52,7 @@ export function useOpenWorld (store) {
         openWorldUrl.value += `+mode:${openWorldType.value}`
         // window.open(openWorldUrl.value, '_self')
         customProtocolCheck(
-          openWorldUrl.value,
+          'sequincamelot://',
           () => {
             console.log('Custom protocol not found.')
           },
