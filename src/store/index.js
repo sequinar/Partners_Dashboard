@@ -43,8 +43,7 @@ const store = createStore({
         commit('setMessageSuccess', 'User successefully updated', { root: true })
         dispatch('getUser')
       } catch (err) {
-        console.error(err)
-        commit('setMessageError', err.response.data.error, { root: true })
+        commit('setMessageError', err.response.data.message, { root: true })
       }
     }
   },
