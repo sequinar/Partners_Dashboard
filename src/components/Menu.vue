@@ -2,9 +2,6 @@
   <el-menu
     default-active="1"
     class="el-menu-vertical"
-    :collapse="isCollapse"
-    @mouseenter="openMenu"
-    @mouseleave="collapseMenu"
   >
     <router-link to="/">
       <img
@@ -14,12 +11,11 @@
       >
     </router-link>
     <el-button
-      v-show="!isCollapse"
       text
       large
       class="collapseButton"
       :class="{ flip: !blockCollapse }"
-      @click="toggleCollapse"
+      @click="toggleCollapse($event)"
     >
       <img
         src="../assets/icons/CollapseLeftpanel_icon.svg"
@@ -36,7 +32,7 @@
         alt="worlds"
       >
       <template #title>
-        Worlds
+        <span class="title">Worlds</span>
       </template>
     </el-menu-item>
     <el-menu-item
@@ -49,7 +45,7 @@
         alt="team"
       >
       <template #title>
-        Team
+        <span class="title">Team</span>
       </template>
     </el-menu-item>
     <!-- <el-menu-item index="3" @click="goTo('/analytics')">
@@ -66,14 +62,13 @@
         alt="Onboarding"
       >
       <template #title>
-        Onboarding
+        <span class="title">Onboarding</span>
       </template>
     </el-menu-item>
   </el-menu>
   <Onboarding
     v-if="isOnboarding"
     :is-open="isOnboarding"
-    :is-collapsed="isCollapse"
     :top="rectTopInsruction"
     @change="slideChange"
     @close="isOnboarding = false"
@@ -91,7 +86,6 @@ const Onboarding = defineAsyncComponent(() =>
 
 const router = useRouter()
 const store = useStore()
-const isCollapse = ref(true)
 const blockCollapse = ref(false)
 const onboardingSlide = ref(0)
 const isOnboarding = ref(false)
@@ -101,19 +95,10 @@ const rectTopInsruction = computed(() => {
   return document.querySelectorAll('.el-menu-item')[onboardingSlide.value].getBoundingClientRect().top
 })
 
-function openMenu () {
-  if (isOnboarding.value) return
-  isCollapse.value = false
-}
-
-function collapseMenu () {
-  if (blockCollapse.value) return
-  isCollapse.value = true
-}
-
-function toggleCollapse () {
-  blockCollapse.value = !blockCollapse.value
-  if (!blockCollapse.value) isCollapse.value = true
+function toggleCollapse (event) {
+  event.target.classList.toggle('flip')
+  const menu = document.querySelector('.el-menu-vertical')
+  menu.classList.toggle('open-menu')
 }
 
 function goTo (route) {
@@ -133,8 +118,33 @@ function showIntruction (index) {
 </script>
 
 <style scoped lang="scss">
-.el-menu-vertical:not(.el-menu--collapse) {
+.el-menu-vertical {
+  width: 80px;
+  overflow: hidden;
+  transition: width 0.3s ease;
+  .title {
+    opacity: 0;
+    margin-left: 20px;
+    transition: all 0.3s;
+  }
+  .collapseButton {
+    opacity: 0;
+  }
+  &:hover {
     width: 300px;
+
+    .title, .collapseButton {
+      opacity: 1;
+    }
+  }
+}
+
+.open-menu {
+  width: 300px !important;
+
+  .title, .collapseButton {
+      opacity: 1;
+    }
 }
 
 .flip {
@@ -158,6 +168,5 @@ function showIntruction (index) {
     border: 2px solid #FFF;
     box-shadow: 0 1px 4px 0 #FFF;
     border-radius: 5px;
-    z-index: 999999;
 }
 </style>

@@ -31,7 +31,7 @@ const store = {
         dispatch('getWorlds')
         commit('setMessageSuccess', 'World created successfully', { root: true })
       } catch (err) {
-        commit('setMessageError', err.response.data.error, { root: true })
+        commit('setMessageError', err.response.data.message, { root: true })
       }
     },
     async getWorlds ({ commit, rootState }, params) {
@@ -60,9 +60,10 @@ const store = {
       await axios.post(`world/${data.id}/update-chat-status/${data.status}`)
       dispatch('getCurrentWorld', data.id)
     },
-    async updateStreamStatus ({ dispatch }, data) {
+    async updateStreamStatus ({ dispatch, commit }, data) {
       await axios.post(`world/${data.id}/update-stream-status/${data.status}`)
       dispatch('getCurrentWorld', data.id)
+      commit('setMessageSuccess', 'Stream status updated', { root: true })
     },
     async updateBanners ({ dispatch, commit }, data) {
       try {
@@ -70,7 +71,7 @@ const store = {
         dispatch('getCurrentWorld', data.id)
         commit('setMessageSuccess', 'Image uploaded successfully', { root: true })
       } catch (err) {
-        commit('setMessageError', err.response.data.error, { root: true })
+        commit('setMessageError', err.response.data.message, { root: true })
       }
     },
     async deleteBanner ({ dispatch, commit }, data) {
@@ -79,7 +80,7 @@ const store = {
         dispatch('getCurrentWorld', data.id)
         commit('setMessageSuccess', 'Image deleted successfully', { root: true })
       } catch (err) {
-        commit('setMessageError', err.response.data.error, { root: true })
+        commit('setMessageError', err.response.data.message, { root: true })
       }
     }
   },

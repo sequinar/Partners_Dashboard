@@ -21,7 +21,7 @@
   </el-dialog>
   <LoadingInstructions
     :show-instaractions="showInstaractions"
-    :world="world"
+    :world="props.world"
     @close="showInstaractions = false"
   />
 </template>
@@ -30,7 +30,6 @@
 import LoadingInstructions from './LoadingInstructions.vue'
 import { ref } from 'vue'
 
-// const props = defineProps(['showModal', 'world'])
 const props = defineProps({
   showModal: {
     type: Boolean
@@ -40,10 +39,16 @@ const props = defineProps({
     default: () => {}
   }
 })
+const isWindows = (window.navigator.userAgent.indexOf('Windows') !== -1)
 const emits = defineEmits(['close'])
 const showInstaractions = ref(false)
 
 const downloadWorld = () => {
+  if (props.world.template_name === 'Camelot') {
+    window.open(isWindows ? process.env.CAMELOT_UEAPP_DOWNLOAD_LINK_WINDOWS : process.env.CAMELOT_UEAPP_DOWNLOAD_LINK_MAC, '_self')
+  } else {
+    window.open(isWindows ? process.env.UEAPP_DOWNLOAD_LINK_WINDOWS : process.env.UEAPP_DOWNLOAD_LINK_MAC, '_self')
+  }
   showInstaractions.value = true
   emits('close')
 }
