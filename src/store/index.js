@@ -43,7 +43,19 @@ const store = createStore({
         commit('setMessageSuccess', 'User successefully updated', { root: true })
         dispatch('getUser')
       } catch (err) {
-        commit('setMessageError', err.response.data.message, { root: true })
+        commit('setMessageError', err.response.data.error, { root: true })
+      }
+    },
+    async updatePassword ({ commit }, data) {
+      try {
+        await axios.post('/updatepassword', {
+          userName: data.userName,
+          currentPassword: data.currentPassword,
+          password: data.newPassword
+        })
+        commit('setMessageSuccess', 'User password successefully updated', { root: true })
+      } catch (err) {
+        commit('setMessageError', err.response.data.error, { root: true })
       }
     }
   },

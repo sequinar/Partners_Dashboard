@@ -44,7 +44,7 @@ const store = {
         await axios.post(`team/${state.team.teamId}/invite-user/${member.email}`)
         commit('setMessageSuccess', 'Member invited successfully', { root: true })
       } catch (err) {
-        commit('setMessageError', err.response.data.message, { root: true })
+        commit('setMessageError', err.response.data.error, { root: true })
       }
     },
     async removeMember ({ state, commit }, id) {
@@ -52,7 +52,7 @@ const store = {
         await axios.delete(`team/${state.team.teamId}/remove-user/${id}`)
         commit('setMessageSuccess', 'User removed successfully', { root: true })
       } catch (err) {
-        commit('setMessageError', err.response.data.message, { root: true })
+        commit('setMessageError', err.response.data.error, { root: true })
       }
     }
   },
