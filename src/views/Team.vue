@@ -79,7 +79,7 @@ const { getTimeSince } = useUtils()
 const loading = ref(true)
 const store = useStore()
 const search = ref('')
-const limit = ref(10)
+const limit = ref(1)
 const page = ref(1)
 
 const userID = computed(() => store.state.user.sub ? store.state.user.sub.split('|')[1] : store.state.user.user_id.split('|')[1])
@@ -129,7 +129,7 @@ watch(page, async (newPage) => {
 })
 watch(search, useDebounce(async (newVal) => {
   loading.value = true
-  await getMembers(page.value, newVal)
+  await getMembers(1, newVal)
   loading.value = false
 }, 500))
 </script>

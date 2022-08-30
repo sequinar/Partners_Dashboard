@@ -31,7 +31,7 @@ const store = {
         dispatch('getWorlds')
         commit('setMessageSuccess', 'World created successfully', { root: true })
       } catch (err) {
-        commit('setMessageError', err.response.data.message, { root: true })
+        commit('setMessageError', err.response.data.error, { root: true })
       }
     },
     async getWorlds ({ commit, rootState }, params) {
@@ -71,7 +71,7 @@ const store = {
         dispatch('getCurrentWorld', data.id)
         commit('setMessageSuccess', 'Image uploaded successfully', { root: true })
       } catch (err) {
-        commit('setMessageError', err.response.data.message, { root: true })
+        commit('setMessageError', err.response.data.error, { root: true })
       }
     },
     async deleteBanner ({ dispatch, commit }, data) {
@@ -80,7 +80,7 @@ const store = {
         dispatch('getCurrentWorld', data.id)
         commit('setMessageSuccess', 'Image deleted successfully', { root: true })
       } catch (err) {
-        commit('setMessageError', err.response.data.message, { root: true })
+        commit('setMessageError', err.response.data.error, { root: true })
       }
     }
   },
