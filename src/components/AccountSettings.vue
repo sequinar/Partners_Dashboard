@@ -154,6 +154,8 @@ const validatePass2 = (rule, value, callback) => {
     callback(new Error('Please input the password again'))
   } else if (value !== passwordUpdate.pass) {
     callback(new Error("Two inputs don't match!"))
+  } else if (value === passwordUpdate.currentPass) {
+    callback(new Error('The new password cannot match the current one!'))
   } else {
     callback()
   }
