@@ -40,7 +40,6 @@
 ::-webkit-scrollbar-track {
     background: transparent;
 }
-
 img {
     -webkit-user-drag: none;
     user-select: none;
@@ -51,6 +50,7 @@ body {
     padding: 0;
     font-family: 'Montserrat';
     color: #1c1c1c;
+    scrollbar-gutter: stable;
 }
 
 a {
@@ -62,6 +62,10 @@ a {
 
 input {
     font-family: 'Montserrat';
+}
+
+.el-main {
+    scrollbar-gutter: stable;
 }
 
 .d-flex {

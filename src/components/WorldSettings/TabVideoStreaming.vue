@@ -1,8 +1,29 @@
 <template>
   <div class="videoStreaming">
-    <el-row :gutter="40">
-      <el-col :span="14">
+    <el-row :gutter="25">
+      <el-col :span="13">
         <!-- <VideoUpload @on-preview="onPreview" /> -->
+        <div class="switcher d-flex">
+          <label>Start streaming</label>
+          <el-switch
+            v-model="streamStatus"
+            size="large"
+            @change="switchStream"
+            :disabled="startStreamDisabled"
+          />
+        </div>
+        <div class="switcher d-flex">
+          <div class="d-flex direction-column">
+            <label>Go Live</label>
+            <small>When "Go live" is enabled the streamed video will be seen by others in your world.</small>
+          </div>
+          <el-switch
+            v-model="streamStatus"
+            size="large"
+            @change="switchStream"
+            :disabled="startStreamDisabled"
+          />
+        </div>
         <h3>Stream Type</h3>
         <el-input
           v-model="streamTypeDefault"
@@ -52,18 +73,9 @@
             </el-button>
           </el-col>
         </el-row>
-        <div class="switcher d-flex">
-          <label>Start stream</label>
-          <el-switch
-            v-model="streamStatus"
-            size="large"
-            @change="switchStream"
-            :disabled="startStreamDisabled"
-          />
-        </div>
       </el-col>
-      <el-col :span="10">
-        <!-- <VideoPreview :video="videoFile" /> -->
+      <el-col :span="11">
+        <VideoPreview :video="videoFile" />
       </el-col>
     </el-row>
 
@@ -105,7 +117,7 @@
 
 <script setup>
 // import VideoUpload from './components/VideoUpload.vue';
-// import VideoPreview from './components/VideoPreview.vue';
+import VideoPreview from './components/VideoPreview.vue'
 import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useStore } from 'vuex'
@@ -128,7 +140,7 @@ const streamStatus = ref(props.world?.streaming_status)
 // const autoStart = ref(false);
 // const autoStop = ref(false);
 
-// let videoFile = ref({});
+const videoFile = ref({})
 
 // const onPreview = (file) => {
 //     videoFile.value = file
@@ -159,7 +171,11 @@ const copyText = function (text) {
   }
 
   .switcher {
-    margin-top: 20px;
+    margin-top: 10px;
+
+    small {
+      font-size: 12px;
+    }
   }
 }
 </style>
