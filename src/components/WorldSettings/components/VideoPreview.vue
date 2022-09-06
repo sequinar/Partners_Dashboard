@@ -3,8 +3,11 @@
     <h3>Video Preview (16:9)</h3>
     <div class="videoContainer d-flex align-center justify-center">
       <video
-        v-if="props.video.url"
-        :src="props.video.url"
+        v-if="props.video"
+        id="videoPreview"
+        :src="props.video"
+        controls
+        data-dashjs-player autoplay
       />
       <span v-else>Add Stream Key to Preview</span>
     </div>
@@ -12,13 +15,21 @@
 </template>
 
 <script setup>
+import { MediaPlayer } from 'dashjs'
+import { onMounted } from 'vue'
+
+const player = MediaPlayer().create()
 const props = defineProps({
   video: {
-    type: Object,
-    default: () => {}
+    type: String
   }
 })
 
+onMounted(() => {
+  if (props.video.url) {
+    player.initialize(document.querySelector('#videoPreview'), props.video, true)
+  }
+})
 </script>
 
 <style lang="scss">

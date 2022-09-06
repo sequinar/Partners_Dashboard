@@ -75,43 +75,9 @@
         </el-row>
       </el-col>
       <el-col :span="11">
-        <VideoPreview :video="videoFile" />
+        <VideoPreview :video="videoUrl" />
       </el-col>
     </el-row>
-
-    <!-- <h3 class="mt-30">
-      Backup Server URL
-    </h3>
-    <el-row :gutter="15">
-      <el-col :span="19">
-        <el-input v-model="backUpUrl" />
-      </el-col>
-      <el-col :span="5">
-        <el-button
-          class="full-width"
-          type="primary"
-          size="large"
-          @click="copyText(backUpUrl)"
-        >
-          Copy
-        </el-button>
-      </el-col>
-    </el-row> -->
-    <!-- <h2>Additional Settings</h2>
-    <div class="switcher d-flex justify-between">
-      <label @click="autoStart = !autoStart">Enable Auto-start</label>
-      <el-switch
-        v-model="autoStart"
-        size="large"
-      />
-    </div>
-    <div class="switcher d-flex justify-between">
-      <label @click="autoStop = !autoStop">Enable Auto-stop</label>
-      <el-switch
-        v-model="autoStop"
-        size="large"
-      />
-    </div> -->
   </div>
 </template>
 
@@ -136,15 +102,8 @@ const streamTypeDefault = ref('')
 const streamKey = ref(props.world?.stream_key)
 const streamUrl = ref(props.world?.streaming_input_url)
 const streamStatus = ref(props.world?.streaming_status)
-// const backUpUrl = ref('This is a long streaming link?backup=1');
-// const autoStart = ref(false);
-// const autoStop = ref(false);
 
-const videoFile = ref({})
-
-// const onPreview = (file) => {
-//     videoFile.value = file
-// };
+const videoUrl = 'https://livesim.dashif.org/livesim/chunkdur_1/ato_7/testpic4_8s/Manifest.mpd'
 
 const startStreamDisabled = computed(() => !streamKey.value || !streamUrl.value)
 

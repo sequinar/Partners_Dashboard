@@ -13,7 +13,7 @@
   </el-row>
   <div class="loadingContainer" v-loading="worlds === null">
     <el-row v-if="worlds?.data" class="worldsContainer">
-      <World v-for="world in worlds.data" :key="world.world_id" :world="world" />
+      <WorldCard v-for="world in worlds.data" :key="world.world_id" :world="world" />
     </el-row>
     <el-empty v-if="worlds && Object.keys(worlds).length === 0" description="You don't have any worlds available yet." />
   </div>
@@ -23,8 +23,8 @@
 import { ref, computed, defineAsyncComponent, watch } from 'vue'
 import { useStore } from 'vuex'
 
-const World = defineAsyncComponent(() =>
-  import('../components/World.vue')
+const WorldCard = defineAsyncComponent(() =>
+  import('../components/WorldCard.vue')
 )
 
 const store = useStore()
