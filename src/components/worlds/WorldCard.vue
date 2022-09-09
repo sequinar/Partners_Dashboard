@@ -53,11 +53,11 @@ import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
 
 const WorldLoadingModal = defineAsyncComponent(() =>
-  import('../components/modals/WorldLoadingModal.vue')
+  import('@/components/modals/WorldLoadingModal.vue')
 )
 
 const Dropdown = defineAsyncComponent(() =>
-  import('./Dropdown.vue')
+  import('@/components/Dropdown.vue')
 )
 
 const store = useStore()

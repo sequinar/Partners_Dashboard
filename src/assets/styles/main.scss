@@ -44,7 +44,9 @@ img {
     -webkit-user-drag: none;
     user-select: none;
 }
-
+* {
+    box-sizing: border-box;
+}
 body {
     margin: 0;
     padding: 0;
@@ -97,7 +99,7 @@ input {
 }
 
 .ma-0 {
-    margin: 0;
+    margin: 0 !important;
 }
 
 .mr-15 {
@@ -112,6 +114,10 @@ input {
     margin-top: 10px;
 }
 
+.mt-15 {
+    margin-top: 15px;
+}
+
 .mt-20 {
     margin-top: 20px;
 }
@@ -124,8 +130,16 @@ input {
     --hover-primary-color: #7749B7;
 }
 
+.red {
+    color: red;
+}
+
 .common-layout {
     min-height: 100vh;
+
+    .main-container {
+        padding-left: 80px;
+    }
 
     .el-button--primary {
         --el-button-hover-bg-color: #7749B7;
@@ -137,7 +151,7 @@ input {
     }
 
     .el-container {
-        height: 100vh;
+        min-height: 100vh;
     }
 
     .el-form-item__label:before {
@@ -149,12 +163,17 @@ input {
         background-color: #1c1c1c;
         color: #fff;
         width: fit-content;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 99999;
 
         .el-menu {
             background-color: transparent;
-            height: 100%;
             font-family: 'Montserrat-SemiBold';
             padding-top: 145px;
+            height: 100vh;
 
             .el-menu-item {
                 color: #fff;

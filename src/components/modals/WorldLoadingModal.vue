@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    custom-class="worldLoadingModal"
+    class="worldLoadingModal"
     :model-value="props.showModal"
     width="500px"
     top="30vh"

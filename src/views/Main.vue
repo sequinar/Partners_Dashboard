@@ -3,7 +3,7 @@
     <el-aside>
       <Menu />
     </el-aside>
-    <el-container>
+    <el-container class="main-container">
       <el-header>
         <Header />
       </el-header>

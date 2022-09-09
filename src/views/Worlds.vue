@@ -6,9 +6,9 @@
       </h1>
     </el-col>
     <el-col :span="12" class="worldsPagination">
-      <!-- <el-button type="primary" size="large" :icon="Plus">New World</el-button> -->
       <el-pagination v-if="worlds?.data" v-model:currentPage="page" background :total="worlds.meta.totalCount"
         :page-size="limit" layout="prev, pager, next" hide-on-single-page />
+        <el-button type="primary" size="large" :icon="Plus" @click="router.push('/new-world')">Add World</el-button>
     </el-col>
   </el-row>
   <div class="loadingContainer" v-loading="worlds === null">
@@ -22,12 +22,15 @@
 <script setup>
 import { ref, computed, defineAsyncComponent, watch } from 'vue'
 import { useStore } from 'vuex'
+import { Plus } from '@element-plus/icons-vue'
+import { useRouter } from 'vue-router'
 
 const WorldCard = defineAsyncComponent(() =>
-  import('../components/WorldCard.vue')
+  import('../components/worlds/WorldCard.vue')
 )
 
 const store = useStore()
+const router = useRouter()
 const worlds = computed(() => store.state.worlds.worlds)
 const limit = ref(8)
 const page = ref(1)
