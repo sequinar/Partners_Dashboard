@@ -1,9 +1,9 @@
 <template>
     <el-container id="world" class="direction-column">
-        <el-row :gutter="50">
-            <el-col :span="16">
+        <el-row :gutter="60">
+            <el-col :span="15">
                 <div class="d-flex justify-between">
-                    <h1 class="title">Add World</h1>
+                    <h1 class="title">{{route.name}}</h1>
                     <el-button type="primary" link :icon="ArrowLeft" @click="router.push('/')">Back to Worlds
                     </el-button>
                 </div>
@@ -40,7 +40,7 @@
                     </el-select>
                 </div>
                 <div>
-                    <label>Playable on *<span class="red">*</span></label>
+                    <label>Playable on<span class="red">*</span></label>
                     <small>Add the platforms your World is available to be played on.</small>
                     <el-select v-model="world.capability" placeholder="Select Platforms" multiple>
                         <el-option v-for="item in capabilities" :key="item.value" :label="item.label"
@@ -109,14 +109,15 @@
 </template>
 
 <script setup>
-import WorldUpload from './WorldUpload.vue'
-import WorldUploadImage from './WorldUploadImage.vue'
-import ImageGallery from '../ImageGallery.vue'
+import WorldUpload from '@/components/worlds/WorldUpload.vue'
+import WorldUploadImage from '@/components/worlds/WorldUploadImage.vue'
+import ImageGallery from '@/components/ImageGallery.vue'
 import { ArrowLeft } from '@element-plus/icons-vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { reactive } from 'vue'
 
 const router = useRouter()
+const route = useRoute()
 const imageTypes = ['JPG', 'PNG', 'GIF', 'SVG', 'MP4', 'WEBM', 'WAV', 'OGG', 'GLB', 'GLTF']
 const world = reactive({
   name: '',
@@ -143,10 +144,10 @@ const capabilities = [
 <style lang="scss">
 #world {
     max-width: 1000px;
-    margin: 0 auto;
     color: #1c1c1c;
     font-size: 12px;
     padding-bottom: 15px;
+    margin: 0 auto;
 
     .title {
         font-size: 30px;
@@ -204,7 +205,7 @@ const capabilities = [
     .thumbnail {
         background-color: #fff;
         border-radius: 10px;
-        padding: 12px;
+        padding: 15px 10px;
         overflow: hidden;
 
         p {

@@ -1,6 +1,6 @@
 <template>
-  <div v-loading="loading" class="worldSettings">
-    <div v-if="world" class="worldSettings__container">
+  <div v-loading="loading" class="worldEditor">
+    <div v-if="world" class="worldEditor__container">
       <h1>World Settings</h1>
       <p>Edit content available inside the world as banner ads, video uploads, and streming.</p>
       <el-row :gutter="25">
@@ -29,10 +29,10 @@ import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 
 const VideoStreaming = defineAsyncComponent(() =>
-  import('../components/WorldSettings/TabVideoStreaming.vue')
+  import('../components/worldEditor/TabVideoStreaming.vue')
 )
 const WorldBanners = defineAsyncComponent(() =>
-  import('../components/WorldSettings/TabWorldBanners.vue')
+  import('../components/worldEditor/TabWorldBanners.vue')
 )
 
 const store = useStore()
@@ -56,7 +56,7 @@ onMounted(async () => {
 </script>
 
 <style lang="scss">
-.worldSettings {
+.worldEditor {
   display: flex;
   justify-content: center;
   color: #1c1c1c;
@@ -129,7 +129,7 @@ onMounted(async () => {
 </style>
 
 <style lang="scss">
-.worldSettings {
+.worldEditor {
   .el-tabs__item {
     font-size: 14px;
     font-family: 'Montserrat-Bold';

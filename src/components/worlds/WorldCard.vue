@@ -15,6 +15,9 @@
       <li @click="copyLink(props.world.public_id)">
         Share
       </li>
+      <li @click.stop="router.push(`/world-editor/${props.world.public_id}`)">
+        World Editor
+      </li>
     </dropdown>
     <div class="worldItem--footer">
       <h3>{{ props.world.worldname }}</h3>

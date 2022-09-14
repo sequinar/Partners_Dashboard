@@ -1,5 +1,5 @@
 <template>
-    <h4 class="bannerTitle">{{props.title}}<span>*</span></h4>
+    <h4 v-if="props.title" class="bannerTitle">{{props.title}}<span>*</span></h4>
     <div ref="bannerRef" class="bannerUpload" :style="{ width: width, height: height }">
         <el-upload ref="uploadRef" drag action="#" :auto-upload="false" :on-change="uploadSuccess" :limit="1"
             :on-exceed="handleExceed" accept=".png, .jpg, .jpeg">
@@ -15,12 +15,12 @@
     <div class="d-flex justify-between mt-10">
         <div v-if="props.types">
             <b>File types supported: </b>
-            <span v-for="type in props.types" :key="type"> {{ type }}, </span>
+            <span v-for="( type, index ) in props.types" :key="type"> {{ type }}{{index < props.types.length - 1 ? ', ' : ''}} </span>
         </div>
-        <span v-if="maxSize"><b>Max size:</b> {{ maxSize }}</span>
+        <span v-if="props.maxSize"><b>Max size:</b> {{ props.maxSize }}</span>
     </div>
     <div class="d-flex justify-between mt-10">
-        <div><b>Size:</b> Upload an image at least <b>{{ resolution }}</b></div>
+        <div v-if="props.resolution"><b>Size:</b> Upload an image at least <b>{{ props.resolution }}</b></div>
         <el-button v-if="img" class="removeBanner" type="danger" link @click="removeImage">Remove</el-button>
     </div>
 </template>
