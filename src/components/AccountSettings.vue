@@ -74,6 +74,7 @@
       <el-form-item
         class="ma-0"
         label="Current password"
+        prop="currentPass"
       >
         <el-input
           v-model="passwordUpdate.currentPass"
@@ -153,6 +154,8 @@ const validatePass2 = (rule, value, callback) => {
     callback(new Error('Please input the password again'))
   } else if (value !== passwordUpdate.pass) {
     callback(new Error("Two inputs don't match!"))
+  } else if (value === passwordUpdate.currentPass) {
+    callback(new Error('The new password cannot match the current one!'))
   } else {
     callback()
   }
@@ -175,6 +178,7 @@ const rules = reactive({
 })
 
 const rulesPass = reactive({
+  currentPass: [{ validator: validatePass, trigger: 'blur' }],
   pass: [{ validator: validatePass, trigger: 'blur' }],
   checkPass: [{ validator: validatePass2, trigger: 'blur' }]
 })
@@ -187,18 +191,20 @@ const submitNameForm = async () => {
         name: user.value.name
       })
     } else {
-      console.log('error submit!', fields)
+      console.error('error submit!', fields)
     }
   })
 }
 const submitPassForm = async () => {
   await passForm.value.validate((valid, fields) => {
     if (valid) {
-      store.dispatch('updateUser', {
-        password: passwordUpdate.value.pass
+      store.dispatch('updatePassword', {
+        userName: user.value.email || user.value.username,
+        currentPassword: passwordUpdate.currentPass,
+        newPassword: passwordUpdate.pass
       })
     } else {
-      console.log('error submit!', fields)
+      console.error('error submit!', fields)
     }
   })
 }

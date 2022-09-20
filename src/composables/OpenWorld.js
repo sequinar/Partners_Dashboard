@@ -1,11 +1,12 @@
 import { ref } from 'vue'
 import axios from 'axios'
+import customProtocolCheck from './customProtocolCheck'
 
 export function useOpenWorld (store) {
   const currentCount = ref(0)
   const openWorldType = ref('')
   const isWorldLoadingModal = ref(false)
-  // const downloadModalVisible = ref(false);
+  const os = navigator.userAgent
 
   let openWorldUrl = ref(null)
 
@@ -24,10 +25,6 @@ export function useOpenWorld (store) {
         if (res.data === 'WAITING') {
           if (currentCount.value === 7) {
             isWorldLoadingModal.value = false
-            // downloadModalVisible.value = true;
-            // setTimeout(() => {
-            //   downloadModalVisible.value = false;
-            // }, 20000);
           }
           setTimeout(() => {
             getSessionApiCall(id)
@@ -54,7 +51,15 @@ export function useOpenWorld (store) {
       .then((res) => {
         openWorldUrl.value += `+session-id:${res.data.response}`
         openWorldUrl.value += `+mode:${openWorldType.value}`
-        window.open(openWorldUrl.value, '_self')
+        customProtocolCheck(
+          openWorldUrl.value,
+          () => {
+            console.log('Custom protocol not found.')
+          },
+          () => {
+            console.log('Custom protocol found and opened the file successfully.')
+          }, 5000
+        )
         getSessionApiCall(res.data.response)
       })
       .catch((err) => {
@@ -63,22 +68,33 @@ export function useOpenWorld (store) {
   }
 
   const openWorld = (type, world) => {
-    isWorldLoadingModal.value = true
-    openWorldType.value = type
-    if (world.template_name === 'Camelot') {
-      openWorldUrl = ref(`sequincamelot://+world-id:${world.public_id}+auth:${store.state.accessToken}`)
+    if (os.includes('Mac')) {
+      if (world.template_name === 'Camelot') {
+        isWorldLoadingModal.value = true
+        customProtocolCheck(
+          'sequincamelot://',
+          () => {
+            console.log('Custom protocol not found.')
+          },
+          () => {
+            console.log('Custom protocol found and opened the file successfully.')
+          }, 5000
+        )
+      }
     } else {
-      openWorldUrl = ref(`sequinworld://+world-id:${world.public_id}+auth:${store.state.accessToken}`)
+      isWorldLoadingModal.value = true
+      openWorldType.value = type
+      if (world.template_name === 'Camelot') {
+        openWorldUrl = ref('sequincamelot://')
+      } else {
+        openWorldUrl = ref(`sequinworld://+world-id:${world.public_id}+auth:${store.state.accessToken}`)
+      }
+      startNewSessionApiCall()
     }
-    startNewSessionApiCall()
   }
-
-  // const closeDownload = () => downloadModalVisible.value = false;
 
   return {
     isWorldLoadingModal,
-    // downloadModalVisible,
     openWorld
-    // closeDownload
   }
 }
