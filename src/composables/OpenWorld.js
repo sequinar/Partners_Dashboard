@@ -72,7 +72,7 @@ export function useOpenWorld (store) {
       if (world.template_name === 'Camelot') {
         isWorldLoadingModal.value = true
         customProtocolCheck(
-          'sequincamelot://',
+          `sequincamelot://?world-id:${world.public_id}?auth:${store.state.accessToken}`,
           () => {
             console.log('Custom protocol not found.')
           },
@@ -85,9 +85,9 @@ export function useOpenWorld (store) {
       isWorldLoadingModal.value = true
       openWorldType.value = type
       if (world.template_name === 'Camelot') {
-        openWorldUrl = ref('sequincamelot://')
+        openWorldUrl = ref(`sequincamelot://?world-id:${world.public_id}?auth:${store.state.accessToken}`)
       } else {
-        openWorldUrl = ref(`sequinworld://+world-id:${world.public_id}+auth:${store.state.accessToken}`)
+        openWorldUrl = ref(`sequinworld://?world-id:${world.public_id}?auth:${store.state.accessToken}`)
       }
       startNewSessionApiCall()
     }
