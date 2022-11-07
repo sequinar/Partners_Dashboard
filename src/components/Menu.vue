@@ -18,12 +18,12 @@
         <span class="title">Team</span>
       </template>
     </el-menu-item>
-    <el-menu-item index="3" @click="goTo('/listings')">
+    <!-- <el-menu-item index="3" @click="goTo('/listings')">
       <img src="../assets/icons/Listings.svg" alt="Listings">
       <template #title>
         <span class="title">Listings or Products</span>
       </template>
-    </el-menu-item>
+    </el-menu-item> -->
     <el-menu-item class="onboarding" index="4" @click="isOnboarding = true">
       <img src="../assets/icons/Onboarding.svg" alt="Onboarding">
       <template #title>

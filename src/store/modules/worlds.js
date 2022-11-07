@@ -5,7 +5,8 @@ const store = {
     return {
       worlds: null, // {data: [], meta: {}}
       currentWorld: null,
-      worldBanners: []
+      worldBanners: [],
+      uploadUrl: ''
     }
   },
   mutations: {
@@ -17,23 +18,12 @@ const store = {
     },
     setBanners (state, banners) {
       state.worldBanners = banners
+    },
+    setUploadUrl (state, url) {
+      state.uploadUrl = url
     }
   },
   actions: {
-    async createWorld ({ dispatch, rootState, commit }, data) {
-      try {
-        await axios.post(`team/${rootState.team.team.teamId}/worlds`, {
-          worldname: data.name,
-          worlddescription: data.descrition,
-          customizations: data.customizations,
-          thumbnail: data.thumbnail
-        })
-        dispatch('getWorlds')
-        commit('setMessageSuccess', 'World created successfully', { root: true })
-      } catch (err) {
-        commit('setMessageError', err.response.data.error, { root: true })
-      }
-    },
     async getWorlds ({ commit, rootState }, params) {
       if (rootState.team.team) {
         const worlds = await axios.get(`team/${rootState.team.team.teamId}/worlds`, {
@@ -82,6 +72,10 @@ const store = {
       } catch (err) {
         commit('setMessageError', err.response.data.error, { root: true })
       }
+    },
+    async getUploadUrl ({ commit }, data) {
+      const response = await axios.post('dummy/getprojectuploadurl', data)
+      commit('setUploadUrl', response.data.data)
     }
   },
   getters: {}

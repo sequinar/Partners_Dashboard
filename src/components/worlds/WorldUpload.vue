@@ -1,7 +1,7 @@
 <template>
     <div ref="bannerRef" class="worldUpload" :style="{ width: props.width, height: props.height }">
         <el-upload ref="uploadRef" drag action="#" :auto-upload="false" :on-change="uploadSuccess" :limit="1"
-            :on-exceed="handleExceed" accept=".zip">
+            :on-exceed="handleExceed" accept=".zip,.7z">
             <div class="el-upload__text d-flex align-center justify-center direction-column">
                 <img src="@/assets/icons/Uploadicon.svg" alt="Uploadicon" />
                 <span>Choose a file or drag it here to upload.</span>
@@ -24,8 +24,10 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { genFileId, ElMessage } from 'element-plus'
+import { useStore } from 'vuex'
+import useUtils from '@/composables/utils.js'
+import axios from '@/axios/index'
 
-const uploadRef = ref(null)
 const props = defineProps({
   width: {
     type: String,
@@ -34,34 +36,41 @@ const props = defineProps({
   height: {
     type: String,
     required: true
-  },
-  file: {
-    type: Object,
-    default: () => { }
   }
 })
+const { file2Buffer } = useUtils()
+const MULTIPART_CHUNK_SIZE = 10000000
+const store = useStore()
+const uploadRef = ref(null)
 const file = ref(null)
 const bannerRef = ref(null)
+const chunksList = ref([])
+const promises = ref([])
+const etags = ref([])
+const chunksListLength = computed(() => chunksList.value.length)
 const fileSize = computed(() => (file.value.size / 1073741824).toFixed(1) + ' GB')
 
-// const emits = defineEmits(['fileUpdate'])
-
-const uploadSuccess = (res) => {
+const uploadSuccess = async (res) => {
+  console.log(res.raw)
   if (res.raw.type !== 'application/x-zip-compressed') {
     ElMessage.error('File must be .zip format!')
   } else if (res.raw.size / 1048576 > 1024) {
     ElMessage.error('The file must not exceed 1 GB')
   } else {
     file.value = res.raw
-    const fd = new FormData()
-    fd.append('file', res.raw)
-    // emits('fileUpdate', fd)
+    chunksList.value = await createChunks(res.raw, MULTIPART_CHUNK_SIZE)
+    console.log(chunksList.value)
+    await store.dispatch('worlds/getUploadUrl', {
+      file: {
+        fileName: res.raw.name,
+        partsRequested: chunksListLength.value,
+        multiPart: true
+      }
+    })
+    createPromises(store.state.worlds.uploadUrl.urls)
   }
 }
 
-// const uploadFile = () => {
-//   bannerRef.value.querySelector('.el-upload__text').click()
-// }
 const removeFile = () => {
   file.value = null
 }
@@ -71,7 +80,39 @@ const handleExceed = (files) => {
   file.uid = genFileId()
   uploadRef.value.handleStart(file)
 }
+const createChunks = async (file, chunkSize) => {
+  const buffer = await file2Buffer(file)
+  let startPointer = 0
+  const endPointer = file.size
+  const chunks = []
+  while (startPointer < endPointer) {
+    const newStartPointer = startPointer + chunkSize
+    chunks.push(buffer.slice(startPointer, newStartPointer))
+    startPointer = newStartPointer
+  }
+  return chunks
+}
 
+const createPromises = async (urls) => {
+  urls.forEach((item, index) => {
+    console.log(chunksList.value[index])
+    const promise = new Promise((resolve, reject) => {
+      axios({
+        method: 'put',
+        url: item.url,
+        data: chunksList.value[index],
+        headers: { 'Content-Type': 'application/zip', Authorization: '' }
+      }).then((result) => {
+        etags.value.push(result.headers.etag)
+        resolve()
+      }).catch((err) => {
+        reject(err)
+      })
+    })
+    promises.value.push(promise)
+  })
+  await Promise.all(promises.value)
+}
 </script>
 
 <style lang="scss">
