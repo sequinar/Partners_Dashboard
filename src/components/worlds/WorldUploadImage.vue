@@ -65,7 +65,7 @@ const uploadSuccess = (res) => {
   if (res.raw.type === 'image/jpeg' || res.raw.type === 'image/png') {
     img.value = URL.createObjectURL(res.raw)
     const fd = new FormData()
-    fd.append('bannerImage', res.raw)
+    fd.append('featuredImage', res.raw)
     if (props.image?.banner_id) fd.append('bannerId', props.image.banner_id)
     emits('imageUpdate', fd)
   } else {

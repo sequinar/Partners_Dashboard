@@ -1,7 +1,7 @@
 <template>
-    <div ref="bannerRef" class="worldUpload" :style="{ width: props.width, height: props.height }">
+    <div ref="bannerRef" class="worldUpload" :style="{ width: props.width, height: props.height }" v-loading="uploading">
         <el-upload ref="uploadRef" drag action="#" :auto-upload="false" :on-change="uploadSuccess" :limit="1"
-            :on-exceed="handleExceed" accept=".zip,.7z">
+            :on-exceed="handleExceed" accept=".zip">
             <div class="el-upload__text d-flex align-center justify-center direction-column">
                 <img src="@/assets/icons/Uploadicon.svg" alt="Uploadicon" />
                 <span>Choose a file or drag it here to upload.</span>
@@ -25,7 +25,6 @@
 import { ref, computed } from 'vue'
 import { genFileId, ElMessage } from 'element-plus'
 import { useStore } from 'vuex'
-import useUtils from '@/composables/utils.js'
 import axios from '@/axios/index'
 
 const props = defineProps({
@@ -38,8 +37,7 @@ const props = defineProps({
     required: true
   }
 })
-const { file2Buffer } = useUtils()
-const MULTIPART_CHUNK_SIZE = 10000000
+const MULTIPART_CHUNK_SIZE = 104857600
 const store = useStore()
 const uploadRef = ref(null)
 const file = ref(null)
@@ -47,19 +45,20 @@ const bannerRef = ref(null)
 const chunksList = ref([])
 const promises = ref([])
 const etags = ref([])
+const uploading = ref(false)
 const chunksListLength = computed(() => chunksList.value.length)
-const fileSize = computed(() => (file.value.size / 1073741824).toFixed(1) + ' GB')
+const fileSize = computed(() => (file.value?.size / 1073741824).toFixed(1) + ' GB')
+const uploadUrls = computed(() => store.state.worlds.uploadUrl.urls)
 
 const uploadSuccess = async (res) => {
-  console.log(res.raw)
   if (res.raw.type !== 'application/x-zip-compressed') {
     ElMessage.error('File must be .zip format!')
   } else if (res.raw.size / 1048576 > 1024) {
     ElMessage.error('The file must not exceed 1 GB')
   } else {
+    uploading.value = true
     file.value = res.raw
-    chunksList.value = await createChunks(res.raw, MULTIPART_CHUNK_SIZE)
-    console.log(chunksList.value)
+    chunksList.value = createChunks(res.raw, MULTIPART_CHUNK_SIZE)
     await store.dispatch('worlds/getUploadUrl', {
       file: {
         fileName: res.raw.name,
@@ -67,7 +66,9 @@ const uploadSuccess = async (res) => {
         multiPart: true
       }
     })
-    createPromises(store.state.worlds.uploadUrl.urls)
+    await createPromises(uploadUrls.value)
+    store.commit('worlds/setETags', etags.value)
+    uploading.value = false
   }
 }
 
@@ -80,30 +81,34 @@ const handleExceed = (files) => {
   file.uid = genFileId()
   uploadRef.value.handleStart(file)
 }
-const createChunks = async (file, chunkSize) => {
-  const buffer = await file2Buffer(file)
+const createChunks = (file, chunkSize) => {
   let startPointer = 0
   const endPointer = file.size
   const chunks = []
   while (startPointer < endPointer) {
     const newStartPointer = startPointer + chunkSize
-    chunks.push(buffer.slice(startPointer, newStartPointer))
+    chunks.push(file.slice(startPointer, newStartPointer, file.type))
     startPointer = newStartPointer
   }
   return chunks
 }
 
 const createPromises = async (urls) => {
+  const axiosInstance = axios.create()
+  delete axiosInstance.defaults.headers.common.Authorization
   urls.forEach((item, index) => {
     console.log(chunksList.value[index])
     const promise = new Promise((resolve, reject) => {
-      axios({
+      axiosInstance({
         method: 'put',
         url: item.url,
         data: chunksList.value[index],
-        headers: { 'Content-Type': 'application/zip', Authorization: '' }
+        headers: { 'Content-Type': file.value.type }
       }).then((result) => {
-        etags.value.push(result.headers.etag)
+        etags.value[item.PartNumber - 1] = {
+          PartNumber: item.PartNumber,
+          ETag: JSON.parse(result.headers.etag)
+        }
         resolve()
       }).catch((err) => {
         reject(err)

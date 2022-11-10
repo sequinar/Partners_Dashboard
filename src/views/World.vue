@@ -11,40 +11,40 @@
                     thumbnails, system requirements and world capabilities. <span class="red">*</span></p>
                 <WorldUpload width="100%" height="105px"/>
                 <WorldUploadImage width="100%" height="300px" title="Feature Image" :types="imageTypes" max-size="20MB"
-                    resolution="W: 1600 H: 800 px" />
+                    resolution="W: 1600 H: 800 px" @imageUpdate="onFeatureImage"/>
                 <div>
                     <label>Name<span class="red">*</span></label>
-                    <el-input v-model="world.name" placeholder="World name" maxlength="20" show-word-limit />
+                    <el-input v-model="world.worldName" placeholder="World name" maxlength="20" show-word-limit />
                 </div>
                 <div>
                     <label>Short Description<span class="red">*</span></label>
                     <small>The short description will be included on the iWorld's feature section underneath its
                         name.</small>
-                    <el-input v-model="world.description" maxlength="100"
+                    <el-input v-model="world.worldDescription" maxlength="100"
                         placeholder="Provide a short description of your item." show-word-limit type="textarea"
                         rows='4' />
                 </div>
-                <div>
+                <div class="gallery">
                     <label>Gallery<span class="red">*</span></label>
                     <small>Images will be included on the World's gallery. Upload an image at least <b>W: 1200 H: 700
                             px</b></small>
-                    <ImageGallery />
+                    <ImageGallery @imageUpdate="onGalleryUpdate"/>
                 </div>
                 <div>
                     <label>Capabilities<span class="red">*</span></label>
                     <small>Add or select your World capabilities.</small>
-                    <el-select v-model="world.capabilitie" placeholder="Select Capabilities" multiple filterable
-                        allow-create :reserve-keyword="false" default-first-option>
-                        <el-option v-for="item in capabilities" :key="item.value" :label="item.label"
-                            :value="item.value" />
+                    <el-select v-model="world.worldCapabilities" placeholder="Select Capabilities" multiple filterable
+                        allow-create :reserve-keyword="false" default-first-option @change="detectNewTag">
+                        <el-option v-for="item in capabilities" :key="item" :label="item"
+                            :value="item" />
                     </el-select>
                 </div>
                 <div>
                     <label>Playable on<span class="red">*</span></label>
                     <small>Add the platforms your World is available to be played on.</small>
-                    <el-select v-model="world.capability" placeholder="Select Platforms" multiple>
-                        <el-option v-for="item in capabilities" :key="item.value" :label="item.label"
-                            :value="item.value" />
+                    <el-select v-model="world.playabelOn" placeholder="Select Platforms" multiple>
+                        <el-option v-for="item in playableOn" :key="item" :label="item"
+                            :value="item" />
                     </el-select>
                 </div>
                 <div>
@@ -55,7 +55,7 @@
                             <el-input v-model="world.ram" placeholder="RAM" />
                         </el-col>
                         <el-col :span="12">
-                            <el-input v-model="world.graphics" placeholder="Graphics Card" />
+                            <el-input v-model="world.gc" placeholder="Graphics Card" />
                         </el-col>
                     </el-row>
                 </div>
@@ -63,10 +63,10 @@
                     <label>Publisher info<span class="red">*</span></label>
                     <el-row :gutter="25">
                         <el-col :span="12">
-                            <el-input v-model="world.published" placeholder="Published By" />
+                            <el-input v-model="world.publishedBy" placeholder="Published By" />
                         </el-col>
                         <el-col :span="12">
-                            <el-input v-model="world.developed" placeholder="Developed By" />
+                            <el-input v-model="world.developedBy" placeholder="Developed By" />
                         </el-col>
                     </el-row>
                 </div>
@@ -77,33 +77,30 @@
                     <p>Publish, save as a draft or preview.</p>
                     <el-row class="mt-15" :gutter="15">
                         <el-col :span="12">
-                            <el-button class="full-width" type="primary" plain size="large">Save Draft</el-button>
+                            <el-button class="full-width" type="primary" plain size="large" :disabled="publishDisabled" @click="saveWorld(WORLD_STATUSES.DRAFT)">Save Draft</el-button>
                         </el-col>
                         <el-col :span="12">
-                            <el-button class="full-width" type="primary" plain size="large">Preview</el-button>
+                            <el-button class="full-width" type="primary" plain size="large" :disabled="publishDisabled" @click="saveWorld(WORLD_STATUSES.PREVIEW)">Preview</el-button>
                         </el-col>
                     </el-row>
-                    <div class="mt-10 d-flex justify-between align-center">
-                        <h3>Released on:</h3>
-                        <el-button type="primary" size="large" link>Edit</el-button>
-                    </div>
-                    <p class="relised-date ma-0">Aug 24, 2022 at 9:19 AM</p>
-                    <el-row class="mt-15" :gutter="15">
+                    <ReleaseDate :init-date="world.releaseDate" @change-date="changeDate"/>
+                    <el-row :gutter="15">
                         <el-col :span="12">
-                            <el-button class="full-width" type="primary" link size="large">Archive World</el-button>
+                            <el-button class="full-width" type="primary" link size="large" :disabled="publishDisabled" @click="saveWorld(WORLD_STATUSES.ARCHIVE)">Archive World</el-button>
                         </el-col>
                         <el-col :span="12">
-                            <el-button class="full-width" type="primary" size="large">Publish</el-button>
+                            <el-button class="full-width" type="primary" size="large" :disabled="publishDisabled" @click="saveWorld(WORLD_STATUSES.PUBLISH)">Publish</el-button>
                         </el-col>
                     </el-row>
                 </div>
                 <div class="thumbnail mt-20">
                     <h3>Thumbnail Image</h3>
                     <p>Upload an image at least <b>W: 300 H: 300 px</b></p>
-                    <ImageGallery :limit="1" />
+                    <ImageGallery :limit="1" @imageUpdate="onThumbnailUpdate"/>
                 </div>
                 <el-button class="full-width mt-15" type="primary" size="large">World Editor</el-button>
             </el-col>
+
         </el-row>
     </el-container>
 </template>
@@ -112,33 +109,101 @@
 import WorldUpload from '@/components/worlds/WorldUpload.vue'
 import WorldUploadImage from '@/components/worlds/WorldUploadImage.vue'
 import ImageGallery from '@/components/ImageGallery.vue'
+import ReleaseDate from '../components/worlds/ReleaseDate.vue'
 import { ArrowLeft } from '@element-plus/icons-vue'
 import { useRouter, useRoute } from 'vue-router'
-import { reactive } from 'vue'
+import { reactive, computed, ref, onMounted } from 'vue'
+import { useStore } from 'vuex'
+import { ElMessage } from 'element-plus'
+import { WORLD_STATUSES } from '@/helpers/constants'
 
+const store = useStore()
 const router = useRouter()
 const route = useRoute()
+
 const imageTypes = ['JPG', 'PNG', 'GIF', 'SVG', 'MP4', 'WEBM', 'WAV', 'OGG', 'GLB', 'GLTF']
+
 const world = reactive({
-  name: '',
-  description: '',
-  capability: '',
+  worldName: '',
+  worldDescription: '',
+  worldCapabilities: [],
   cpu: '',
   ram: '',
-  graphics: '',
-  published: '',
-  developed: ''
+  gc: '',
+  publishedBy: '',
+  developedBy: '',
+  playabelOn: [],
+  releaseDate: new Date().toLocaleDateString('en-CA')
 })
-const capabilities = [
-  {
-    value: 'Option1',
-    label: 'Option1'
-  },
-  {
-    value: 'Option2',
-    label: 'Option2'
+
+const featureImage = ref(null)
+const thumbnailImage = ref(null)
+const gallery = ref(null)
+const capabilities = computed(() => store.getters['worlds/getCapabilities'])
+const playableOn = computed(() => store.getters['worlds/getPlatforms'])
+const etags = computed(() => store.state.worlds.eTags.length > 0 ? store.state.worlds.eTags : null)
+const uploadId = computed(() => store.state.worlds.uploadUrl.uploadid)
+const fileName = computed(() => store.state.worlds.fileName)
+const uploadedWorldUrl = computed(() => store.state.worlds.uploadedWorldUrl)
+const publishDisabled = computed(() => !(isWorldFilled.value && featureImage.value && gallery.value && etags.value))
+const isWorldFilled = computed(() => {
+  return Object.values(world).every(value => value.length !== 0)
+})
+
+const createWorld = async () => {
+  return await store.dispatch('worlds/createWorld', {
+    worldAssetsUrl: uploadedWorldUrl.value,
+    ...world
+  })
+}
+
+const saveWorld = async (status) => {
+  await store.dispatch('worlds/completeMultipartUpload', {
+    fileName: fileName.value, etags: etags.value, uploadID: uploadId.value
+  })
+  await createWorld()
+  await store.dispatch('worlds/setWorldStatus', status)
+  store.dispatch('worlds/updateFeaturedImage', featureImage.value)
+  store.dispatch('worlds/updateGallery', gallery.value)
+
+  if (thumbnailImage.value) {
+    store.dispatch('worlds/updateThumbnailImage', thumbnailImage.value)
   }
-]
+  ElMessage.success('World successfully created')
+}
+
+const onFeatureImage = (formData) => {
+  featureImage.value = formData
+}
+
+const onGalleryUpdate = (images) => {
+  const fd = new FormData()
+  images.forEach((image, index) => {
+    fd.append(index, image.raw)
+  })
+  gallery.value = fd
+}
+
+const onThumbnailUpdate = (images) => {
+  const fd = new FormData()
+  fd.append('thumbnailImage', images[0].raw)
+  thumbnailImage.value = fd
+}
+
+const detectNewTag = (tags) => {
+  tags.forEach(tag => {
+    if (!capabilities.value.includes(tag)) {
+      store.dispatch('worlds/createCapability', tag)
+    }
+  })
+}
+
+const changeDate = (date) => { world.releaseDate = date }
+
+onMounted(async () => {
+  await store.dispatch('worlds/getCapabilities')
+  await store.dispatch('worlds/getPlatforms')
+})
 </script>
 
 <style lang="scss">
@@ -214,12 +279,6 @@ const capabilities = [
             line-height: 24px;
             margin-bottom: 5px;
         }
-
-        .relised-date {
-            font-size: 14px;
-            margin-top: 10px;
-            margin-bottom: 20px;
-        }
     }
 
     .el-button {
@@ -239,6 +298,23 @@ const capabilities = [
             width: 275px;
             height: 275px;
             margin: 0 auto;
+        }
+    }
+
+    .gallery {
+        .el-upload-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-auto-flow: dense;
+        }
+        .el-upload-list__item,
+        .el-upload--picture-card {
+            width: 185px;
+            height: 115px;
+        }
+
+        .el-upload-list--picture-card {
+            gap: 23px;
         }
     }
 }

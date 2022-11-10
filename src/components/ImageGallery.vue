@@ -1,7 +1,7 @@
 <template>
     <div ref="imageGallery">
         <el-upload v-model:file-list="fileList" action="#" list-type="picture-card"
-            :on-preview="handlePictureCardPreview" :on-remove="handleRemove" accept="image/png, image/jpeg"
+            :on-preview="handlePictureCardPreview" accept="image/png, image/jpeg"
             :auto-upload="false" :limit="props.limit">
             <div class="addButton">
                 <el-icon>
@@ -20,6 +20,8 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 
+const emits = defineEmits(['imageUpdate'])
+
 const props = defineProps({
   limit: {
     type: Number,
@@ -35,16 +37,13 @@ const dialogVisible = ref(false)
 const uploadButton = computed(() => imageGallery.value.querySelector('.el-upload--picture-card'))
 const fileListLength = computed(() => fileList.value.length)
 
-const handleRemove = (uploadFile, uploadFiles) => {
-  console.log(uploadFile, uploadFiles)
-}
-
 const handlePictureCardPreview = (uploadFile) => {
   dialogImageUrl.value = uploadFile.url
   dialogVisible.value = true
 }
 
 watch(fileListLength, (length) => {
+  emits('imageUpdate', fileList.value)
   if (length >= props.limit) {
     uploadButton.value.style.display = 'none'
   } else if (uploadButton.value.style.display === 'none') {
