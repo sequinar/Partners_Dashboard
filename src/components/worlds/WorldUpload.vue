@@ -27,6 +27,7 @@ import { genFileId, ElMessage } from 'element-plus'
 import { useStore } from 'vuex'
 import axios from '@/axios/index'
 
+const emits = defineEmits(['fileChanged'])
 const props = defineProps({
   width: {
     type: String,
@@ -69,6 +70,7 @@ const uploadSuccess = async (res) => {
     await createPromises(uploadUrls.value)
     store.commit('worlds/setETags', etags.value)
     uploading.value = false
+    emits('fileChanged')
   }
 }
 

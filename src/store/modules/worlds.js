@@ -10,7 +10,7 @@ const store = {
       uploadedWorldUrl: '',
       eTags: [],
       fileName: null,
-      newWorld: {},
+      editedWorld: null,
       capabilities: [],
       playebleOn: []
     }
@@ -37,8 +37,8 @@ const store = {
     setFileName (state, name) {
       state.fileName = name
     },
-    setNewWorld (state, world) {
-      state.newWorld = world
+    setEditedWorld (state, world) {
+      state.editedWorld = world
     },
     setCapabilities (state, capabilities) {
       state.capabilities = capabilities
@@ -51,7 +51,7 @@ const store = {
     async createWorld ({ rootState, commit }, data) {
       try {
         const response = await axios.post(`team/${rootState.team.team.teamId}/worlds`, data)
-        commit('setNewWorld', response.data.data)
+        commit('setEditedWorld', response.data.data)
       } catch (err) {
         commit('setMessageError', err.response.data.error, { root: true })
       }
@@ -73,6 +73,10 @@ const store = {
       } else {
         commit('setWorlds', {})
       }
+    },
+    async getWorld ({ rootState, commit }, worldId) {
+      const response = await axios.get(`team/${rootState.team.team.teamId}/world/${worldId}`)
+      commit('setEditedWorld', response.data.data)
     },
     async getCurrentWorld ({ commit }, worldId) {
       const world = await axios.get(`world/${worldId}/get-world-state`)
@@ -96,18 +100,18 @@ const store = {
       commit('setPlayableOn', response.data.data)
     },
     async updateFeaturedImage ({ state }, image) {
-      if (state.newWorld?.publicId) {
-        await axios.post(`world/${state.newWorld.publicId}/world-feature-image`, image)
+      if (state.editedWorld?.publicId) {
+        await axios.post(`world/${state.editedWorld.publicId}/world-feature-image`, image)
       }
     },
     async updateThumbnailImage ({ state }, image) {
-      if (state.newWorld?.publicId) {
-        await axios.post(`world/${state.newWorld.publicId}/world-thumbnail-image`, image)
+      if (state.editedWorld?.publicId) {
+        await axios.post(`world/${state.editedWorld.publicId}/world-thumbnail-image`, image)
       }
     },
     async updateGallery ({ state }, images) {
-      if (state.newWorld?.publicId) {
-        await axios.post(`world/${state.newWorld.publicId}/world-image`, images)
+      if (state.editedWorld?.publicId) {
+        await axios.post(`world/${state.editedWorld.publicId}/world-image`, images)
       }
     },
     async updateChatStatus ({ dispatch }, data) {
@@ -158,8 +162,8 @@ const store = {
       commit('setUploadedWorldUrl', response.data.data)
     },
     async setWorldStatus ({ state }, status) {
-      if (state.newWorld?.publicId) {
-        await axios.post(`world/${state.newWorld.publicId}/publish-status/${status}`)
+      if (state.editedWorld?.publicId) {
+        await axios.post(`world/${state.editedWorld.publicId}/publish-status/${status}`)
       }
     }
   },

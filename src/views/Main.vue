@@ -8,7 +8,7 @@
         <Header />
       </el-header>
       <el-main>
-        <router-view v-if="token"/>
+        <router-view v-if="token && team"/>
       </el-main>
     </el-container>
   </el-container>
@@ -26,6 +26,7 @@ const auth = inject('Auth')
 const messageSuccess = computed(() => store.state.messageSuccess)
 const messageError = computed(() => store.state.messageError)
 const token = computed(() => store.state.accessToken)
+const team = computed(() => store.state.team.team)
 
 const loading = ref(false)
 

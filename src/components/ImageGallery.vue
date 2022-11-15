@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 
 const emits = defineEmits(['imageUpdate'])
 
@@ -26,6 +26,9 @@ const props = defineProps({
   limit: {
     type: Number,
     default: () => 9
+  },
+  images: {
+    type: Array
   }
 })
 
@@ -48,6 +51,14 @@ watch(fileListLength, (length) => {
     uploadButton.value.style.display = 'none'
   } else if (uploadButton.value.style.display === 'none') {
     uploadButton.value.style.display = 'inline-flex'
+  }
+})
+
+onMounted(() => {
+  if (props.images) {
+    props.images.forEach(image => {
+      fileList.value.push({ url: image.image_url })
+    })
   }
 })
 </script>
