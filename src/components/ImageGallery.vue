@@ -2,7 +2,7 @@
     <div ref="imageGallery">
         <el-upload v-model:file-list="fileList" action="#" list-type="picture-card"
             :on-preview="handlePictureCardPreview" accept="image/png, image/jpeg"
-            :auto-upload="false" :limit="props.limit">
+            :auto-upload="false" :limit="props.limit" :on-change="uploadSuccess">
             <div class="addButton">
                 <el-icon>
                     +
@@ -45,8 +45,11 @@ const handlePictureCardPreview = (uploadFile) => {
   dialogVisible.value = true
 }
 
-watch(fileListLength, (length) => {
+const uploadSuccess = () => {
   emits('imageUpdate', fileList.value)
+}
+
+watch(fileListLength, (length) => {
   if (length >= props.limit) {
     uploadButton.value.style.display = 'none'
   } else if (uploadButton.value.style.display === 'none') {

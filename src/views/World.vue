@@ -10,7 +10,7 @@
                 <p class="description">Upload World zip file, and world assets like title ,description, gallery images,
                     thumbnails, system requirements and world capabilities. <span class="red">*</span></p>
                 <WorldUpload width="100%" height="105px" @fileChanged="fileChanged"/>
-                <WorldUploadImage width="100%" height="300px" title="Feature Image" :types="imageTypes" max-size="20MB"
+                <WorldUploadImage width="100%" height="300px" title="Feature Image" :image="{banner_url: editedWorld?.featureImageUrl}" :types="imageTypes" max-size="20MB"
                     resolution="W: 1600 H: 800 px" @imageUpdate="onFeatureImage"/>
                 <div>
                     <label>Name<span class="red">*</span></label>
@@ -197,6 +197,7 @@ const onFeatureImage = (formData) => {
 }
 
 const onGalleryUpdate = (images) => {
+  console.log(images)
   functionsForEdit.value.add(updateGallery)
   const fd = new FormData()
   images.forEach((image, index) => {
