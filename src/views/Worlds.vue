@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { ref, computed, defineAsyncComponent, watch } from 'vue'
+import { ref, computed, defineAsyncComponent, watch, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { Plus } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
@@ -41,6 +41,10 @@ watch(page, async (newPage) => {
     page: newPage,
     filter: ''
   })
+})
+
+onMounted(async () => {
+  await store.dispatch('worlds/getWorlds')
 })
 </script>
 

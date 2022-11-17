@@ -1,5 +1,5 @@
 <template>
-  <el-container v-loading="loading">
+  <el-container>
     <el-aside>
       <Menu />
     </el-aside>
@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import { onMounted, inject, computed, ref, watch } from 'vue'
+import { onMounted, inject, computed, watch } from 'vue'
 import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
 import Menu from '../components/Menu.vue'
@@ -28,8 +28,6 @@ const messageError = computed(() => store.state.messageError)
 const token = computed(() => store.state.accessToken)
 const team = computed(() => store.state.team.team)
 
-const loading = ref(false)
-
 onMounted(async () => {
   store.commit('setUser', auth.user.value)
   await auth.getTokenSilently().then((data) => {
@@ -37,8 +35,6 @@ onMounted(async () => {
   })
   store.dispatch('getUser')
   await store.dispatch('team/getTeam')
-  await store.dispatch('worlds/getWorlds')
-  loading.value = false
 })
 
 watch(messageSuccess, (value) => {

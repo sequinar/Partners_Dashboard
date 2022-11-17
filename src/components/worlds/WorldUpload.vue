@@ -7,10 +7,10 @@
                 <span>Choose a file or drag it here to upload.</span>
             </div>
         </el-upload>
-        <div v-if="file" class="uploadedFile d-flex justify-between align-center">
+        <div v-if="file || fileInfo" class="uploadedFile d-flex justify-between align-center">
             <div>
-                <h4 class="fileName">{{file.name}}</h4>
-                <span class="fileSize">{{fileSize}}</span>
+                <h4 class="fileName">{{file?.name || fileInfo.fileName}}</h4>
+                <span class="fileSize">{{fileSize || fileInfo.fileSize}}</span>
             </div>
             <el-button type="danger" link @click="removeFile">Remove</el-button>
         </div>
@@ -27,7 +27,7 @@ import { genFileId, ElMessage } from 'element-plus'
 import { useStore } from 'vuex'
 import axios from '@/axios/index'
 
-const emits = defineEmits(['fileChanged'])
+const emits = defineEmits(['fileChanged', 'fileRemoved'])
 const props = defineProps({
   width: {
     type: String,
@@ -36,6 +36,9 @@ const props = defineProps({
   height: {
     type: String,
     required: true
+  },
+  fileInfo: {
+    type: Object
   }
 })
 const MULTIPART_CHUNK_SIZE = 104857600
@@ -48,7 +51,7 @@ const promises = ref([])
 const etags = ref([])
 const uploading = ref(false)
 const chunksListLength = computed(() => chunksList.value.length)
-const fileSize = computed(() => (file.value?.size / 1073741824).toFixed(1) + ' GB')
+const fileSize = computed(() => file.value ? (file.value?.size / 1073741824).toFixed(1) + ' GB' : null)
 const uploadUrls = computed(() => store.state.worlds.uploadUrl.urls)
 
 const uploadSuccess = async (res) => {
@@ -74,7 +77,8 @@ const uploadSuccess = async (res) => {
   }
 }
 
-const removeFile = () => {
+const removeFile = async () => {
+  emits('fileRemoved')
   file.value = null
 }
 const handleExceed = (files) => {
@@ -99,7 +103,6 @@ const createPromises = async (urls) => {
   const axiosInstance = axios.create()
   delete axiosInstance.defaults.headers.common.Authorization
   urls.forEach((item, index) => {
-    console.log(chunksList.value[index])
     const promise = new Promise((resolve, reject) => {
       axiosInstance({
         method: 'put',

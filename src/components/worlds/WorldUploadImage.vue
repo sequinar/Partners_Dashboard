@@ -21,7 +21,6 @@
     </div>
     <div class="d-flex justify-between mt-10">
         <div v-if="props.resolution"><b>Size:</b> Upload an image at least <b>{{ props.resolution }}</b></div>
-        <el-button v-if="img" class="removeBanner" type="danger" link @click="removeImage">Remove</el-button>
     </div>
 </template>
 
@@ -64,17 +63,10 @@ const emits = defineEmits(['imageUpdate'])
 const uploadSuccess = (res) => {
   if (res.raw.type === 'image/jpeg' || res.raw.type === 'image/png') {
     img.value = URL.createObjectURL(res.raw)
-    const fd = new FormData()
-    fd.append('featuredImage', res.raw)
-    if (props.image?.banner_id) fd.append('bannerId', props.image.banner_id)
-    emits('imageUpdate', fd)
+    emits('imageUpdate', res)
   } else {
     ElMessage.error('Image must be JPG or PNG format!')
   }
-}
-
-const removeImage = () => {
-  img.value = null
 }
 
 const uploadImage = () => {

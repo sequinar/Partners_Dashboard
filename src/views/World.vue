@@ -1,6 +1,6 @@
 <template>
-    <el-container id="world" class="direction-column" v-loading="!editedWorld">
-        <el-row :gutter="60" v-if="editedWorld">
+    <el-container id="world" class="direction-column" v-loading="loading">
+        <el-row :gutter="60" v-if="!loading">
             <el-col :span="15">
                 <div class="d-flex justify-between">
                     <h1 class="title">{{route.name}}</h1>
@@ -9,7 +9,7 @@
                 </div>
                 <p class="description">Upload World zip file, and world assets like title ,description, gallery images,
                     thumbnails, system requirements and world capabilities. <span class="red">*</span></p>
-                <WorldUpload width="100%" height="105px" @fileChanged="fileChanged"/>
+                <WorldUpload width="100%" height="105px" :fileInfo="fileInfo" @fileChanged="fileChanged" @fileRemoved="fileRemoved"/>
                 <WorldUploadImage width="100%" height="300px" title="Feature Image" :image="{banner_url: editedWorld?.featureImageUrl}" :types="imageTypes" max-size="20MB"
                     resolution="W: 1600 H: 800 px" @imageUpdate="onFeatureImage"/>
                 <div>
@@ -28,7 +28,7 @@
                     <label>Gallery<span class="red">*</span></label>
                     <small>Images will be included on the World's gallery. Upload an image at least <b>W: 1200 H: 700
                             px</b></small>
-                    <ImageGallery @imageUpdate="onGalleryUpdate" :images="editedWorld?.imageUrls"/>
+                    <ImageGallery @imageUpdate="onGalleryUpdate" @imageRemove="onGalleryRemove" :images="gallery"/>
                 </div>
                 <div>
                     <label>Capabilities<span class="red">*</span></label>
@@ -77,26 +77,26 @@
                     <p>Publish, save as a draft or preview.</p>
                     <el-row class="mt-15" :gutter="15">
                         <el-col :span="12">
-                            <el-button class="full-width" type="primary" plain size="large" :disabled="actionsDisabled" @click="saveWorld(WORLD_STATUSES.DRAFT)">Save Draft</el-button>
+                            <el-button class="full-width" type="primary" plain size="large" :loading="buttonLoading" :disabled="actionsDisabled" @click="saveWorld(WORLD_STATUSES.DRAFT)">Save Draft</el-button>
                         </el-col>
                         <el-col :span="12">
-                            <el-button class="full-width" type="primary" plain size="large" :disabled="actionsDisabled" @click="saveWorld(WORLD_STATUSES.PREVIEW)">Preview</el-button>
+                            <el-button class="full-width" type="primary" plain size="large" :loading="buttonLoading" :disabled="actionsDisabled" @click="saveWorld(WORLD_STATUSES.PREVIEW)">Preview</el-button>
                         </el-col>
                     </el-row>
                     <ReleaseDate :init-date="world.releaseDate" @change-date="changeDate"/>
                     <el-row :gutter="15">
                         <el-col :span="12">
-                            <el-button class="full-width" type="primary" link size="large" :disabled="actionsDisabled" @click="saveWorld(WORLD_STATUSES.ARCHIVE)">Archive World</el-button>
+                            <el-button class="full-width" type="primary" link size="large" :loading="buttonLoading" :disabled="actionsDisabled" @click="saveWorld(WORLD_STATUSES.ARCHIVE)">Archive World</el-button>
                         </el-col>
                         <el-col :span="12">
-                            <el-button class="full-width" type="primary" size="large" :disabled="actionsDisabled" @click="saveWorld(WORLD_STATUSES.PUBLISH)">Publish</el-button>
+                            <el-button class="full-width" type="primary" size="large" :loading="buttonLoading" :disabled="actionsDisabled" @click="saveWorld(WORLD_STATUSES.PUBLISH)">Publish</el-button>
                         </el-col>
                     </el-row>
                 </div>
                 <div class="thumbnail mt-20">
                     <h3>Thumbnail Image</h3>
                     <p>Upload an image at least <b>W: 300 H: 300 px</b></p>
-                    <ImageGallery :limit="1" :images="[{image_url: editedWorld?.thumbnailLink}]" @imageUpdate="onThumbnailUpdate"/>
+                    <ImageGallery :limit="1" :images="thumbnailImage" @imageUpdate="onThumbnailUpdate" @imageRemove="onThumbnailRemove"/>
                 </div>
                 <!-- <el-button class="full-width mt-15" type="primary" size="large">World Editor</el-button> -->
             </el-col>
@@ -136,25 +136,14 @@ const world = reactive({
   releaseDate: new Date().toLocaleDateString('en-CA')
 })
 
-const updateFeaturedImage = () => {
-  store.dispatch('worlds/updateFeaturedImage', featureImage.value)
-}
-const updateGallery = () => {
-  store.dispatch('worlds/updateGallery', gallery.value)
-}
-const updateThumbnailImage = () => {
-  store.dispatch('worlds/updateThumbnailImage', thumbnailImage.value)
-}
-const completeMultipartUpload = async () => {
-  await store.dispatch('worlds/completeMultipartUpload', {
-    fileName: fileName.value, etags: etags.value, uploadID: uploadId.value
-  })
-}
-
+const loading = ref(false)
+const buttonLoading = ref(false)
 const featureImage = ref(null)
-const thumbnailImage = ref(null)
-const gallery = ref(null)
+const thumbnailImage = ref([])
+const gallery = ref([])
+const fileInfo = ref(null)
 const functionsForEdit = ref(new Set())
+const imagesToDelete = ref([])
 const editedWorld = computed(() => store.state.worlds.editedWorld)
 const capabilities = computed(() => store.getters['worlds/getCapabilities'])
 const playableOn = computed(() => store.getters['worlds/getPlatforms'])
@@ -162,10 +151,55 @@ const etags = computed(() => store.state.worlds.eTags.length > 0 ? store.state.w
 const uploadId = computed(() => store.state.worlds.uploadUrl.uploadid)
 const fileName = computed(() => store.state.worlds.fileName)
 const uploadedWorldUrl = computed(() => store.state.worlds.uploadedWorldUrl)
-const actionsDisabled = computed(() => !(isWorldFilled.value && featureImage.value && gallery.value && etags.value))
+const actionsDisabled = computed(() => !(isWorldFilled.value && featureImage.value && gallery.value.length && (etags.value || fileInfo.value)))
 const isWorldFilled = computed(() => {
   return Object.values(world).every(value => value.length !== 0)
 })
+
+const updateFeaturedImage = async () => {
+  const fd = new FormData()
+  fd.append('featuredImage', featureImage.value.raw)
+  return await store.dispatch('worlds/updateFeaturedImage', fd)
+}
+const updateGallery = async () => {
+  const fd = new FormData()
+  gallery.value.forEach((image, index) => {
+    if (image.raw) {
+      fd.append(index, image.raw)
+    }
+  })
+  return store.dispatch('worlds/updateGallery', fd)
+}
+const updateThumbnailImage = async () => {
+  const fd = new FormData()
+  fd.append('thumbnailImage', thumbnailImage.value[0].raw)
+  return await store.dispatch('worlds/updateThumbnailImage', fd)
+}
+const completeMultipartUpload = async () => {
+  return await store.dispatch('worlds/completeMultipartUpload', {
+    fileName: fileName.value, etags: etags.value, uploadID: uploadId.value
+  })
+}
+const removeWorldFile = async () => {
+  return await store.dispatch('worlds/deleteWorldFile', route.params.id)
+}
+
+const removeGalleryImage = () => {
+  const promises = []
+  imagesToDelete.value.forEach(image => {
+    promises.push(store.dispatch('worlds/deleteGalleryImage', image.id))
+  })
+  imagesToDelete.value = []
+  return Promise.all(promises)
+}
+
+const removeThumbnailImage = async () => {
+  return await store.dispatch('worlds/deleteThumbnailImage', route.params.id)
+}
+
+const removeFeatureImage = async () => {
+  return await store.dispatch('worlds/deleteFeaturedImage', route.params.id)
+}
 
 const createWorld = async () => {
   return await store.dispatch('worlds/createWorld', {
@@ -175,9 +209,21 @@ const createWorld = async () => {
 }
 
 const saveWorld = async (status) => {
+  buttonLoading.value = true
   if (editedWorld.value) {
-    functionsForEdit.value.forEach(func => func())
-    store.dispatch('worlds/setWorldStatus', status)
+    for (const func of functionsForEdit.value) {
+      await func()
+    }
+    store.dispatch('worlds/updateWorld', {
+      worldId: route.params.id,
+      world: {
+        worldAssetsUrl: uploadedWorldUrl.value.length ? uploadedWorldUrl.value : editedWorld.value.assetsUrl,
+        ...world
+      }
+    })
+    await store.dispatch('worlds/setWorldStatus', status)
+    getWorld()
+    functionsForEdit.value = new Set()
   } else {
     await completeMultipartUpload()
     await createWorld()
@@ -189,28 +235,32 @@ const saveWorld = async (status) => {
     }
     ElMessage.success('World successfully created')
   }
+  buttonLoading.value = false
 }
 
-const onFeatureImage = (formData) => {
+const onFeatureImage = (image) => {
+  functionsForEdit.value.add(removeFeatureImage)
   functionsForEdit.value.add(updateFeaturedImage)
-  featureImage.value = formData
+  featureImage.value = image
 }
 
 const onGalleryUpdate = (images) => {
-  console.log(images)
   functionsForEdit.value.add(updateGallery)
-  const fd = new FormData()
-  images.forEach((image, index) => {
-    fd.append(index, image.raw)
-  })
-  gallery.value = fd
+  gallery.value = images
 }
 
 const onThumbnailUpdate = (images) => {
   functionsForEdit.value.add(updateThumbnailImage)
-  const fd = new FormData()
-  fd.append('thumbnailImage', images[0] ? images[0].raw : '')
-  thumbnailImage.value = fd
+  thumbnailImage.value = images
+}
+
+const onGalleryRemove = (image) => {
+  functionsForEdit.value.add(removeGalleryImage)
+  imagesToDelete.value.push(image)
+}
+
+const onThumbnailRemove = () => {
+  functionsForEdit.value.add(removeThumbnailImage)
 }
 
 const detectNewTag = (tags) => {
@@ -223,6 +273,15 @@ const detectNewTag = (tags) => {
 
 const changeDate = (date) => { world.releaseDate = date }
 
+const fileChanged = () => {
+  functionsForEdit.value.add(completeMultipartUpload)
+}
+
+const fileRemoved = () => {
+  functionsForEdit.value.add(removeWorldFile)
+  fileInfo.value = null
+}
+
 const editWorld = (worldToEdit) => {
   world.worldName = worldToEdit.worldName
   world.worldDescription = worldToEdit.worldDescription
@@ -234,13 +293,26 @@ const editWorld = (worldToEdit) => {
   world.developedBy = worldToEdit.developedBy
   world.playabelOn = worldToEdit.playabelOn
   world.releaseDate = worldToEdit.releaseDate
+
+  featureImage.value = worldToEdit.featureImageUrl
+  thumbnailImage.value = worldToEdit.thumbnailLink ? [{ url: worldToEdit.thumbnailLink }] : []
+  gallery.value = worldToEdit.imageUrls.map(image => {
+    return { url: image.image_url, id: image.id }
+  })
+}
+
+const getWorld = async () => {
+  if (route.params.id) {
+    loading.value = true
+    await store.dispatch('worlds/getWorld', route.params.id)
+    fileInfo.value = await store.dispatch('worlds/getWorldFileInfo', route.params.id)
+    editWorld(editedWorld.value)
+    loading.value = false
+  }
 }
 
 onBeforeMount(async () => {
-  if (route.params.id) {
-    await store.dispatch('worlds/getWorld', route.params.id)
-    editWorld(editedWorld.value)
-  }
+  getWorld()
   await store.dispatch('worlds/getCapabilities')
   await store.dispatch('worlds/getPlatforms')
 })

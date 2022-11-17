@@ -99,6 +99,17 @@ const store = {
       const response = await axios.get('world/playabel-platforms')
       commit('setPlayableOn', response.data.data)
     },
+    async getWorldFileInfo ({ state }, worldId) {
+      const response = await axios.get(`/world/${worldId}/file`)
+      return response.data.data
+    },
+    async updateWorld ({ rootState, commit }, data) {
+      try {
+        await axios.post(`team/${rootState.team.team.teamId}/world/${data.worldId}`, data.world)
+      } catch (err) {
+        commit('setMessageError', err.response.data.error, { root: true })
+      }
+    },
     async updateFeaturedImage ({ state }, image) {
       if (state.editedWorld?.publicId) {
         await axios.post(`world/${state.editedWorld.publicId}/world-feature-image`, image)
@@ -141,18 +152,30 @@ const store = {
         commit('setMessageError', err.response.data.error, { root: true })
       }
     },
-    async deleteFeaturedImage ({ commit }, id) {
+    async deleteFeaturedImage ({ commit }, worldId) {
       try {
-        await axios.delete(`world/${id}/world-feature-image`)
-        commit('setMessageSuccess', 'Fetured image deleted successfully', { root: true })
+        await axios.delete(`world/${worldId}/world-feature-image`)
       } catch (err) {
         commit('setMessageError', err.response.data.error, { root: true })
       }
     },
-    async deleteThumbnailImage ({ commit }, id) {
+    async deleteThumbnailImage ({ commit }, worldId) {
       try {
-        await axios.delete(`world/${id}/world-thumbnail-image`)
-        commit('setMessageSuccess', 'Thumbnail image deleted successfully', { root: true })
+        await axios.delete(`world/${worldId}/world-thumbnail-image`)
+      } catch (err) {
+        commit('setMessageError', err.response.data.error, { root: true })
+      }
+    },
+    async deleteGalleryImage ({ commit, state }, imageId) {
+      try {
+        await axios.delete(`world/${state.editedWorld.publicId}/world-image/${imageId}`)
+      } catch (err) {
+        commit('setMessageError', err.response.data.error, { root: true })
+      }
+    },
+    async deleteWorldFile ({ commit }, worldId) {
+      try {
+        await axios.delete(`world/${worldId}/file`)
       } catch (err) {
         commit('setMessageError', err.response.data.error, { root: true })
       }

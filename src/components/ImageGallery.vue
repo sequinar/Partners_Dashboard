@@ -2,7 +2,7 @@
     <div ref="imageGallery">
         <el-upload v-model:file-list="fileList" action="#" list-type="picture-card"
             :on-preview="handlePictureCardPreview" accept="image/png, image/jpeg"
-            :auto-upload="false" :limit="props.limit" :on-change="uploadSuccess">
+            :auto-upload="false" :limit="props.limit" :on-remove="handleRemove">
             <div class="addButton">
                 <el-icon>
                     +
@@ -20,7 +20,7 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
 
-const emits = defineEmits(['imageUpdate'])
+const emits = defineEmits(['imageUpdate', 'imageRemove'])
 
 const props = defineProps({
   limit: {
@@ -32,11 +32,18 @@ const props = defineProps({
   }
 })
 
-const fileList = ref([])
 const imageGallery = ref(null)
 const dialogImageUrl = ref('')
 const dialogVisible = ref(false)
 
+const fileList = computed({
+  get () {
+    return props.images
+  },
+  set (value) {
+    emits('imageUpdate', value)
+  }
+})
 const uploadButton = computed(() => imageGallery.value.querySelector('.el-upload--picture-card'))
 const fileListLength = computed(() => fileList.value.length)
 
@@ -45,24 +52,24 @@ const handlePictureCardPreview = (uploadFile) => {
   dialogVisible.value = true
 }
 
-const uploadSuccess = () => {
-  emits('imageUpdate', fileList.value)
+const handleRemove = (image) => {
+  emits('imageRemove', image)
 }
 
-watch(fileListLength, (length) => {
+const hideUploadButton = (length) => {
   if (length >= props.limit) {
     uploadButton.value.style.display = 'none'
   } else if (uploadButton.value.style.display === 'none') {
     uploadButton.value.style.display = 'inline-flex'
   }
+}
+
+watch(fileListLength, (length) => {
+  hideUploadButton(length)
 })
 
 onMounted(() => {
-  if (props.images) {
-    props.images.forEach(image => {
-      fileList.value.push({ url: image.image_url })
-    })
-  }
+  hideUploadButton(fileListLength.value)
 })
 </script>
 
