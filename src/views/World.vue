@@ -10,7 +10,7 @@
                 <p class="description">Upload World zip file, and world assets like title ,description, gallery images,
                     thumbnails, system requirements and world capabilities. <span class="red">*</span></p>
                 <WorldUpload width="100%" height="105px" :fileInfo="fileInfo" @fileChanged="fileChanged" @fileRemoved="fileRemoved"/>
-                <WorldUploadImage width="100%" height="300px" title="Feature Image" :image="{banner_url: editedWorld?.featureImageUrl}" :types="imageTypes" max-size="20MB"
+                <WorldUploadImage width="100%" height="300px" title="Feature Image" :image="{banner_url: featureImage}" :types="imageTypes" max-size="20MB"
                     resolution="W: 1600 H: 800 px" @imageUpdate="onFeatureImage"/>
                 <div>
                     <label>Name<span class="red">*</span></label>
@@ -234,6 +234,7 @@ const saveWorld = async (status) => {
       updateThumbnailImage()
     }
     ElMessage.success('World successfully created')
+    router.push('/')
   }
   buttonLoading.value = false
 }
@@ -308,6 +309,8 @@ const getWorld = async () => {
     fileInfo.value = await store.dispatch('worlds/getWorldFileInfo', route.params.id)
     editWorld(editedWorld.value)
     loading.value = false
+  } else {
+    store.commit('worlds/setEditedWorld', null)
   }
 }
 
