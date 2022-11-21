@@ -234,7 +234,6 @@ const saveWorld = async (status) => {
       updateThumbnailImage()
     }
     ElMessage.success('World successfully created')
-    router.push('/')
   }
   buttonLoading.value = false
 }
