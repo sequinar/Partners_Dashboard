@@ -1,21 +1,21 @@
 <template>
-  <el-container v-loading="loading">
+  <el-container>
     <el-aside>
       <Menu />
     </el-aside>
-    <el-container>
+    <el-container class="main-container">
       <el-header>
         <Header />
       </el-header>
       <el-main>
-        <router-view v-if="token"/>
+        <router-view v-if="token && team"/>
       </el-main>
     </el-container>
   </el-container>
 </template>
 
 <script setup>
-import { onMounted, inject, computed, ref, watch } from 'vue'
+import { onMounted, inject, computed, watch } from 'vue'
 import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
 import Menu from '../components/Menu.vue'
@@ -26,8 +26,7 @@ const auth = inject('Auth')
 const messageSuccess = computed(() => store.state.messageSuccess)
 const messageError = computed(() => store.state.messageError)
 const token = computed(() => store.state.accessToken)
-
-const loading = ref(false)
+const team = computed(() => store.state.team.team)
 
 onMounted(async () => {
   store.commit('setUser', auth.user.value)
@@ -36,8 +35,6 @@ onMounted(async () => {
   })
   store.dispatch('getUser')
   await store.dispatch('team/getTeam')
-  await store.dispatch('worlds/getWorlds')
-  loading.value = false
 })
 
 watch(messageSuccess, (value) => {

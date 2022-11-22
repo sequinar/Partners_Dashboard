@@ -41,6 +41,7 @@ window.addEventListener('click', () => {
         background-color: #fff;
         border-radius: 3px;
         margin: 0;
+        width: max-content;
 
         li {
             font-size: 14px;

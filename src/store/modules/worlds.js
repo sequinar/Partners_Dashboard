@@ -5,7 +5,14 @@ const store = {
     return {
       worlds: null, // {data: [], meta: {}}
       currentWorld: null,
-      worldBanners: []
+      worldBanners: [],
+      uploadUrl: '',
+      uploadedWorldUrl: '',
+      eTags: [],
+      fileName: null,
+      editedWorld: null,
+      capabilities: [],
+      playebleOn: []
     }
   },
   mutations: {
@@ -17,22 +24,41 @@ const store = {
     },
     setBanners (state, banners) {
       state.worldBanners = banners
+    },
+    setUploadUrl (state, url) {
+      state.uploadUrl = url
+    },
+    setUploadedWorldUrl (state, url) {
+      state.uploadedWorldUrl = url
+    },
+    setETags (state, etags) {
+      state.eTags = etags
+    },
+    setFileName (state, name) {
+      state.fileName = name
+    },
+    setEditedWorld (state, world) {
+      state.editedWorld = world
+    },
+    setCapabilities (state, capabilities) {
+      state.capabilities = capabilities
+    },
+    setPlayableOn (state, playebleOn) {
+      state.playebleOn = playebleOn
     }
   },
   actions: {
-    async createWorld ({ dispatch, rootState, commit }, data) {
+    async createWorld ({ rootState, commit }, data) {
       try {
-        await axios.post(`team/${rootState.team.team.teamId}/worlds`, {
-          worldname: data.name,
-          worlddescription: data.descrition,
-          customizations: data.customizations,
-          thumbnail: data.thumbnail
-        })
-        dispatch('getWorlds')
-        commit('setMessageSuccess', 'World created successfully', { root: true })
+        const response = await axios.post(`team/${rootState.team.team.teamId}/worlds`, data)
+        commit('setEditedWorld', response.data.data)
       } catch (err) {
         commit('setMessageError', err.response.data.error, { root: true })
       }
+    },
+    async createCapability ({ dispatch }, capability) {
+      await axios.post('world/capability', { capabilityName: capability })
+      dispatch('getCapabilities')
     },
     async getWorlds ({ commit, rootState }, params) {
       if (rootState.team.team) {
@@ -48,6 +74,10 @@ const store = {
         commit('setWorlds', {})
       }
     },
+    async getWorld ({ rootState, commit }, worldId) {
+      const response = await axios.get(`team/${rootState.team.team.teamId}/world/${worldId}`)
+      commit('setEditedWorld', response.data.data)
+    },
     async getCurrentWorld ({ commit }, worldId) {
       const world = await axios.get(`world/${worldId}/get-world-state`)
       commit('setCurrentWorld', world.data.data[0])
@@ -55,6 +85,45 @@ const store = {
     async getBanners ({ commit }, id) {
       const banners = await axios.get(`world/${id}/world-banner`)
       commit('setBanners', banners.data)
+    },
+    async getUploadUrl ({ commit }, data) {
+      const response = await axios.post('dummy/getprojectuploadurl', data)
+      commit('setUploadUrl', response.data.data)
+      commit('setFileName', data.file.fileName)
+    },
+    async getCapabilities ({ commit }) {
+      const response = await axios.get('world/capability')
+      commit('setCapabilities', response.data.data)
+    },
+    async getPlatforms ({ commit }) {
+      const response = await axios.get('world/playabel-platforms')
+      commit('setPlayableOn', response.data.data)
+    },
+    async getWorldFileInfo ({ state }, worldId) {
+      const response = await axios.get(`/world/${worldId}/file`)
+      return response.data.data
+    },
+    async updateWorld ({ rootState, commit }, data) {
+      try {
+        await axios.post(`team/${rootState.team.team.teamId}/world/${data.worldId}`, data.world)
+      } catch (err) {
+        commit('setMessageError', err.response.data.error, { root: true })
+      }
+    },
+    async updateFeaturedImage ({ state }, image) {
+      if (state.editedWorld?.publicId) {
+        await axios.post(`world/${state.editedWorld.publicId}/world-feature-image`, image)
+      }
+    },
+    async updateThumbnailImage ({ state }, image) {
+      if (state.editedWorld?.publicId) {
+        await axios.post(`world/${state.editedWorld.publicId}/world-thumbnail-image`, image)
+      }
+    },
+    async updateGallery ({ state }, images) {
+      if (state.editedWorld?.publicId) {
+        await axios.post(`world/${state.editedWorld.publicId}/world-image`, images)
+      }
     },
     async updateChatStatus ({ dispatch }, data) {
       await axios.post(`world/${data.id}/update-chat-status/${data.status}`)
@@ -82,9 +151,53 @@ const store = {
       } catch (err) {
         commit('setMessageError', err.response.data.error, { root: true })
       }
+    },
+    async deleteFeaturedImage ({ commit }, worldId) {
+      try {
+        await axios.delete(`world/${worldId}/world-feature-image`)
+      } catch (err) {
+        commit('setMessageError', err.response.data.error, { root: true })
+      }
+    },
+    async deleteThumbnailImage ({ commit }, worldId) {
+      try {
+        await axios.delete(`world/${worldId}/world-thumbnail-image`)
+      } catch (err) {
+        commit('setMessageError', err.response.data.error, { root: true })
+      }
+    },
+    async deleteGalleryImage ({ commit, state }, imageId) {
+      try {
+        await axios.delete(`world/${state.editedWorld.publicId}/world-image/${imageId}`)
+      } catch (err) {
+        commit('setMessageError', err.response.data.error, { root: true })
+      }
+    },
+    async deleteWorldFile ({ commit }, worldId) {
+      try {
+        await axios.delete(`world/${worldId}/file`)
+      } catch (err) {
+        commit('setMessageError', err.response.data.error, { root: true })
+      }
+    },
+    async completeMultipartUpload ({ commit }, data) {
+      const response = await axios.post('dummy/completemultipartupload', data)
+      commit('setUploadedWorldUrl', response.data.data)
+    },
+    async setWorldStatus ({ state }, status) {
+      if (state.editedWorld?.publicId) {
+        await axios.post(`world/${state.editedWorld.publicId}/publish-status/${status}`)
+      }
     }
   },
-  getters: {}
+  getters: {
+    getCapabilities (state) {
+      return state.capabilities.map(item => item.value)
+    },
+    getPlatforms (state) {
+      return state.playebleOn.map(item => item.platform)
+    }
+  }
 }
 
 export default store

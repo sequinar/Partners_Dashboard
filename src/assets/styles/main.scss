@@ -40,17 +40,19 @@
 ::-webkit-scrollbar-track {
     background: transparent;
 }
-
 img {
     -webkit-user-drag: none;
     user-select: none;
 }
-
+* {
+    box-sizing: border-box;
+}
 body {
     margin: 0;
     padding: 0;
     font-family: 'Montserrat';
     color: #1c1c1c;
+    scrollbar-gutter: stable;
 }
 
 a {
@@ -62,6 +64,10 @@ a {
 
 input {
     font-family: 'Montserrat';
+}
+
+.el-main {
+    scrollbar-gutter: stable;
 }
 
 .d-flex {
@@ -84,8 +90,16 @@ input {
     justify-content: flex-start !important;
 }
 
+.justify-end {
+    justify-content: flex-end !important;
+}
+
 .align-center {
     align-items: center !important;
+}
+
+.align-end {
+    align-items: flex-end !important;
 }
 
 .full-width {
@@ -93,7 +107,7 @@ input {
 }
 
 .ma-0 {
-    margin: 0;
+    margin: 0 !important;
 }
 
 .mr-15 {
@@ -108,6 +122,10 @@ input {
     margin-top: 10px;
 }
 
+.mt-15 {
+    margin-top: 15px;
+}
+
 .mt-20 {
     margin-top: 20px;
 }
@@ -116,16 +134,29 @@ input {
     margin-top: 30px;
 }
 
+.mb-5 {
+    margin-bottom: 5px;
+}
+
 :root {
     --hover-primary-color: #7749B7;
+}
+
+.red {
+    color: red;
 }
 
 .common-layout {
     min-height: 100vh;
 
+    .main-container {
+        padding-left: 80px;
+    }
+
     .el-button--primary {
         --el-button-hover-bg-color: #7749B7;
         --el-button-hover-border-color: #7749B7;
+        border-radius: 30px;
     }
 
     .el-input .el-input__count .el-input__count-inner {
@@ -133,7 +164,7 @@ input {
     }
 
     .el-container {
-        height: 100vh;
+        min-height: 100vh;
     }
 
     .el-form-item__label:before {
@@ -145,18 +176,24 @@ input {
         background-color: #1c1c1c;
         color: #fff;
         width: fit-content;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 99999;
 
         .el-menu {
             background-color: transparent;
-            height: 100%;
             font-family: 'Montserrat-SemiBold';
             padding-top: 145px;
+            height: 100vh;
 
             .el-menu-item {
                 color: #fff;
                 margin: 0 10px;
-                padding-left: 16px !important;
+                padding-left: 18px !important;
                 margin-bottom: 5px;
+                border-radius: 30px;
 
                 .el-menu-tooltip__trigger {
                     padding: 0 16px;

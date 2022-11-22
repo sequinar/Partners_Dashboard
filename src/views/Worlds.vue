@@ -6,28 +6,31 @@
       </h1>
     </el-col>
     <el-col :span="12" class="worldsPagination">
-      <!-- <el-button type="primary" size="large" :icon="Plus">New World</el-button> -->
       <el-pagination v-if="worlds?.data" v-model:currentPage="page" background :total="worlds.meta.totalCount"
         :page-size="limit" layout="prev, pager, next" hide-on-single-page />
+        <el-button type="primary" size="large" :icon="Plus" @click="router.push('/new-world')">Add World</el-button>
     </el-col>
   </el-row>
   <div class="loadingContainer" v-loading="worlds === null">
     <el-row v-if="worlds?.data" class="worldsContainer">
-      <World v-for="world in worlds.data" :key="world.world_id" :world="world" />
+      <WorldCard v-for="world in worlds.data" :key="world.world_id" :world="world" />
     </el-row>
-    <el-empty v-if="worlds && Object.keys(worlds).length === 0" description="You don't have any worlds available yet." />
+    <el-empty v-if="worlds && Object.keys(worlds.data).length === 0" description="You don't have any worlds available yet." />
   </div>
 </template>
 
 <script setup>
-import { ref, computed, defineAsyncComponent, watch } from 'vue'
+import { ref, computed, defineAsyncComponent, watch, onMounted } from 'vue'
 import { useStore } from 'vuex'
+import { Plus } from '@element-plus/icons-vue'
+import { useRouter } from 'vue-router'
 
-const World = defineAsyncComponent(() =>
-  import('../components/World.vue')
+const WorldCard = defineAsyncComponent(() =>
+  import('../components/worlds/WorldCard.vue')
 )
 
 const store = useStore()
+const router = useRouter()
 const worlds = computed(() => store.state.worlds.worlds)
 const limit = ref(8)
 const page = ref(1)
@@ -38,6 +41,10 @@ watch(page, async (newPage) => {
     page: newPage,
     filter: ''
   })
+})
+
+onMounted(async () => {
+  await store.dispatch('worlds/getWorlds')
 })
 </script>
 
