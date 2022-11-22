@@ -47,7 +47,7 @@ const downloadWorld = () => {
   if (props.world.template_name === 'Camelot') {
     window.open(isWindows ? process.env.CAMELOT_UEAPP_DOWNLOAD_LINK_WINDOWS : process.env.CAMELOT_UEAPP_DOWNLOAD_LINK_MAC, '_self')
   } else {
-    window.open(process.env.UEAPP_DOWNLOAD_LINK_WINDOWS, '_self')
+    window.open(isWindows ? process.env.UEAPP_DOWNLOAD_LINK_WINDOWS : process.env.UEAPP_DOWNLOAD_LINK_MAC, '_self')
   }
   showInstaractions.value = true
   emits('close')
