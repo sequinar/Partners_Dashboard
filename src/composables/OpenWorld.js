@@ -49,18 +49,18 @@ export function useOpenWorld (store) {
     }
     axios(config)
       .then((res) => {
-        openWorldUrl.value += `+session-id:${res.data.response}`
-        openWorldUrl.value += `+mode:${openWorldType.value}`
-        customProtocolCheck(
-          openWorldUrl.value,
-          () => {
-            console.log('Custom protocol not found.')
-          },
-          () => {
-            console.log('Custom protocol found and opened the file successfully.')
-          }, 5000
-        )
-        getSessionApiCall(res.data.response)
+        // openWorldUrl.value += `+session-id:${res.data.response}`
+        // openWorldUrl.value += `+mode:${openWorldType.value}`
+        // customProtocolCheck(
+        //   openWorldUrl.value,
+        //   () => {
+        //     console.log('Custom protocol not found.')
+        //   },
+        //   () => {
+        //     console.log('Custom protocol found and opened the file successfully.')
+        //   }, 5000
+        // )
+        // getSessionApiCall(res.data.response)
       })
       .catch((err) => {
         console.log(err)
@@ -72,7 +72,7 @@ export function useOpenWorld (store) {
       if (world.template_name === 'Camelot') {
         isWorldLoadingModal.value = true
         customProtocolCheck(
-          'sequincamelot://',
+          `sequincamelot://?world-id:${world.public_id}?auth:${store.state.accessToken}`,
           () => {
             console.log('Custom protocol not found.')
           },
@@ -85,9 +85,9 @@ export function useOpenWorld (store) {
       isWorldLoadingModal.value = true
       openWorldType.value = type
       if (world.template_name === 'Camelot') {
-        openWorldUrl = ref('sequincamelot://')
+        openWorldUrl = ref(`sequincamelot://?world-id:${world.public_id}?auth:${store.state.accessToken}`)
       } else {
-        openWorldUrl = ref(`sequinworld://+world-id:${world.public_id}+auth:${store.state.accessToken}`)
+        openWorldUrl = ref(`sequin://?world-id:${world.public_id}?auth:${store.state.accessToken}`)
       }
       startNewSessionApiCall()
     }
