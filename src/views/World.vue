@@ -258,6 +258,7 @@ const onThumbnailUpdate = (images) => {
 }
 
 const onGalleryRemove = (image) => {
+  if (!image.id) return
   functionsForEdit.value.add(removeGalleryImage)
   imagesToDelete.value.push(image)
 }

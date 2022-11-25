@@ -1,13 +1,11 @@
 <template>
   <el-card
-    class="world-item"
+    class="world-card"
     :body-style="{ padding: '0px' }"
     @click="openWorld('view', props.world)"
   >
-    <img
-      :src="props.world.thumbnail_link"
-      class="image"
-    >
+    <div v-if="props.world.thumbnail_link" class="image-container" :style="{ backgroundImage: `url(${props.world.thumbnail_link})` }"></div>
+    <img v-else class="default-image" src="@/assets/default.png" alt="default-image">
     <dropdown @click.stop>
       <li @click.stop="router.push(`/settings/${props.world.public_id}`)">
         Settings
@@ -19,7 +17,7 @@
         World Editor
       </li>
     </dropdown>
-    <div class="world-item__footer">
+    <div class="world-card__footer">
       <h3>{{ props.world.worldname }}</h3>
       <div class="world-statuses">
         <span v-if="props.world.publish_status === WORLD_STATUSES.PUBLISH" class="status published">Published</span>
@@ -68,7 +66,7 @@ const copyLink = (id) => {
 </script>
 
 <style lang="scss">
-.world-item {
+.world-card {
   position: relative;
   cursor: pointer;
 
@@ -79,9 +77,15 @@ const copyLink = (id) => {
     height: 100%;
   }
 
-  img {
+  .image-container {
     width: 100%;
-    height: auto;
+    height: 300px;
+    background-size: cover;
+    background-position: center center;
+  }
+
+  .default-image {
+    height: 300px;
   }
 
   .dropdown {
@@ -107,7 +111,7 @@ const copyLink = (id) => {
     justify-content: space-between;
     color: #d8d8d8;
 
-    &--item {
+    &--card {
       display: flex;
       align-items: center;
       gap: 5px;
