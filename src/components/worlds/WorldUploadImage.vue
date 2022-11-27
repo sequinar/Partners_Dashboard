@@ -2,15 +2,15 @@
     <h4 v-if="props.title" class="bannerTitle">{{props.title}}<span>*</span></h4>
     <div ref="bannerRef" class="bannerUpload" :style="{ width: width, height: height }">
         <el-upload ref="uploadRef" drag action="#" :auto-upload="false" :on-change="uploadSuccess" :limit="1"
-            :on-exceed="handleExceed" accept=".png, .jpg, .jpeg">
+            :on-exceed="handleExceed" accept=".png, .jpg, .jpeg, .gif, .svg, .mp4, .webm, .wav, .ogg, .glb, .gltf">
             <div class="el-upload__text d-flex align-center justify-center direction-column">
                 <img src="@/assets/icons/Uploadicon.svg" alt="Uploadicon"> <span>Choose a file or drag it here to
                     upload.</span>
             </div>
         </el-upload>
-        <img v-if="img" :src="img" alt="uploaded image" @click="uploadImage">
-        <img v-else-if="props.image?.banner_url" :src="props.image?.banner_url" alt="uploaded image"
-            @click="uploadImage">
+        <img v-if="fileType === 'image'" :src="fileUrl || props.file?.banner_url" alt="uploaded image"
+            @click="uploadFile">
+        <video v-if="fileType === 'video'" :src="fileUrl" autoplay muted loop playsinline @click="uploadFile"></video>
     </div>
     <div class="d-flex justify-between mt-10">
         <div v-if="props.types">
@@ -25,8 +25,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { genFileId, ElMessage } from 'element-plus'
+import { ref, computed } from 'vue'
+import { genFileId } from 'element-plus'
 
 const uploadRef = ref(null)
 const props = defineProps({
@@ -38,7 +38,7 @@ const props = defineProps({
     type: String,
     required: true
   },
-  image: {
+  file: {
     type: Object,
     default: () => { }
   },
@@ -55,21 +55,26 @@ const props = defineProps({
     type: String
   }
 })
-const img = ref(null)
+const file = ref(null)
 const bannerRef = ref(null)
+const fileUrl = computed(() => file.value ? URL.createObjectURL(file.value) : null)
+const fileType = computed(() => {
+  if (!props.file?.banner_url?.raw) return
+  if (props.file.banner_url.raw.type.match('image.*')) return 'image'
+
+  if (props.file.banner_url.raw.type.match('video.*')) return 'video'
+
+  return 'other'
+})
 
 const emits = defineEmits(['imageUpdate'])
 
 const uploadSuccess = (res) => {
-  if (res.raw.type === 'image/jpeg' || res.raw.type === 'image/png') {
-    img.value = URL.createObjectURL(res.raw)
-    emits('imageUpdate', res)
-  } else {
-    ElMessage.error('Image must be JPG or PNG format!')
-  }
+  file.value = res.raw
+  emits('imageUpdate', res)
 }
 
-const uploadImage = () => {
+const uploadFile = () => {
   bannerRef.value.querySelector('.el-upload__text').click()
 }
 
@@ -90,9 +95,9 @@ const handleExceed = (files) => {
     border-radius: 5px;
     margin: 0 auto;
 
-    &>img {
+    &>img,video {
         width: 100%;
-        height: auto;
+        height: 100%;
         position: absolute;
         top: 0;
         left: 0;

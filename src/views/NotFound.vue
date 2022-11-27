@@ -2,7 +2,7 @@
 <template>
   <img
     style="position: absolute; left: 48px; top: 26px; cursor: pointer;"
-    src="../assets/icons/Sequin.world.svg"
+    src="@/assets/icons/Sequin.world.svg"
     alt="Sequin.world"
     @click="goHome"
   >
