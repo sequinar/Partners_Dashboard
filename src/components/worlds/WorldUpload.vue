@@ -1,5 +1,5 @@
 <template>
-    <div ref="bannerRef" class="worldUpload" :style="{ width: props.width, height: props.height }" v-loading="uploading">
+    <div ref="bannerRef" class="worldUpload" :style="{ width: props.width, height: props.height }">
         <el-upload ref="uploadRef" drag action="#" :auto-upload="false" :on-change="uploadSuccess" :limit="1"
             :on-exceed="handleExceed" accept=".zip">
             <div class="el-upload__text d-flex align-center justify-center direction-column">
@@ -7,10 +7,10 @@
                 <span>Choose a file or drag it here to upload.</span>
             </div>
         </el-upload>
-        <div v-if="file || fileInfo" class="uploadedFile d-flex justify-between align-center">
+        <div v-if="file || props.file" class="uploadedFile d-flex justify-between align-center">
             <div>
-                <h4 class="fileName">{{file?.name || fileInfo.fileName}}</h4>
-                <span class="fileSize">{{fileSize || fileInfo.fileSize}}</span>
+                <h4 class="fileName">{{file?.name || props.file.fileName}}</h4>
+                <span class="fileSize">{{fileSize || props.file.fileSize}}</span>
             </div>
             <el-button type="danger" link @click="removeFile">Remove</el-button>
         </div>
@@ -25,7 +25,6 @@
 import { ref, computed } from 'vue'
 import { genFileId, ElMessage } from 'element-plus'
 import { useStore } from 'vuex'
-import axios from '@/axios/index'
 
 const emits = defineEmits(['fileChanged', 'fileRemoved'])
 const props = defineProps({
@@ -37,22 +36,17 @@ const props = defineProps({
     type: String,
     required: true
   },
-  fileInfo: {
+  file: {
     type: Object
   }
 })
-const MULTIPART_CHUNK_SIZE = 104857600
+
 const store = useStore()
 const uploadRef = ref(null)
 const file = ref(null)
 const bannerRef = ref(null)
-const chunksList = ref([])
-const promises = ref([])
-const etags = ref([])
-const uploading = ref(false)
-const chunksListLength = computed(() => chunksList.value.length)
+
 const fileSize = computed(() => file.value ? (file.value?.size / 1073741824).toFixed(1) + ' GB' : null)
-const uploadUrls = computed(() => store.state.worlds.uploadUrl.urls)
 
 const uploadSuccess = async (res) => {
   if (res.raw.type !== 'application/x-zip-compressed') {
@@ -60,19 +54,8 @@ const uploadSuccess = async (res) => {
   } else if (res.raw.size / 1048576 > 1024) {
     ElMessage.error('The file must not exceed 1 GB')
   } else {
-    uploading.value = true
     file.value = res.raw
-    chunksList.value = createChunks(res.raw, MULTIPART_CHUNK_SIZE)
-    await store.dispatch('worlds/getUploadUrl', {
-      file: {
-        fileName: res.raw.name,
-        partsRequested: chunksListLength.value,
-        multiPart: true
-      }
-    })
-    await createPromises(uploadUrls.value)
-    store.commit('worlds/setETags', etags.value)
-    uploading.value = false
+    store.commit('worlds/setFile', res)
     emits('fileChanged')
   }
 }
@@ -86,42 +69,6 @@ const handleExceed = (files) => {
   const file = files[0]
   file.uid = genFileId()
   uploadRef.value.handleStart(file)
-}
-const createChunks = (file, chunkSize) => {
-  let startPointer = 0
-  const endPointer = file.size
-  const chunks = []
-  while (startPointer < endPointer) {
-    const newStartPointer = startPointer + chunkSize
-    chunks.push(file.slice(startPointer, newStartPointer, file.type))
-    startPointer = newStartPointer
-  }
-  return chunks
-}
-
-const createPromises = async (urls) => {
-  const axiosInstance = axios.create()
-  delete axiosInstance.defaults.headers.common.Authorization
-  urls.forEach((item, index) => {
-    const promise = new Promise((resolve, reject) => {
-      axiosInstance({
-        method: 'put',
-        url: item.url,
-        data: chunksList.value[index],
-        headers: { 'Content-Type': file.value.type }
-      }).then((result) => {
-        etags.value[item.PartNumber - 1] = {
-          PartNumber: item.PartNumber,
-          ETag: JSON.parse(result.headers.etag)
-        }
-        resolve()
-      }).catch((err) => {
-        reject(err)
-      })
-    })
-    promises.value.push(promise)
-  })
-  await Promise.all(promises.value)
 }
 </script>
 

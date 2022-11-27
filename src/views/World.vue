@@ -1,5 +1,6 @@
 <template>
   <el-container id="world" class="direction-column" v-loading="loading">
+    <UploadProgress :showProgress="showProgress" :percentage="progress" />
     <el-row :gutter="60" v-if="!loading">
       <el-col :span="15">
         <div class="d-flex justify-between">
@@ -9,9 +10,8 @@
         </div>
         <p class="description">Upload World zip file, and world assets like title ,description, gallery images,
           thumbnails, system requirements and world capabilities. <span class="red">*</span></p>
-        <WorldUpload width="100%" height="105px" :fileInfo="fileInfo" @fileChanged="fileChanged"
-          @fileRemoved="fileRemoved" />
-        <WorldUploadImage width="100%" height="300px" title="Feature Image" :image="{ banner_url: featureImage }"
+        <WorldUpload width="100%" height="105px" :file="file" @fileChanged="fileChanged" @fileRemoved="fileRemoved" />
+        <WorldUploadImage width="100%" height="300px" title="Feature Image" :file="{ banner_url: featureImage }"
           :types="imageTypes" max-size="20MB" resolution="W: 1600 H: 800 px" @imageUpdate="onFeatureImage" />
         <div>
           <label>Name<span class="red">*</span></label>
@@ -70,31 +70,8 @@
         </div>
       </el-col>
       <el-col :span="8">
-        <div class="publish">
-          <h3>Publish</h3>
-          <p>Publish, save as a draft or preview.</p>
-          <el-row class="mt-15" :gutter="15">
-            <el-col :span="12">
-              <el-button class="full-width" type="primary" plain size="large" :loading="buttonLoading"
-                :disabled="actionsDisabled" @click="saveWorld(WORLD_STATUSES.DRAFT)">Save Draft</el-button>
-            </el-col>
-            <el-col :span="12">
-              <el-button class="full-width" type="primary" plain size="large" :loading="buttonLoading"
-                :disabled="actionsDisabled" @click="saveWorld(WORLD_STATUSES.PREVIEW)">Preview</el-button>
-            </el-col>
-          </el-row>
-          <ReleaseDate :init-date="world.releaseDate" @change-date="changeDate" />
-          <el-row :gutter="15">
-            <el-col :span="12">
-              <el-button class="full-width" type="primary" link size="large" :loading="buttonLoading"
-                :disabled="actionsDisabled" @click="saveWorld(WORLD_STATUSES.ARCHIVE)">Archive World</el-button>
-            </el-col>
-            <el-col :span="12">
-              <el-button class="full-width" type="primary" size="large" :loading="buttonLoading"
-                :disabled="actionsDisabled" @click="saveWorld(WORLD_STATUSES.PUBLISH)">Publish</el-button>
-            </el-col>
-          </el-row>
-        </div>
+        <PublishCard :date="world.releaseDate" :loading="buttonLoading" :disabled="actionsDisabled"
+          @change-date="changeDate" @change-status="saveWorld" />
         <div class="thumbnail mt-20">
           <h3>Thumbnail Image</h3>
           <p>Upload an image at least <b>W: 300 H: 300 px</b></p>
@@ -112,20 +89,21 @@
 import WorldUpload from '@/components/worlds/WorldUpload.vue'
 import WorldUploadImage from '@/components/worlds/WorldUploadImage.vue'
 import ImageGallery from '@/components/ImageGallery.vue'
-import ReleaseDate from '../components/worlds/ReleaseDate.vue'
+import UploadProgress from '@/components/worlds/UploadProgress.vue'
+import PublishCard from '@/components/worlds/PublishCard.vue'
 import { ArrowLeft } from '@element-plus/icons-vue'
 import { useRouter, useRoute } from 'vue-router'
 import { reactive, computed, ref, onBeforeMount } from 'vue'
 import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
-import { WORLD_STATUSES } from '@/helpers/constants'
+import { useFileUpload } from '@/composables/fileUpload'
 
 const store = useStore()
 const router = useRouter()
 const route = useRoute()
 
 const imageTypes = ['JPG', 'PNG', 'GIF', 'SVG', 'MP4', 'WEBM', 'WAV', 'OGG', 'GLB', 'GLTF']
-
+const { uploadFile, progress } = useFileUpload(store)
 const world = reactive({
   worldName: '',
   worldDescription: '',
@@ -144,17 +122,14 @@ const buttonLoading = ref(false)
 const featureImage = ref(null)
 const thumbnailImage = ref([])
 const gallery = ref([])
-const fileInfo = ref(null)
 const functionsForEdit = ref(new Set())
 const imagesToDelete = ref([])
+const showProgress = ref(false)
+const file = computed(() => store.state.worlds.file)
 const editedWorld = computed(() => store.state.worlds.editedWorld)
 const capabilities = computed(() => store.getters['worlds/getCapabilities'])
 const playableOn = computed(() => store.getters['worlds/getPlatforms'])
-const etags = computed(() => store.state.worlds.eTags.length > 0 ? store.state.worlds.eTags : null)
-const uploadId = computed(() => store.state.worlds.uploadUrl.uploadid)
-const fileName = computed(() => store.state.worlds.fileName)
-const uploadedWorldUrl = computed(() => store.state.worlds.uploadedWorldUrl)
-const actionsDisabled = computed(() => !(isWorldFilled.value && featureImage.value && gallery.value.length && (etags.value || fileInfo.value)))
+const actionsDisabled = computed(() => !(isWorldFilled.value && featureImage.value && gallery.value.length && file.value))
 const isWorldFilled = computed(() => {
   return Object.values(world).every(value => value.length !== 0)
 })
@@ -178,11 +153,6 @@ const updateThumbnailImage = async () => {
   fd.append('thumbnailImage', thumbnailImage.value[0].raw)
   return await store.dispatch('worlds/updateThumbnailImage', fd)
 }
-const completeMultipartUpload = async () => {
-  return await store.dispatch('worlds/completeMultipartUpload', {
-    fileName: fileName.value, etags: etags.value, uploadID: uploadId.value
-  })
-}
 const removeWorldFile = async () => {
   return await store.dispatch('worlds/deleteWorldFile', route.params.id)
 }
@@ -205,40 +175,37 @@ const removeFeatureImage = async () => {
 }
 
 const createWorld = async () => {
-  return await store.dispatch('worlds/createWorld', {
-    worldAssetsUrl: uploadedWorldUrl.value,
-    ...world
-  })
+  return await store.dispatch('worlds/createWorld', { ...world })
 }
 
 const saveWorld = async (status) => {
   buttonLoading.value = true
   if (editedWorld.value) {
+    if (functionsForEdit.value.has(uploadFile)) showProgress.value = true
     for (const func of functionsForEdit.value) {
-      await func()
+      await func() // call all functions for edited data
     }
-    store.dispatch('worlds/updateWorld', {
+    await store.dispatch('worlds/updateWorld', {
       worldId: route.params.id,
-      world: {
-        worldAssetsUrl: uploadedWorldUrl.value.length ? uploadedWorldUrl.value : editedWorld.value.assetsUrl,
-        ...world
-      }
+      world: { ...world }
     })
     await store.dispatch('worlds/setWorldStatus', status)
     getWorld()
     functionsForEdit.value = new Set()
   } else {
-    await completeMultipartUpload()
+    showProgress.value = true
     await createWorld()
+    await uploadFile()
     await store.dispatch('worlds/setWorldStatus', status)
-    updateFeaturedImage()
-    updateGallery()
+    await updateFeaturedImage()
+    await updateGallery()
     if (thumbnailImage.value) {
-      updateThumbnailImage()
+      await updateThumbnailImage()
     }
     ElMessage.success('World successfully created')
   }
   buttonLoading.value = false
+  showProgress.value = false
 }
 
 const onFeatureImage = (image) => {
@@ -278,12 +245,12 @@ const detectNewTag = (tags) => {
 const changeDate = (date) => { world.releaseDate = date }
 
 const fileChanged = () => {
-  functionsForEdit.value.add(completeMultipartUpload)
+  functionsForEdit.value.add(uploadFile)
 }
 
 const fileRemoved = () => {
   functionsForEdit.value.add(removeWorldFile)
-  fileInfo.value = null
+  store.commit('worlds/setFile', null)
 }
 
 const fillWorld = (worldToEdit) => {
@@ -309,7 +276,7 @@ const getWorld = async () => {
   if (route.params.id) {
     loading.value = true
     await store.dispatch('worlds/getWorld', route.params.id)
-    fileInfo.value = await store.dispatch('worlds/getWorldFileInfo', route.params.id)
+    await store.dispatch('worlds/getWorldFileInfo', route.params.id)
     fillWorld(editedWorld.value)
     loading.value = false
   } else {
