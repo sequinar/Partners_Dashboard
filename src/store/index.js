@@ -61,7 +61,7 @@ const store = createStore({
   },
   getters: {
     getAuth0UserId: (state) => {
-      return state.user.sub || state.user.user_id
+      return state.user?.sub || state.user?.user_id
     }
   },
   modules: {

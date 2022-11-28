@@ -17,6 +17,28 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
+      path: '/',
+      component: Auth,
+      children: [
+        {
+          path: '',
+          component: LogIn
+        },
+        {
+          path: 'signup',
+          component: SignUp
+        },
+        {
+          path: 'pass-update',
+          component: UpdatePassword
+        },
+        {
+          path: 'new-password',
+          component: NewPassword
+        }
+      ]
+    },
+    {
       path: '/worlds',
       component: Main,
       children: [
@@ -50,28 +72,6 @@ const router = createRouter({
         {
           path: 'new-product',
           component: Product
-        }
-      ]
-    },
-    {
-      path: '/auth',
-      component: Auth,
-      children: [
-        {
-          path: '',
-          component: SignUp
-        },
-        {
-          path: 'login',
-          component: LogIn
-        },
-        {
-          path: 'pass-update',
-          component: UpdatePassword
-        },
-        {
-          path: 'new-password',
-          component: NewPassword
         }
       ]
     },

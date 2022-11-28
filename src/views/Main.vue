@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container v-if="token && team && user">
     <el-aside>
       <Menu />
     </el-aside>
@@ -8,7 +8,7 @@
         <Header />
       </el-header>
       <el-main>
-        <router-view v-if="token && team"/>
+        <router-view/>
       </el-main>
     </el-container>
   </el-container>
@@ -26,6 +26,8 @@ const messageSuccess = computed(() => store.state.messageSuccess)
 const messageError = computed(() => store.state.messageError)
 const token = computed(() => store.state.accessToken)
 const team = computed(() => store.state.team.team)
+const user = computed(() => store.state.user)
+
 onMounted(async () => {
   store.dispatch('getUser')
   await store.dispatch('team/getTeam')
