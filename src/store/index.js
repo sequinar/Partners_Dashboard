@@ -7,7 +7,7 @@ const store = createStore({
   state () {
     return {
       accessToken: null,
-      user: {},
+      user: null,
       apiEndpoint: process.env.API_ENDPOINT,
       messageSuccess: null,
       messageError: null

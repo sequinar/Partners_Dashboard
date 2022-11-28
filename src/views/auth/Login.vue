@@ -12,7 +12,7 @@
                 <el-input type="password" v-model="data.password" placeholder="Password" autocomplete="off"
                     size="large" />
             </el-form-item>
-            <el-button class="full-width" type="primary" size="large">Log In</el-button>
+            <el-button class="full-width" type="primary" size="large" @click="login" :loading="loading">Log In</el-button>
         </el-form>
         <div class="d-flex align-center justify-between mt-10">
             <router-link to="/auth/pass-update">Forgot Password?</router-link>
@@ -22,8 +22,12 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, inject } from 'vue'
+import { ElMessage } from 'element-plus'
+
+const auth = inject('Auth')
 const formRef = ref(null)
+const loading = ref(false)
 const data = reactive({
   name: '',
   password: ''
@@ -46,6 +50,28 @@ const rules = reactive({
   ],
   password: [{ validator: validatePass, trigger: 'blur' }]
 })
+
+const login = async () => {
+  if (!formRef.value) return
+  await formRef.value.validate((valid, fields) => {
+    if (valid) {
+      loading.value = true
+      auth.login({
+        username: data.name,
+        password: data.password
+      }, (err) => {
+        ElMessage({
+          type: 'error',
+          message: err.description,
+          duration: 5000
+        })
+        loading.value = false
+      })
+    } else {
+      console.log('error submit!', fields)
+    }
+  })
+}
 </script>
 
 <style scoped lang="scss">

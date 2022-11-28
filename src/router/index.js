@@ -17,7 +17,7 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: '/',
+      path: '/worlds',
       component: Main,
       children: [
         {
