@@ -10,7 +10,7 @@
         </el-upload>
         <img v-if="fileType === 'image'" :src="fileUrl || props.file?.banner_url" alt="uploaded image"
             @click="uploadFile">
-        <video v-if="fileType === 'video'" :src="fileUrl" autoplay muted loop playsinline @click="uploadFile"></video>
+        <video v-if="fileType === 'video'" :src="fileUrl || props.file?.banner_url" autoplay muted loop playsinline @click="uploadFile"></video>
     </div>
     <div class="d-flex justify-between mt-10">
         <div v-if="props.types">

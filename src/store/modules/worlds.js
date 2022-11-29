@@ -99,14 +99,21 @@ const store = {
     },
     async updateFeaturedImage ({ state }, image) {
       if (state.editedWorld?.publicId) {
-        // await axios.post(`world/${state.editedWorld.publicId}/world-feature-image`, image)
-        const urls = await axios.get('/presigned-url', {
-          params: {
-            fileName: 'test.png',
-            uploadFolder: 'featured_images'
-          }
+        const axiosInstance = axios.create()
+        delete axiosInstance.defaults.headers.common.Authorization
+        const urls = await axios.post('/presigned-url', {
+          fileName: image.name,
+          uploadFolder: 'featured_images'
         })
-        console.log(urls)
+        const { getUrl, postUrl } = urls.data.data
+        await axiosInstance({
+          method: 'put',
+          url: postUrl,
+          data: image.raw
+        })
+        await axios.post(`world/${state.editedWorld.publicId}/world-feature`, {
+          fileUrl: getUrl
+        })
       }
     },
     async updateThumbnailImage ({ state }, image) {

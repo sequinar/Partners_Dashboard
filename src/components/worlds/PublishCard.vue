@@ -9,7 +9,7 @@
             </el-col>
             <el-col :span="12">
                 <el-button v-if="world" class="full-width" type="primary" plain size="large" :loading="props.loading"
-                    :disabled="disabled" @click="openWorld('view', world)">Preview</el-button>
+                    :disabled="disabled" @click="onPreview">Preview</el-button>
             </el-col>
         </el-row>
         <ReleaseDate :init-date="date" @change-date="emits('changeDate', $event)" />
@@ -24,11 +24,17 @@
             </el-col>
         </el-row>
     </div>
+    <WorldLoadingModal
+    :show-modal="isWorldLoadingModal"
+    :world="world"
+    @close="isWorldLoadingModal = false"
+  />
 </template>
 <script setup>
 import ReleaseDate from '@/components/worlds/ReleaseDate.vue'
+import WorldLoadingModal from '@/components/modals/WorldLoadingModal.vue'
 import { WORLD_STATUSES } from '@/helpers/constants'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useOpenWorld } from '@/composables/OpenWorld'
 import { useStore } from 'vuex'
 
@@ -47,8 +53,19 @@ const props = defineProps({
 })
 const emits = defineEmits(['changeStatus', 'changeDate'])
 const { openWorld } = useOpenWorld(store)
+const isWorldLoadingModal = ref(false)
 const world = computed(() => store.state.worlds.editedWorld)
+const onPreview = () => {
+  openWorld('view', world)
+  isWorldLoadingModal.value = true
+}
 </script>
 <style lang="scss">
-
+.publish {
+  .el-button--primary.is-plain {
+  &:active {
+    color: var(--el-color-primary);
+  }
+}
+}
 </style>
