@@ -53,6 +53,7 @@ const drawer = ref(false)
 const auth = inject('Auth')
 
 const logOut = () => {
+  sessionStorage.removeItem('token')
   auth.logout()
 }
 

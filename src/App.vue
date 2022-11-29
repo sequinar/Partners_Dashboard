@@ -16,37 +16,37 @@ const router = useRouter()
 const auth = inject('Auth')
 const loading = ref(true)
 
-const parseHash = async () => {
-  if (window.location.hash) {
-    await auth.parseHash({ hash: window.location.hash }, (err, authResult) => {
-      if (err) {
-        return console.log('hash', err)
-      }
-      auth.client.userInfo(authResult.accessToken, (err, user) => {
-        if (err) {
-          return console.log('user', err)
-        }
-        console.log(user)
-        store.commit('setUser', user)
-        loading.value = false
-        router.push('/worlds')
-      })
-    })
-  }
+const userInfo = (token) => {
+  auth.client.userInfo(token, (err, user) => {
+    if (err) {
+      loading.value = false
+      return console.log('user error', err)
+    }
+    store.commit('setUser', user)
+    store.commit('updateAccessToken', token)
+    loading.value = false
+    router.push('/worlds')
+  })
+}
+
+const parseHash = () => {
+  auth.parseHash({ hash: window.location.hash }, (err, authResult) => {
+    if (err) {
+      return console.log('hash error', err)
+    }
+    userInfo(authResult.accessToken)
+  })
 }
 
 onBeforeMount(async () => {
-  await auth.checkSession({
-    responseType: 'token'
-  },
-  async (err, authResult) => {
-    if (err) {
-      return console.log('session', err)
-    }
-    console.log(authResult)
-    store.commit('updateAccessToken', authResult.accessToken)
-    await parseHash()
-  })
+  const token = sessionStorage.getItem('token')
+  if (token) {
+    userInfo(token)
+  } else if (window.location.hash) {
+    parseHash()
+  } else {
+    loading.value = false
+  }
 })
 </script>
 

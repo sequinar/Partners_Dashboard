@@ -16,6 +16,7 @@ const store = createStore({
   mutations: {
     updateAccessToken (state, token) {
       axios.defaults.headers.common.Authorization = `Bearer ${token}`
+      sessionStorage.setItem('token', token)
       state.accessToken = token
     },
     setUser (state, user) {
