@@ -11,7 +11,7 @@
         <p class="description">Upload World zip file, and world assets like title ,description, gallery images,
           thumbnails, system requirements and world capabilities. <span class="red">*</span></p>
         <WorldUpload width="100%" height="105px" :file="file" @fileChanged="fileChanged" @fileRemoved="fileRemoved" />
-        <WorldUploadImage width="100%" height="300px" title="Feature Image" :file="{ banner_url: featureImage }"
+        <WorldUploadImage width="100%" height="300px" title="Feature Image" :file="{ banner_url: featureImage, type: world.featuredType }"
           :types="imageTypes" max-size="20MB" resolution="W: 1600 H: 800 px" @imageUpdate="onFeatureImage" />
         <div>
           <label>Name<span class="red">*</span></label>
@@ -265,7 +265,7 @@ const fillWorld = (worldToEdit) => {
   world.playabelOn = worldToEdit.playabelOn
   world.releaseDate = worldToEdit.releaseDate
 
-  featureImage.value = worldToEdit.featureImageUrl
+  featureImage.value = worldToEdit.featuredUrl
   thumbnailImage.value = worldToEdit.thumbnailLink ? [{ url: worldToEdit.thumbnailLink }] : []
   gallery.value = worldToEdit.imageUrls.map(image => {
     return { url: image.image_url, id: image.id }

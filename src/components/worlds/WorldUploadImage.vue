@@ -59,11 +59,11 @@ const file = ref(null)
 const bannerRef = ref(null)
 const fileUrl = computed(() => file.value ? URL.createObjectURL(file.value) : null)
 const fileType = computed(() => {
-  if (!props.file?.banner_url?.raw) return
-  if (props.file.banner_url.raw.type.match('image.*')) return 'image'
-
-  if (props.file.banner_url.raw.type.match('video.*')) return 'video'
-
+  if (file.value) {
+    return file.value.type.split('/')[0]
+  } else if (props.file.type) {
+    return props.file.type.split('/')[0]
+  }
   return 'other'
 })
 

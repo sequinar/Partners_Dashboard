@@ -99,12 +99,19 @@ const store = {
     },
     async updateFeaturedImage ({ state }, image) {
       if (state.editedWorld?.publicId) {
-        await axios.post(`world/${state.editedWorld.publicId}/world-feature-image`, image)
+        // await axios.post(`world/${state.editedWorld.publicId}/world-feature-image`, image)
+        const urls = await axios.get('/presigned-url', {
+          params: {
+            fileName: 'test.png',
+            uploadFolder: 'featured_images'
+          }
+        })
+        console.log(urls)
       }
     },
     async updateThumbnailImage ({ state }, image) {
       if (state.editedWorld?.publicId) {
-        await axios.post(`world/${state.editedWorld.publicId}/world-thumbnail-image`, image)
+        await axios.post(`world/${state.editedWorld.publicId}/world-thumbnail`, image)
       }
     },
     async updateGallery ({ state }, images) {
@@ -141,7 +148,7 @@ const store = {
     },
     async deleteFeaturedImage ({ commit }, worldId) {
       try {
-        await axios.delete(`world/${worldId}/world-feature-image`)
+        await axios.delete(`world/${worldId}/world-feature`)
       } catch (err) {
         commit('setMessageError', err.response.data.error, { root: true })
       }
