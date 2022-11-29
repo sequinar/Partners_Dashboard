@@ -8,8 +8,8 @@
                     :disabled="disabled" @click="emits('changeStatus', WORLD_STATUSES.DRAFT)">Save Draft</el-button>
             </el-col>
             <el-col :span="12">
-                <el-button v-if="world" class="full-width" type="primary" plain size="large" :loading="props.loading"
-                    :disabled="disabled" @click="onPreview">Preview</el-button>
+                <el-button class="full-width" type="primary" plain size="large"
+                    :disabled="!world" @click="onPreview">Preview</el-button>
             </el-col>
         </el-row>
         <ReleaseDate :init-date="date" @change-date="emits('changeDate', $event)" />
