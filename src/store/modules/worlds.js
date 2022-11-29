@@ -6,10 +6,7 @@ const store = {
       worlds: null, // {data: [], meta: {}}
       currentWorld: null,
       worldBanners: [],
-      uploadUrl: '',
-      uploadedWorldUrl: '',
-      eTags: [],
-      fileName: null,
+      file: null,
       editedWorld: null,
       capabilities: [],
       playebleOn: []
@@ -25,17 +22,8 @@ const store = {
     setBanners (state, banners) {
       state.worldBanners = banners
     },
-    setUploadUrl (state, url) {
-      state.uploadUrl = url
-    },
-    setUploadedWorldUrl (state, url) {
-      state.uploadedWorldUrl = url
-    },
-    setETags (state, etags) {
-      state.eTags = etags
-    },
-    setFileName (state, name) {
-      state.fileName = name
+    setFile (state, file) {
+      state.file = file
     },
     setEditedWorld (state, world) {
       state.editedWorld = world
@@ -86,10 +74,9 @@ const store = {
       const banners = await axios.get(`world/${id}/world-banner`)
       commit('setBanners', banners.data)
     },
-    async getUploadUrl ({ commit }, data) {
-      const response = await axios.post('dummy/getprojectuploadurl', data)
-      commit('setUploadUrl', response.data.data)
-      commit('setFileName', data.file.fileName)
+    async getUploadUrl ({ state }, data) {
+      const response = await axios.post(`world/${state.editedWorld.publicId}/getprojectuploadurl`, data)
+      return response.data.data
     },
     async getCapabilities ({ commit }) {
       const response = await axios.get('world/capability')
@@ -99,9 +86,9 @@ const store = {
       const response = await axios.get('world/playabel-platforms')
       commit('setPlayableOn', response.data.data)
     },
-    async getWorldFileInfo ({ state }, worldId) {
+    async getWorldFileInfo ({ commit }, worldId) {
       const response = await axios.get(`/world/${worldId}/file`)
-      return response.data.data
+      commit('setFile', response.data.data)
     },
     async updateWorld ({ rootState, commit }, data) {
       try {
@@ -112,12 +99,26 @@ const store = {
     },
     async updateFeaturedImage ({ state }, image) {
       if (state.editedWorld?.publicId) {
-        await axios.post(`world/${state.editedWorld.publicId}/world-feature-image`, image)
+        const axiosInstance = axios.create()
+        delete axiosInstance.defaults.headers.common.Authorization
+        const urls = await axios.post('/presigned-url', {
+          fileName: image.name,
+          uploadFolder: 'featured_images'
+        })
+        const { getUrl, postUrl } = urls.data.data
+        await axiosInstance({
+          method: 'put',
+          url: postUrl,
+          data: image.raw
+        })
+        await axios.post(`world/${state.editedWorld.publicId}/world-feature`, {
+          fileUrl: getUrl
+        })
       }
     },
     async updateThumbnailImage ({ state }, image) {
       if (state.editedWorld?.publicId) {
-        await axios.post(`world/${state.editedWorld.publicId}/world-thumbnail-image`, image)
+        await axios.post(`world/${state.editedWorld.publicId}/world-thumbnail`, image)
       }
     },
     async updateGallery ({ state }, images) {
@@ -154,7 +155,7 @@ const store = {
     },
     async deleteFeaturedImage ({ commit }, worldId) {
       try {
-        await axios.delete(`world/${worldId}/world-feature-image`)
+        await axios.delete(`world/${worldId}/world-feature`)
       } catch (err) {
         commit('setMessageError', err.response.data.error, { root: true })
       }
@@ -180,9 +181,8 @@ const store = {
         commit('setMessageError', err.response.data.error, { root: true })
       }
     },
-    async completeMultipartUpload ({ commit }, data) {
-      const response = await axios.post('dummy/completemultipartupload', data)
-      commit('setUploadedWorldUrl', response.data.data)
+    async completeMultipartUpload ({ state }, data) {
+      await axios.post(`world/${state.editedWorld.publicId}/completemultipartupload`, data)
     },
     async setWorldStatus ({ state }, status) {
       if (state.editedWorld?.publicId) {

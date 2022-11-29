@@ -12,7 +12,7 @@
         alt="sequin logo"
       >
       <h2>Get Ready!</h2>
-      <p>{{ props.world.worldname }} is now loading...</p>
+      <p>{{ props.world.worldname || props.world.worldName }} is now loading...</p>
       <a
         href="#"
         @click="downloadWorld()"
@@ -28,7 +28,7 @@
 
 <script setup>
 import LoadingInstructions from './LoadingInstructions.vue'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const props = defineProps({
   showModal: {
@@ -52,6 +52,10 @@ const downloadWorld = () => {
   showInstaractions.value = true
   emits('close')
 }
+
+onMounted(() => {
+  setTimeout(() => emits('close'), 10000)
+})
 </script>
 
 <style lang="scss">

@@ -1,7 +1,7 @@
 <template>
   <el-menu default-active="1" class="el-menu-vertical">
     <router-link to="/">
-      <img class="logo" src="../assets/icons/Sequin.world.svg" alt="logo">
+      <img class="logo" src="@/assets/icons/Sequin.world.svg" alt="logo">
     </router-link>
     <el-button text large class="collapseButton" :class="{ flip: !blockCollapse }" @click="toggleCollapse($event)">
       <img src="../assets/icons/CollapseLeftpanel_icon.svg" alt="collapseIcon">
