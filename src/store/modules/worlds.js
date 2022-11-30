@@ -118,7 +118,7 @@ const store = {
     },
     async updateThumbnailImage ({ state }, image) {
       if (state.editedWorld?.publicId) {
-        await axios.post(`world/${state.editedWorld.publicId}/world-thumbnail`, image)
+        await axios.post(`world/${state.editedWorld.publicId}/world-thumbnail-image`, image)
       }
     },
     async updateGallery ({ state }, images) {

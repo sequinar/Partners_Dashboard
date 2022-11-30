@@ -26,8 +26,12 @@ const props = defineProps({
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     background-color: #fff;
     z-index: 99;
+
+    h4 {
+      margin-top: 30vh;
+    }
 }
 </style>

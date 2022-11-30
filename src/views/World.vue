@@ -296,6 +296,7 @@ onBeforeMount(async () => {
   font-size: 12px;
   padding-bottom: 15px;
   margin: 0 auto;
+  position: relative;
 
   .title {
     font-size: 30px;
