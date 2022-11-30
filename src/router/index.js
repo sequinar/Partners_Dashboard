@@ -12,16 +12,17 @@ import LogIn from '../views/auth/Login.vue'
 import UpdatePassword from '../views/auth/UpdatePassword.vue'
 import NewPassword from '../views/auth/NewPassword.vue'
 import NotFound from '../views/NotFound.vue'
+import ErrorPage from '../views/ErrorPage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: '/',
+      path: '/auth',
       component: Auth,
       children: [
         {
-          path: '',
+          path: 'login',
           component: LogIn
         },
         {
@@ -74,6 +75,11 @@ const router = createRouter({
           component: Product
         }
       ]
+    },
+    {
+      path: '/error',
+      name: 'Error',
+      component: ErrorPage
     },
     {
       path: '/:pathMatch(.*)*',

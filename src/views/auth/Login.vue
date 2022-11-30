@@ -2,7 +2,7 @@
     <div class="logIn authContainer">
         <h1>Hi There,</h1>
         <p>Welcome to Sequin.World – to begin, enter your email and password. Don't have an account? <router-link
-                to="/auth">Sign Up</router-link>
+                to="/auth/signup">Sign Up</router-link>
         </p>
         <el-form ref="formRef" label-position="top" :model="data" @submit.prevent :rules="rules">
             <el-form-item prop="name">
@@ -16,7 +16,7 @@
         </el-form>
         <div class="d-flex align-center justify-between mt-10">
             <router-link to="/auth/pass-update">Forgot Password?</router-link>
-            <router-link class="wrongEmail" to="/auth">Wrong Email or Password*</router-link>
+            <router-link class="wrongEmail" to="/auth/new-password">Wrong Email or Password*</router-link>
         </div>
     </div>
 </template>
@@ -46,7 +46,7 @@ const validatePass = (rule, value, callback) => {
 const rules = reactive({
   name: [
     { required: true, message: 'Please input your name', trigger: 'blur' },
-    { min: 3, max: 25, message: 'Length should be 3 to 25', trigger: 'change' }
+    { min: 3, max: 35, message: 'The length should be from 3 to 35', trigger: 'change' }
   ],
   password: [{ validator: validatePass, trigger: 'blur' }]
 })

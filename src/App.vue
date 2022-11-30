@@ -32,6 +32,8 @@ const userInfo = (token) => {
 const parseHash = () => {
   auth.parseHash({ hash: window.location.hash }, (err, authResult) => {
     if (err) {
+      router.push({ name: 'Error', params: { message: err.errorDescription } })
+      loading.value = false
       return console.log('hash error', err)
     }
     userInfo(authResult.accessToken)
@@ -45,6 +47,7 @@ onBeforeMount(async () => {
   } else if (window.location.hash) {
     parseHash()
   } else {
+    router.push('/auth/login')
     loading.value = false
   }
 })
