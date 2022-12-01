@@ -16,7 +16,6 @@
         </el-form>
         <div class="d-flex align-center justify-between mt-10">
             <router-link to="/auth/pass-update">Forgot Password?</router-link>
-            <router-link class="wrongEmail" to="/auth/new-password">Wrong Email or Password*</router-link>
         </div>
     </div>
 </template>
