@@ -252,34 +252,32 @@ const fileRemoved = () => {
 }
 
 const fillWorld = (worldToEdit) => {
-  world.worldName = worldToEdit.worldName
-  world.worldDescription = worldToEdit.worldDescription
-  world.worldCapabilities = worldToEdit.capabilities
-  world.cpu = worldToEdit.systemRequirements.cpu
-  world.ram = worldToEdit.systemRequirements.ram
-  world.gc = worldToEdit.systemRequirements.gc
-  world.publishedBy = worldToEdit.publishedBy
-  world.developedBy = worldToEdit.developedBy
-  world.playabelOn = worldToEdit.playabelOn
-  world.releaseDate = worldToEdit.releaseDate
+  world.worldName = worldToEdit.worldName || ''
+  world.worldDescription = worldToEdit.worldDescription || ''
+  world.worldCapabilities = worldToEdit.capabilities || ''
+  world.cpu = worldToEdit.systemRequirements.cpu || ''
+  world.ram = worldToEdit.systemRequirements.ram || ''
+  world.gc = worldToEdit.systemRequirements.gc || ''
+  world.publishedBy = worldToEdit.publishedBy || ''
+  world.developedBy = worldToEdit.developedBy || ''
+  world.playabelOn = worldToEdit.playabelOn || []
+  world.releaseDate = worldToEdit.releaseDate || ''
 
   featureImage.value = worldToEdit.featuredUrl
   thumbnailImage.value = worldToEdit.thumbnailLink ? [{ url: worldToEdit.thumbnailLink }] : []
-  gallery.value = worldToEdit.imageUrls.map(image => {
-    return { url: image.image_url, id: image.id }
-  })
+  if (worldToEdit.imageUrls) gallery.value = worldToEdit.imageUrls.map(image => ({ url: image.image_url, id: image.id }))
 }
 
 const getWorld = async () => {
+  loading.value = true
   if (route.params.id) {
-    loading.value = true
     await store.dispatch('worlds/getWorld', route.params.id)
     await store.dispatch('worlds/getWorldFileInfo', route.params.id)
     fillWorld(editedWorld.value)
-    loading.value = false
   } else {
     store.commit('worlds/setEditedWorld', null)
   }
+  loading.value = false
 }
 
 onBeforeMount(async () => {

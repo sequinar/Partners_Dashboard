@@ -87,8 +87,13 @@ const store = {
       commit('setPlayableOn', response.data.data)
     },
     async getWorldFileInfo ({ commit }, worldId) {
-      const response = await axios.get(`/world/${worldId}/file`)
-      commit('setFile', response.data.data)
+      try {
+        const response = await axios.get(`/world/${worldId}/file`)
+        commit('setFile', response.data.data)
+      } catch (err) {
+        commit('setFile', null)
+        commit('setMessageError', err.response.data.error, { root: true })
+      }
     },
     async updateWorld ({ rootState, commit }, data) {
       try {
