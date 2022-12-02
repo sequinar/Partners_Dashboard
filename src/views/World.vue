@@ -281,6 +281,7 @@ const getWorld = async () => {
 }
 
 onBeforeMount(async () => {
+  store.commit('worlds/setFile', null)
   getWorld()
   await store.dispatch('worlds/getCapabilities')
   await store.dispatch('worlds/getPlatforms')
