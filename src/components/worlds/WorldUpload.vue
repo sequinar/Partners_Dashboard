@@ -49,8 +49,7 @@ const bannerRef = ref(null)
 const fileSize = computed(() => file.value ? (file.value?.size / 1073741824).toFixed(1) + ' GB' : null)
 
 const uploadSuccess = async (res) => {
-  console.log(res)
-  if (res.raw.type !== 'application/x-zip-compressed') {
+  if (!res.raw.type.includes('zip')) {
     ElMessage.error('File must be .zip format!')
   } else if (res.raw.size / 1048576 > 1024) {
     ElMessage.error('The file must not exceed 1 GB')
