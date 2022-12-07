@@ -19,7 +19,11 @@ const store = createStore({
       state.accessToken = token
     },
     setUser (state, user) {
-      state.user = user
+      if (state.user) {
+        state.user = { ...state.user, ...user }
+      } else {
+        state.user = { ...user }
+      }
     },
     setMessageSuccess (state, message) {
       state.messageSuccess = message
