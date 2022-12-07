@@ -46,7 +46,12 @@ const uploadRef = ref(null)
 const file = ref(null)
 const bannerRef = ref(null)
 
-const fileSize = computed(() => file.value ? (file.value?.size / 1073741824).toFixed(1) + ' GB' : null)
+const fileSize = computed(() => file.value ? humanFileSize(file.value.size) : null)
+
+const humanFileSize = (size) => {
+  const i = size === 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024))
+  return (size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i]
+}
 
 const uploadSuccess = async (res) => {
   if (!res.raw.type.includes('zip')) {
