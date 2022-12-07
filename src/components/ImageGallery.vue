@@ -24,8 +24,7 @@ const emits = defineEmits(['imageUpdate', 'imageRemove'])
 
 const props = defineProps({
   limit: {
-    type: Number,
-    default: () => 9
+    type: Number
   },
   images: {
     type: Array
