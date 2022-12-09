@@ -10,9 +10,19 @@
         </div>
         <p class="description">Upload World zip file, and world assets like title ,description, gallery images,
           thumbnails, system requirements and world capabilities. <span class="red">*</span></p>
-        <WorldUpload width="100%" height="105px" :file="file" @fileChanged="fileChanged" @fileRemoved="fileRemoved" />
-        <WorldUploadImage width="100%" height="300px" title="Feature Image" :file="{ banner_url: featureImage, type: editedWorld?.featuredType }"
-          :types="imageTypes" max-size="20MB" resolution="W: 1600 H: 800 px" @imageUpdate="onFeatureImage" />
+        <el-row :gutter="35">
+          <el-col :span="12">
+            <WorldUpload width="100%" height="105px" :file="file" :file-type="'.zip'" @fileChanged="fileChanged"
+              @fileRemoved="fileRemoved" />
+          </el-col>
+          <el-col :span="12">
+            <WorldUpload width="100%" height="105px" :file="file" :file-type="'.pak'" @fileChanged="fileChanged"
+              @fileRemoved="fileRemoved" />
+          </el-col>
+        </el-row>
+        <WorldUploadImage width="100%" height="300px" title="Feature Image"
+          :file="{ banner_url: featureImage, type: editedWorld?.featuredType }" :types="imageTypes" max-size="20MB"
+          resolution="W: 1600 H: 800 px" @imageUpdate="onFeatureImage" />
         <div>
           <label>Name<span class="red">*</span></label>
           <el-input v-model="world.worldName" placeholder="World name" maxlength="20" show-word-limit />

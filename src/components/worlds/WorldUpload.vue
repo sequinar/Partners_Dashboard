@@ -1,7 +1,7 @@
 <template>
     <div ref="bannerRef" class="worldUpload" :style="{ width: props.width, height: props.height }">
         <el-upload ref="uploadRef" drag action="#" :auto-upload="false" :on-change="uploadSuccess" :limit="1"
-            :on-exceed="handleExceed" accept=".zip">
+            :on-exceed="handleExceed" :accept="props.fileType">
             <div class="el-upload__text d-flex align-center justify-center direction-column">
                 <img src="@/assets/icons/Uploadicon.svg" alt="Uploadicon" />
                 <span>Choose a file or drag it here to upload.</span>
@@ -16,7 +16,7 @@
         </div>
     </div>
     <div class="d-flex justify-between mt-10">
-        <span><b>File types supported:</b> .Zip</span>
+        <span><b>File types supported:</b> {{props.fileType}}</span>
         <span><b>Max size:</b> 1GB</span>
     </div>
 </template>
@@ -38,6 +38,10 @@ const props = defineProps({
   },
   file: {
     type: Object
+  },
+  fileType: {
+    type: String,
+    required: true
   }
 })
 
@@ -54,8 +58,9 @@ const humanFileSize = (size) => {
 }
 
 const uploadSuccess = async (res) => {
-  if (!res.raw.type.includes('zip')) {
-    ElMessage.error('File must be .zip format!')
+  console.log(res.raw)
+  if (!res.raw.type.includes(props.fileType)) {
+    ElMessage.error(`File must be ${props.fileType} format!`)
   } else if (res.raw.size / 1048576 > 1024) {
     ElMessage.error('The file must not exceed 1 GB')
   } else {
@@ -131,6 +136,7 @@ const handleExceed = (files) => {
 
     .el-upload__text {
         span {
+          font-size: 12px;
             padding: 5px;
             color: var(--el-color-primary);
             font-family: 'Montserrat-SemiBold';
