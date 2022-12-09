@@ -12,12 +12,12 @@
           thumbnails, system requirements and world capabilities. <span class="red">*</span></p>
         <el-row :gutter="35">
           <el-col :span="12">
-            <WorldUpload width="100%" height="105px" :file="file" :file-type="'.zip'" @fileChanged="fileChanged"
-              @fileRemoved="fileRemoved" />
+            <WorldUpload width="100%" height="105px" :file="files.windows" file-type="zip"
+              @fileChanged="fileChanged($event, 'windows')" @fileRemoved="fileRemoved('windows')" />
           </el-col>
           <el-col :span="12">
-            <WorldUpload width="100%" height="105px" :file="file" :file-type="'.pak'" @fileChanged="fileChanged"
-              @fileRemoved="fileRemoved" />
+            <WorldUpload width="100%" height="105px" :file="files.mac" file-type="pak"
+              @fileChanged="fileChanged($event, 'mac')" @fileRemoved="fileRemoved('mac')" />
           </el-col>
         </el-row>
         <WorldUploadImage width="100%" height="300px" title="Feature Image"
@@ -113,7 +113,7 @@ const router = useRouter()
 const route = useRoute()
 
 const imageTypes = ['JPG', 'PNG', 'GIF', 'SVG', 'MP4', 'WEBM', 'WAV', 'OGG', 'GLB', 'GLTF']
-const { uploadFile, progress } = useFileUpload(store)
+const { uploadFile, progress } = useFileUpload()
 const world = reactive({
   worldName: '',
   worldDescription: '',
@@ -135,14 +135,22 @@ const gallery = ref([])
 const functionsForEdit = ref(new Set())
 const imagesToDelete = ref([])
 const showProgress = ref(false)
-const file = computed(() => store.state.worlds.file)
+const files = computed(() => store.state.worlds.files)
 const editedWorld = computed(() => store.state.worlds.editedWorld)
 const capabilities = computed(() => store.getters['worlds/getCapabilities'])
 const playableOn = computed(() => store.getters['worlds/getPlatforms'])
-const actionsDisabled = computed(() => !(isWorldFilled.value && featureImage.value && gallery.value.length && file.value))
+const actionsDisabled = computed(() => !(isWorldFilled.value && featureImage.value && gallery.value.length && files.value.windows && files.value.mac))
 const isWorldFilled = computed(() => {
   return Object.values(world).every(value => value.length !== 0)
 })
+
+const updateWorldFile = async () => {
+  for (const file in files.value) {
+    if (files.value[file] && files.value[file].raw) {
+      await uploadFile(editedWorld.value.publicId, files.value[file].raw)
+    }
+  }
+}
 
 const updateFeaturedImage = async () => {
   return await store.dispatch('worlds/updateFeaturedImage', featureImage.value)
@@ -189,7 +197,7 @@ const createWorld = async () => {
 const saveWorld = async (status) => {
   buttonLoading.value = true
   if (editedWorld.value) {
-    if (functionsForEdit.value.has(uploadFile)) showProgress.value = true
+    if (functionsForEdit.value.has(updateWorldFile)) showProgress.value = true
     for (const func of functionsForEdit.value) {
       await func() // call all functions for edited data
     }
@@ -203,7 +211,7 @@ const saveWorld = async (status) => {
   } else {
     showProgress.value = true
     await createWorld()
-    await uploadFile()
+    await updateWorldFile()
     await store.dispatch('worlds/setWorldStatus', status)
     await updateFeaturedImage()
     await updateGallery()
@@ -252,13 +260,18 @@ const detectNewTag = (tags) => {
 
 const changeDate = (date) => { world.releaseDate = date }
 
-const fileChanged = () => {
-  functionsForEdit.value.add(uploadFile)
+const fileChanged = (file, platform) => {
+  functionsForEdit.value.add(updateWorldFile)
+  store.commit('worlds/setFiles', {
+    [platform]: file
+  })
 }
 
-const fileRemoved = () => {
+const fileRemoved = (platform) => {
   functionsForEdit.value.add(removeWorldFile)
-  store.commit('worlds/setFile', null)
+  store.commit('worlds/setFiles', {
+    [platform]: null
+  })
 }
 
 const fillWorld = (worldToEdit) => {
@@ -291,7 +304,7 @@ const getWorld = async () => {
 }
 
 onBeforeMount(async () => {
-  store.commit('worlds/setFile', null)
+  store.commit('worlds/setFiles', null)
   getWorld()
   await store.dispatch('worlds/getCapabilities')
   await store.dispatch('worlds/getPlatforms')

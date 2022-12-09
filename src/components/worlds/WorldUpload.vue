@@ -1,7 +1,7 @@
 <template>
     <div ref="bannerRef" class="worldUpload" :style="{ width: props.width, height: props.height }">
         <el-upload ref="uploadRef" drag action="#" :auto-upload="false" :on-change="uploadSuccess" :limit="1"
-            :on-exceed="handleExceed" :accept="props.fileType">
+            :on-exceed="handleExceed" :accept="`.${props.fileType}`">
             <div class="el-upload__text d-flex align-center justify-center direction-column">
                 <img src="@/assets/icons/Uploadicon.svg" alt="Uploadicon" />
                 <span>Choose a file or drag it here to upload.</span>
@@ -16,7 +16,7 @@
         </div>
     </div>
     <div class="d-flex justify-between mt-10">
-        <span><b>File types supported:</b> {{props.fileType}}</span>
+        <span><b>File types supported:</b> .{{props.fileType}}</span>
         <span><b>Max size:</b> 1GB</span>
     </div>
 </template>
@@ -24,7 +24,6 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { genFileId, ElMessage } from 'element-plus'
-import { useStore } from 'vuex'
 
 const emits = defineEmits(['fileChanged', 'fileRemoved'])
 const props = defineProps({
@@ -45,7 +44,6 @@ const props = defineProps({
   }
 })
 
-const store = useStore()
 const uploadRef = ref(null)
 const file = ref(null)
 const bannerRef = ref(null)
@@ -58,15 +56,13 @@ const humanFileSize = (size) => {
 }
 
 const uploadSuccess = async (res) => {
-  console.log(res.raw)
   if (!res.raw.type.includes(props.fileType)) {
     ElMessage.error(`File must be ${props.fileType} format!`)
   } else if (res.raw.size / 1048576 > 1024) {
     ElMessage.error('The file must not exceed 1 GB')
   } else {
     file.value = res.raw
-    store.commit('worlds/setFile', res)
-    emits('fileChanged')
+    emits('fileChanged', res)
   }
 }
 

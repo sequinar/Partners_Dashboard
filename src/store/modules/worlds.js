@@ -6,7 +6,7 @@ const store = {
       worlds: null, // {data: [], meta: {}}
       currentWorld: null,
       worldBanners: [],
-      file: null,
+      files: { windows: null, mac: null },
       editedWorld: null,
       capabilities: [],
       playebleOn: []
@@ -22,8 +22,11 @@ const store = {
     setBanners (state, banners) {
       state.worldBanners = banners
     },
-    setFile (state, file) {
-      state.file = file
+    setFiles (state, data) {
+      if (!data) state.files = { windows: null, mac: null }
+      else {
+        Object.keys(data).forEach(key => { state.files[key] = data[key] })
+      }
     },
     setEditedWorld (state, world) {
       state.editedWorld = world
@@ -74,10 +77,6 @@ const store = {
       const banners = await axios.get(`world/${id}/world-banner`)
       commit('setBanners', banners.data)
     },
-    async getUploadUrl ({ state }, data) {
-      const response = await axios.post(`world/${state.editedWorld.publicId}/getprojectuploadurl`, data)
-      return response.data.data
-    },
     async getCapabilities ({ commit }) {
       const response = await axios.get('world/capability')
       commit('setCapabilities', response.data.data)
@@ -89,9 +88,9 @@ const store = {
     async getWorldFileInfo ({ commit }, worldId) {
       try {
         const response = await axios.get(`/world/${worldId}/file`)
-        commit('setFile', response.data.data)
+        commit('setFiles', response.data.data)
       } catch (err) {
-        commit('setFile', null)
+        commit('setFiles', null)
         commit('setMessageError', err.response.data.error, { root: true })
       }
     },
@@ -185,9 +184,6 @@ const store = {
       } catch (err) {
         commit('setMessageError', err.response.data.error, { root: true })
       }
-    },
-    async completeMultipartUpload ({ state }, data) {
-      await axios.post(`world/${state.editedWorld.publicId}/completemultipartupload`, data)
     },
     async setWorldStatus ({ state }, status) {
       if (state.editedWorld?.publicId) {
