@@ -9,7 +9,8 @@ const store = {
       files: { windows: null, mac: null },
       editedWorld: null,
       capabilities: [],
-      playebleOn: []
+      playebleOn: [],
+      filter: ''
     }
   },
   mutations: {
@@ -36,6 +37,9 @@ const store = {
     },
     setPlayableOn (state, playebleOn) {
       state.playebleOn = playebleOn
+    },
+    setFilter (state, filter) {
+      state.filter = filter
     }
   },
   actions: {
@@ -53,13 +57,7 @@ const store = {
     },
     async getWorlds ({ commit, rootState }, params) {
       if (rootState.team.team) {
-        const worlds = await axios.get(`team/${rootState.team.team.teamId}/worlds`, {
-          params: {
-            limit: params?.limit || 8,
-            page: params?.page || 1,
-            filter: params?.filter || ''
-          }
-        })
+        const worlds = await axios.get(`team/${rootState.team.team.teamId}/worlds`, { params })
         commit('setWorlds', worlds.data)
       } else {
         commit('setWorlds', {})

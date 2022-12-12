@@ -36,9 +36,8 @@
 
 <script setup>
 import { ArrowDown } from '@element-plus/icons-vue'
-import { ref, computed, defineAsyncComponent, watch, inject } from 'vue'
+import { ref, computed, defineAsyncComponent, inject } from 'vue'
 import { useStore } from 'vuex'
-import useDebounce from '../composables/debounce'
 import { useRoute } from 'vue-router'
 
 const AccountSettings = defineAsyncComponent(() =>
@@ -48,21 +47,20 @@ const AccountSettings = defineAsyncComponent(() =>
 const store = useStore()
 const route = useRoute()
 const user = computed(() => store.state.user)
-const search = ref('')
+const search = computed({
+  get () {
+    return store.state.worlds.filter
+  },
+  set (value) {
+    store.commit('worlds/setFilter', value)
+  }
+})
 const drawer = ref(false)
 const auth = inject('Auth')
 
 const logOut = () => {
   auth.logout()
 }
-
-watch(search, useDebounce((newVal) => {
-  store.dispatch('worlds/getWorlds', {
-    limit: 10,
-    page: 1,
-    filter: newVal
-  })
-}, 500))
 </script>
 
 <style scoped lang="scss">
