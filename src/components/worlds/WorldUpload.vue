@@ -9,8 +9,8 @@
         </el-upload>
         <div v-if="file || props.file" class="uploadedFile d-flex justify-between align-center">
             <div>
-                <h4 class="fileName">{{file?.name || props.file.fileName}}</h4>
-                <span class="fileSize">{{fileSize || props.file.fileSize}}</span>
+                <h4 class="fileName">{{file?.name || props.file.name}}</h4>
+                <span class="fileSize">{{fileSize || props.file.size}}</span>
             </div>
             <el-button type="danger" link @click="removeFile">Remove</el-button>
         </div>
@@ -56,13 +56,13 @@ const humanFileSize = (size) => {
 }
 
 const uploadSuccess = async (res) => {
-  if (!res.raw.type.includes(props.fileType)) {
-    ElMessage.error(`File must be ${props.fileType} format!`)
-  } else if (res.raw.size / 1048576 > 1024) {
+  if (res.raw.size / 1048576 > 1024) {
     ElMessage.error('The file must not exceed 1 GB')
   } else {
     file.value = res.raw
-    emits('fileChanged', res)
+    const newFile = res
+    newFile.raw = new File([newFile.raw], newFile.raw.name.replace(/\s/g, ''))
+    emits('fileChanged', newFile)
   }
 }
 
@@ -103,6 +103,8 @@ const handleExceed = (files) => {
             margin: 0;
             font-size: 14px;
             margin-bottom: 5px;
+            max-width: 100px;
+            overflow: hidden;
         }
 
         .el-button {

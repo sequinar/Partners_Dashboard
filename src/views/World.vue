@@ -12,12 +12,12 @@
           thumbnails, system requirements and world capabilities. <span class="red">*</span></p>
         <el-row :gutter="35">
           <el-col :span="12">
-            <WorldUpload width="100%" height="105px" :file="files.windows" file-type="zip"
-              @fileChanged="fileChanged($event, 'windows')" @fileRemoved="fileRemoved('windows')" />
+            <WorldUpload width="100%" height="105px" :file="files.get('Windows')" file-type="zip"
+              @fileChanged="fileChanged($event, 'Windows')" @fileRemoved="fileRemoved('Windows')" />
           </el-col>
           <el-col :span="12">
-            <WorldUpload width="100%" height="105px" :file="files.mac" file-type="pak"
-              @fileChanged="fileChanged($event, 'mac')" @fileRemoved="fileRemoved('mac')" />
+            <WorldUpload width="100%" height="105px" :file="files.get('MacOS')" file-type="pak"
+              @fileChanged="fileChanged($event, 'MacOS')" @fileRemoved="fileRemoved('MacOS')" />
           </el-col>
         </el-row>
         <WorldUploadImage width="100%" height="300px" title="Feature Image"
@@ -139,15 +139,18 @@ const files = computed(() => store.state.worlds.files)
 const editedWorld = computed(() => store.state.worlds.editedWorld)
 const capabilities = computed(() => store.getters['worlds/getCapabilities'])
 const playableOn = computed(() => store.getters['worlds/getPlatforms'])
-const actionsDisabled = computed(() => !(isWorldFilled.value && featureImage.value && gallery.value.length && files.value.windows && files.value.mac))
+const actionsDisabled = computed(() => !(isWorldFilled.value && featureImage.value && gallery.value.length && files.value.has('Windows') && files.value.has('MacOS')))
 const isWorldFilled = computed(() => {
   return Object.values(world).every(value => value.length !== 0)
 })
 
 const updateWorldFile = async () => {
-  for (const file in files.value) {
-    if (files.value[file] && files.value[file].raw) {
-      await uploadFile(editedWorld.value.publicId, files.value[file].raw)
+  world.worldAssetsUrls = []
+  // eslint-disable-next-line no-unused-vars
+  for (const [platform, file] of files.value) {
+    if ('raw' in file) {
+      const url = await uploadFile(editedWorld.value.publicId, file.raw)
+      world.worldAssetsUrls.push(url)
     }
   }
 }
@@ -169,8 +172,11 @@ const updateThumbnailImage = async () => {
   fd.append('thumbnailImage', thumbnailImage.value[0].raw)
   return await store.dispatch('worlds/updateThumbnailImage', fd)
 }
-const removeWorldFile = async () => {
-  return await store.dispatch('worlds/deleteWorldFile', route.params.id)
+const removeWorldFile = async (platform) => {
+  return await store.dispatch('worlds/deleteWorldFile', {
+    worldId: route.params.id,
+    platform
+  })
 }
 
 const removeGalleryImage = () => {
@@ -262,16 +268,16 @@ const changeDate = (date) => { world.releaseDate = date }
 
 const fileChanged = (file, platform) => {
   functionsForEdit.value.add(updateWorldFile)
-  store.commit('worlds/setFiles', {
-    [platform]: file
-  })
+  store.commit('worlds/setFiles', [
+    {
+      platform, ...file
+    }
+  ])
 }
 
 const fileRemoved = (platform) => {
-  functionsForEdit.value.add(removeWorldFile)
-  store.commit('worlds/setFiles', {
-    [platform]: null
-  })
+  functionsForEdit.value.add(removeWorldFile.bind(this, platform))
+  store.commit('worlds/removeFiles', [{ platform }])
 }
 
 const fillWorld = (worldToEdit) => {

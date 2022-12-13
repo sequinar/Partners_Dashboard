@@ -6,7 +6,7 @@ const store = {
       worlds: null, // {data: [], meta: {}}
       currentWorld: null,
       worldBanners: [],
-      files: { windows: null, mac: null },
+      files: new Map(),
       editedWorld: null,
       capabilities: [],
       playebleOn: [],
@@ -23,11 +23,19 @@ const store = {
     setBanners (state, banners) {
       state.worldBanners = banners
     },
-    setFiles (state, data) {
-      if (!data) state.files = { windows: null, mac: null }
-      else {
-        Object.keys(data).forEach(key => { state.files[key] = data[key] })
+    setFiles (state, files) {
+      if (!files) {
+        state.files = new Map()
+      } else {
+        files.forEach(element => {
+          state.files.set(element.platform, element)
+        })
       }
+    },
+    removeFiles (state, files) {
+      files.forEach(file => {
+        state.files.delete(file.platform)
+      })
     },
     setEditedWorld (state, world) {
       state.editedWorld = world
@@ -88,7 +96,6 @@ const store = {
         const response = await axios.get(`/world/${worldId}/file`)
         commit('setFiles', response.data.data)
       } catch (err) {
-        commit('setFiles', null)
         commit('setMessageError', err.response.data.error, { root: true })
       }
     },
@@ -176,9 +183,11 @@ const store = {
         commit('setMessageError', err.response.data.error, { root: true })
       }
     },
-    async deleteWorldFile ({ commit }, worldId) {
+    async deleteWorldFile ({ commit }, { worldId, platform }) {
       try {
-        await axios.delete(`world/${worldId}/file`)
+        await axios.delete(`world/${worldId}/file`, {
+          data: { platform }
+        })
       } catch (err) {
         commit('setMessageError', err.response.data.error, { root: true })
       }

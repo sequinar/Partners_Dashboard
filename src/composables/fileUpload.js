@@ -12,14 +12,15 @@ export function useFileUpload () {
   const progress = ref(0)
   const chunksLength = computed(() => chunks.value?.length)
   const uploadId = computed(() => uploadUrls.value?.uploadid)
-  const progressDivision = computed(() => chunksLength.value ? Math.round(100 / chunksLength.value) : 0)
+  const progressDivision = computed(() => chunksLength.value ? (Math.round(100 / chunksLength.value)) / 2 : 0)
 
   const createChunks = () => {
+    chunks.value = []
     let startPointer = 0
     const endPointer = worldFile.size
     while (startPointer < endPointer) {
       const newStartPointer = startPointer + MULTIPART_CHUNK_SIZE
-      chunks.value.push(worldFile.raw.slice(startPointer, newStartPointer, worldFile.type))
+      chunks.value.push(worldFile.slice(startPointer, newStartPointer, worldFile.type))
       startPointer = newStartPointer
     }
   }
@@ -62,9 +63,10 @@ export function useFileUpload () {
   }
 
   const completeMultipartUpload = async () => {
-    await axios.post(`world/${worldId}/completemultipartupload`, {
+    const response = await axios.post(`world/${worldId}/completemultipartupload`, {
       fileName: worldFile.name, etags: etags.value, uploadID: uploadId.value
     })
+    return response.data.data
   }
 
   const uploadFile = async (id, file) => {
@@ -73,7 +75,7 @@ export function useFileUpload () {
     createChunks()
     await getUploadUrl()
     await uploadChanks()
-    await completeMultipartUpload()
+    return await completeMultipartUpload()
   }
 
   return {
