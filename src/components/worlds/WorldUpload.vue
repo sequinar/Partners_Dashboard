@@ -1,7 +1,7 @@
 <template>
     <div ref="bannerRef" class="worldUpload" :style="{ width: props.width, height: props.height }">
         <el-upload ref="uploadRef" drag action="#" :auto-upload="false" :on-change="uploadSuccess" :limit="1"
-            :on-exceed="handleExceed" accept=".zip">
+            :on-exceed="handleExceed" :accept="`.${props.fileType}`">
             <div class="el-upload__text d-flex align-center justify-center direction-column">
                 <img src="@/assets/icons/Uploadicon.svg" alt="Uploadicon" />
                 <span>Choose a file or drag it here to upload.</span>
@@ -9,14 +9,14 @@
         </el-upload>
         <div v-if="file || props.file" class="uploadedFile d-flex justify-between align-center">
             <div>
-                <h4 class="fileName">{{file?.name || props.file.fileName}}</h4>
-                <span class="fileSize">{{fileSize || props.file.fileSize}}</span>
+                <h4 class="fileName">{{file?.name || props.file.name}}</h4>
+                <span class="fileSize">{{fileSize || props.file.size}}</span>
             </div>
             <el-button type="danger" link @click="removeFile">Remove</el-button>
         </div>
     </div>
     <div class="d-flex justify-between mt-10">
-        <span><b>File types supported:</b> .Zip</span>
+        <span><b>File types supported:</b> .{{props.fileType}}</span>
         <span><b>Max size:</b> 1GB</span>
     </div>
 </template>
@@ -24,7 +24,6 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { genFileId, ElMessage } from 'element-plus'
-import { useStore } from 'vuex'
 
 const emits = defineEmits(['fileChanged', 'fileRemoved'])
 const props = defineProps({
@@ -38,25 +37,32 @@ const props = defineProps({
   },
   file: {
     type: Object
+  },
+  fileType: {
+    type: String,
+    required: true
   }
 })
 
-const store = useStore()
 const uploadRef = ref(null)
 const file = ref(null)
 const bannerRef = ref(null)
 
-const fileSize = computed(() => file.value ? (file.value?.size / 1073741824).toFixed(1) + ' GB' : null)
+const fileSize = computed(() => file.value ? humanFileSize(file.value.size) : null)
+
+const humanFileSize = (size) => {
+  const i = size === 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024))
+  return (size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i]
+}
 
 const uploadSuccess = async (res) => {
-  if (!res.raw.type.includes('zip')) {
-    ElMessage.error('File must be .zip format!')
-  } else if (res.raw.size / 1048576 > 1024) {
+  if (res.raw.size / 1048576 > 1024) {
     ElMessage.error('The file must not exceed 1 GB')
   } else {
     file.value = res.raw
-    store.commit('worlds/setFile', res)
-    emits('fileChanged')
+    const newFile = res
+    newFile.raw = new File([newFile.raw], newFile.raw.name.replace(/\s/g, ''))
+    emits('fileChanged', newFile)
   }
 }
 
@@ -97,6 +103,8 @@ const handleExceed = (files) => {
             margin: 0;
             font-size: 14px;
             margin-bottom: 5px;
+            max-width: 100px;
+            overflow: hidden;
         }
 
         .el-button {
@@ -126,6 +134,7 @@ const handleExceed = (files) => {
 
     .el-upload__text {
         span {
+          font-size: 12px;
             padding: 5px;
             color: var(--el-color-primary);
             font-family: 'Montserrat-SemiBold';

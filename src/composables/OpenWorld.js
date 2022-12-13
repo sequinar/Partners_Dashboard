@@ -6,6 +6,7 @@ export function useOpenWorld (store) {
   const currentCount = ref(0)
   const openWorldType = ref('')
   const isWorldLoadingModal = ref(false)
+  let rolesString = ''
 
   const getSessionApiCall = (id) => {
     currentCount.value += 1
@@ -49,7 +50,7 @@ export function useOpenWorld (store) {
         if (world.template_name === 'Camelot') {
           isWorldLoadingModal.value = true
           customProtocolCheck(
-            `sequincamelot://?world-id:${world.public_id}?auth:${store.state.accessToken}?session-id:${res.data.response}?mode:${openWorldType.value}`,
+            `sequincamelot://?world-id:${world.public_id}?auth:${store.state.accessToken}?session-id:${res.data.response}?mode:${openWorldType.value}${rolesString}`,
             () => {
               console.log('Custom protocol not found.')
             },
@@ -59,7 +60,7 @@ export function useOpenWorld (store) {
           )
         } else {
           customProtocolCheck(
-            `sequin://?world-id:${world.public_id}?auth:${store.state.accessToken}?session-id:${res.data.response}?mode:${openWorldType.value}`,
+            `sequin://?world-id:${world.public_id}?auth:${store.state.accessToken}?session-id:${res.data.response}?mode:${openWorldType.value}${rolesString}`,
             () => {
               console.log('Custom protocol not found.')
             },
@@ -75,9 +76,20 @@ export function useOpenWorld (store) {
       })
   }
 
+  const fillRoles = () => {
+    if (store.state.user) {
+      const roles = store.state.user['https://sequin.world/api/roles']
+
+      for (let i = 0; i < roles.length; i++) {
+        rolesString += '?role:' + roles[i]
+      }
+    }
+  }
+
   const openWorld = (type, world) => {
     isWorldLoadingModal.value = true
     openWorldType.value = type
+    fillRoles()
     startNewSessionApiCall(world)
   }
 

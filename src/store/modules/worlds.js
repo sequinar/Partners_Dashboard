@@ -6,10 +6,11 @@ const store = {
       worlds: null, // {data: [], meta: {}}
       currentWorld: null,
       worldBanners: [],
-      file: null,
+      files: new Map(),
       editedWorld: null,
       capabilities: [],
-      playebleOn: []
+      playebleOn: [],
+      filter: ''
     }
   },
   mutations: {
@@ -22,8 +23,19 @@ const store = {
     setBanners (state, banners) {
       state.worldBanners = banners
     },
-    setFile (state, file) {
-      state.file = file
+    setFiles (state, files) {
+      if (!files) {
+        state.files = new Map()
+      } else {
+        files.forEach(element => {
+          state.files.set(element.platform, element)
+        })
+      }
+    },
+    removeFiles (state, files) {
+      files.forEach(file => {
+        state.files.delete(file.platform)
+      })
     },
     setEditedWorld (state, world) {
       state.editedWorld = world
@@ -33,6 +45,9 @@ const store = {
     },
     setPlayableOn (state, playebleOn) {
       state.playebleOn = playebleOn
+    },
+    setFilter (state, filter) {
+      state.filter = filter
     }
   },
   actions: {
@@ -50,13 +65,7 @@ const store = {
     },
     async getWorlds ({ commit, rootState }, params) {
       if (rootState.team.team) {
-        const worlds = await axios.get(`team/${rootState.team.team.teamId}/worlds`, {
-          params: {
-            limit: params?.limit || 8,
-            page: params?.page || 1,
-            filter: params?.filter || ''
-          }
-        })
+        const worlds = await axios.get(`team/${rootState.team.team.teamId}/worlds`, { params })
         commit('setWorlds', worlds.data)
       } else {
         commit('setWorlds', {})
@@ -74,10 +83,6 @@ const store = {
       const banners = await axios.get(`world/${id}/world-banner`)
       commit('setBanners', banners.data)
     },
-    async getUploadUrl ({ state }, data) {
-      const response = await axios.post(`world/${state.editedWorld.publicId}/getprojectuploadurl`, data)
-      return response.data.data
-    },
     async getCapabilities ({ commit }) {
       const response = await axios.get('world/capability')
       commit('setCapabilities', response.data.data)
@@ -89,9 +94,8 @@ const store = {
     async getWorldFileInfo ({ commit }, worldId) {
       try {
         const response = await axios.get(`/world/${worldId}/file`)
-        commit('setFile', response.data.data)
+        commit('setFiles', response.data.data)
       } catch (err) {
-        commit('setFile', null)
         commit('setMessageError', err.response.data.error, { root: true })
       }
     },
@@ -179,15 +183,14 @@ const store = {
         commit('setMessageError', err.response.data.error, { root: true })
       }
     },
-    async deleteWorldFile ({ commit }, worldId) {
+    async deleteWorldFile ({ commit }, { worldId, platform }) {
       try {
-        await axios.delete(`world/${worldId}/file`)
+        await axios.delete(`world/${worldId}/file`, {
+          data: { platform }
+        })
       } catch (err) {
         commit('setMessageError', err.response.data.error, { root: true })
       }
-    },
-    async completeMultipartUpload ({ state }, data) {
-      await axios.post(`world/${state.editedWorld.publicId}/completemultipartupload`, data)
     },
     async setWorldStatus ({ state }, status) {
       if (state.editedWorld?.publicId) {
