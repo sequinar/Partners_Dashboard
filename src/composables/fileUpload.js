@@ -15,7 +15,6 @@ export function useFileUpload () {
   const progressDivision = computed(() => chunksLength.value ? (Math.round(100 / chunksLength.value)) / 2 : 0)
 
   const createChunks = () => {
-    chunks.value = []
     let startPointer = 0
     const endPointer = worldFile.size
     while (startPointer < endPointer) {
@@ -72,6 +71,8 @@ export function useFileUpload () {
   const uploadFile = async (id, file) => {
     worldId = id
     worldFile = file
+    etags.value = []
+    chunks.value = []
     createChunks()
     await getUploadUrl()
     await uploadChanks()
