@@ -213,7 +213,6 @@ const saveWorld = async (status) => {
     })
     await store.dispatch('worlds/setWorldStatus', status)
     getWorld()
-    functionsForEdit.value = new Set()
   } else {
     showProgress.value = true
     await createWorld()
@@ -228,6 +227,8 @@ const saveWorld = async (status) => {
   }
   buttonLoading.value = false
   showProgress.value = false
+  functionsForEdit.value = new Set()
+  progress.value = 0
 }
 
 const onFeatureImage = (image) => {
