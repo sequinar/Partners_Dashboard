@@ -7,9 +7,9 @@
     <div v-if="props.world.thumbnail_link" class="image-container" :style="{ backgroundImage: `url(${props.world.thumbnail_link})` }"></div>
     <img v-else class="default-image" src="@/assets/default.png" alt="default-image">
     <dropdown @click.stop>
-      <li @click.stop="router.push(`/settings/${props.world.public_id}`)">
+      <!-- <li @click.stop="router.push(`/settings/${props.world.public_id}`)">
         Settings
-      </li>
+      </li> -->
       <li @click="copyLink(props.world.public_id)">
         Share
       </li>

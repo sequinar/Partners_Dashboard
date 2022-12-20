@@ -285,9 +285,9 @@ const fillWorld = (worldToEdit) => {
   world.worldName = worldToEdit.worldName || ''
   world.worldDescription = worldToEdit.worldDescription || ''
   world.worldCapabilities = worldToEdit.capabilities || ''
-  world.cpu = worldToEdit.systemRequirements.cpu || ''
-  world.ram = worldToEdit.systemRequirements.ram || ''
-  world.gc = worldToEdit.systemRequirements.gc || ''
+  world.cpu = worldToEdit.systemRequirements?.cpu || ''
+  world.ram = worldToEdit.systemRequirements?.ram || ''
+  world.gc = worldToEdit.systemRequirements?.gc || ''
   world.publishedBy = worldToEdit.publishedBy || ''
   world.developedBy = worldToEdit.developedBy || ''
   world.playabelOn = worldToEdit.playabelOn || []
