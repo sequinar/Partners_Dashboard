@@ -1,13 +1,11 @@
 <template>
   <el-card
-    class="worldItem"
+    class="world-card"
     :body-style="{ padding: '0px' }"
     @click="openWorld('view', props.world)"
   >
-    <img
-      :src="props.world.thumbnail_link"
-      class="image"
-    >
+    <div v-if="props.world.thumbnail_link" class="image-container" :style="{ backgroundImage: `url(${props.world.thumbnail_link})` }"></div>
+    <img v-else class="default-image" src="@/assets/default.png" alt="default-image">
     <dropdown @click.stop>
       <li @click.stop="router.push(`/settings/${props.world.public_id}`)">
         Settings
@@ -15,28 +13,17 @@
       <li @click="copyLink(props.world.public_id)">
         Share
       </li>
+      <li @click.stop="router.push(`/world-editor/${props.world.public_id}`)">
+        World Editor
+      </li>
     </dropdown>
-    <div class="worldItem--footer">
+    <div class="world-card__footer">
       <h3>{{ props.world.worldname }}</h3>
-      <!-- <div class="statistics">
-                <span class="statistics--item">
-                    <span class="status" :class="{ online: isOnline }"></span>
-                    <small>0045</small>
-                </span>
-                <span class="statistics--item">
-                    <EyeOutline />
-                    <small>0045</small>
-                </span>
-                <span class="statistics--item">
-                    <ChatOutline />
-                    <small>0045</small>
-                </span>
-                <span class="statistics--item">
-                    <HeartOutline />
-                    <small>0045</small>
-                </span>
-                <ArrowUp class="green" />
-            </div> -->
+      <div class="world-statuses">
+        <span v-if="props.world.publish_status === WORLD_STATUSES.PUBLISH" class="status published">Published</span>
+        <span v-if="props.world.publish_status === WORLD_STATUSES.ARCHIVE" class="status archived">Archived</span>
+        <span v-if="props.world.publish_status === WORLD_STATUSES.DRAFT" class="status drafted">Drafted</span>
+      </div>
     </div>
   </el-card>
   <WorldLoadingModal
@@ -51,13 +38,14 @@ import { useRouter } from 'vue-router'
 import { useOpenWorld } from '@/composables/OpenWorld'
 import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
+import { WORLD_STATUSES } from '@/helpers/constants'
 
 const WorldLoadingModal = defineAsyncComponent(() =>
-  import('../components/modals/WorldLoadingModal.vue')
+  import('@/components/modals/WorldLoadingModal.vue')
 )
 
 const Dropdown = defineAsyncComponent(() =>
-  import('./Dropdown.vue')
+  import('@/components/Dropdown.vue')
 )
 
 const store = useStore()
@@ -78,7 +66,7 @@ const copyLink = (id) => {
 </script>
 
 <style lang="scss">
-.worldItem {
+.world-card {
   position: relative;
   cursor: pointer;
 
@@ -89,9 +77,15 @@ const copyLink = (id) => {
     height: 100%;
   }
 
-  img {
+  .image-container {
     width: 100%;
-    height: auto;
+    height: 300px;
+    background-size: cover;
+    background-position: center center;
+  }
+
+  .default-image {
+    height: 300px;
   }
 
   .dropdown {
@@ -100,15 +94,15 @@ const copyLink = (id) => {
     right: 10px;
   }
 
-  &--footer {
-    padding: 30px 15px;
-    text-align: center;
+  &__footer {
+    padding: 20px 15px;
 
     h3 {
       margin: 0;
       font-size: 18px;
       font-family: 'Montserrat-SemiBold';
     }
+
   }
 
   .statistics {
@@ -117,19 +111,39 @@ const copyLink = (id) => {
     justify-content: space-between;
     color: #d8d8d8;
 
-    &--item {
+    &--card {
       display: flex;
       align-items: center;
       gap: 5px;
     }
   }
 
-  .status {
-    width: 12px;
-    height: 12px;
-    display: inline-block;
-    background-color: var(--el-color-error);
-    border-radius: 10px;
+  .world-statuses {
+    .status {
+      position: relative;
+      font-size: 14px;
+      padding-left: 20px;
+
+      &:before {
+        content: '';
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        background-color: #A6A6A6;
+        border-radius: 50%;
+        left: 0;
+        top: 2px;
+      }
+    }
+    .published::before {
+      background-color: #09B700;
+    }
+    .archived::before {
+      background-color: #F00505;
+    }
+    .drafted::before {
+      background-color: #A6A6A6;
+    }
   }
 
   .online {
