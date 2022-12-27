@@ -159,13 +159,15 @@ const updateFeaturedImage = async () => {
   return await store.dispatch('worlds/updateFeaturedImage', featureImage.value)
 }
 const updateGallery = async () => {
-  const fd = new FormData()
+  const promises = []
   gallery.value.forEach((image, index) => {
     if (image.raw) {
+      const fd = new FormData()
       fd.append(index, image.raw)
+      promises.push(store.dispatch('worlds/updateGallery', fd))
     }
   })
-  return store.dispatch('worlds/updateGallery', fd)
+  return Promise.all(promises)
 }
 const updateThumbnailImage = async () => {
   const fd = new FormData()
