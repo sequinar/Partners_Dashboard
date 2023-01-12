@@ -46,7 +46,7 @@ const search = computed(() => store.state.worlds.filter)
 const filters = reactive({
   limit: 8,
   page: 1,
-  periodFilter: '3 months',
+  periodFilter: '',
   sortFilter: 'A-Z',
   filter: ''
 })
