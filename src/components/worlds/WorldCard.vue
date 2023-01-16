@@ -61,7 +61,7 @@ const props = defineProps({
 
 const copyLink = (id) => {
   navigator.clipboard.writeText(`${window.document.location.href}settings/${id}`)
-  ElMessage.success('Copied')
+  ElMessage.success('Link copied to clipboard')
 }
 </script>
 
