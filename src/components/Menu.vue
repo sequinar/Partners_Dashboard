@@ -12,7 +12,7 @@
         <span class="title">Worlds</span>
       </template>
     </el-menu-item>
-    <el-menu-item index="2" :class="showIntruction(1)" @click="goTo(`/team/${team?.teamId || ''}`)">
+    <el-menu-item index="2" :class="showIntruction(1)" @click="goTo(`/worlds/team/${team?.teamId || ''}`)">
       <img src="../assets/icons/Teams.svg" alt="team">
       <template #title>
         <span class="title">Team</span>
