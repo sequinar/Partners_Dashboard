@@ -6,14 +6,41 @@ import Team from '../views/Team.vue'
 import WorldEditor from '../views/WorldEditor.vue'
 import World from '../views/World.vue'
 import Product from '../views/Product.vue'
+import Auth from '../views/auth/Auth.vue'
+import SignUp from '../views/auth/Signup.vue'
+import LogIn from '../views/auth/Login.vue'
+import UpdatePassword from '../views/auth/UpdatePassword.vue'
+import NewPassword from '../views/auth/NewPassword.vue'
 import NotFound from '../views/NotFound.vue'
-import Auth0 from '../auth0/index'
+import ErrorPage from '../views/ErrorPage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: '/',
+      path: '/auth',
+      component: Auth,
+      children: [
+        {
+          path: 'login',
+          component: LogIn
+        },
+        {
+          path: 'signup',
+          component: SignUp
+        },
+        {
+          path: 'pass-update',
+          component: UpdatePassword
+        },
+        {
+          path: 'new-password',
+          component: NewPassword
+        }
+      ]
+    },
+    {
+      path: '/worlds',
       component: Main,
       children: [
         {
@@ -50,13 +77,16 @@ const router = createRouter({
       ]
     },
     {
+      path: '/error',
+      name: 'Error',
+      component: ErrorPage
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
       component: NotFound
     }
   ]
 })
-
-router.beforeEach(Auth0.routeGuard)
 
 export default router
