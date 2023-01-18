@@ -98,7 +98,7 @@ const signup = async () => {
             message: 'User created successfully',
             duration: 5000
           })
-          router.push('/')
+          router.push('/auth/login')
         }
       })
     } else {
