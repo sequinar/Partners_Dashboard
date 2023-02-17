@@ -6,13 +6,13 @@
     <el-button text large class="collapseButton" :class="{ flip: !blockCollapse }" @click="toggleCollapse($event)">
       <img src="../assets/icons/CollapseLeftpanel_icon.svg" alt="collapseIcon">
     </el-button>
-    <el-menu-item index="1" :class="showIntruction(0)" @click="goTo('/')">
+    <el-menu-item index="1" :class="showIntruction(0)" @click="goTo('/worlds')">
       <img src="../assets/icons/Worlds.svg" alt="worlds">
       <template #title>
         <span class="title">Worlds</span>
       </template>
     </el-menu-item>
-    <el-menu-item index="2" :class="showIntruction(1)" @click="goTo(`/team/${team?.teamId || ''}`)">
+    <el-menu-item index="2" :class="showIntruction(1)" @click="goTo(`/worlds/team/${team?.teamId || ''}`)">
       <img src="../assets/icons/Teams.svg" alt="team">
       <template #title>
         <span class="title">Team</span>

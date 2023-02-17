@@ -7,7 +7,7 @@ const store = createStore({
   state () {
     return {
       accessToken: null,
-      user: {},
+      user: null,
       apiEndpoint: process.env.API_ENDPOINT,
       messageSuccess: null,
       messageError: null
@@ -16,6 +16,7 @@ const store = createStore({
   mutations: {
     updateAccessToken (state, token) {
       axios.defaults.headers.common.Authorization = `Bearer ${token}`
+      sessionStorage.setItem('token', token)
       state.accessToken = token
     },
     setUser (state, user) {
@@ -65,7 +66,7 @@ const store = createStore({
   },
   getters: {
     getAuth0UserId: (state) => {
-      return state.user.sub || state.user.user_id
+      return state.user?.sub || state.user?.user_id
     }
   },
   modules: {

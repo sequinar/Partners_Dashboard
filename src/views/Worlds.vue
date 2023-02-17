@@ -16,7 +16,7 @@
       </div>
       <el-pagination v-if="worlds?.data" v-model:currentPage="filters.page" background :total="worlds.meta.totalCount"
         :page-size="filters.limit" layout="prev, pager, next" hide-on-single-page />
-      <el-button type="primary" size="large" :icon="Plus" @click="router.push('/new-world')">Add World</el-button>
+      <el-button type="primary" size="large" :icon="Plus" @click="router.push('/worlds/new-world')">Add World</el-button>
     </el-col>
   </el-row>
   <div class="loadingContainer" v-loading="worlds === null">
