@@ -6,13 +6,15 @@ import Team from '../views/Team.vue'
 import WorldEditor from '../views/WorldEditor.vue'
 import World from '../views/World.vue'
 import Product from '../views/Product.vue'
-import Auth from '../views/auth/Auth.vue'
-import SignUp from '../views/auth/Signup.vue'
-import LogIn from '../views/auth/Login.vue'
-import UpdatePassword from '../views/auth/UpdatePassword.vue'
-import NewPassword from '../views/auth/NewPassword.vue'
-import NotFound from '../views/NotFound.vue'
-import ErrorPage from '../views/ErrorPage.vue'
+import {
+  Auth,
+  Signup,
+  Login,
+  UpdatePassword,
+  NewPassword,
+  NotFound,
+  ErrorPage
+} from 'sequin-platform-packages'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -23,11 +25,11 @@ const router = createRouter({
       children: [
         {
           path: 'login',
-          component: LogIn
+          component: Login
         },
         {
           path: 'signup',
-          component: SignUp
+          component: Signup
         },
         {
           path: 'pass-update',

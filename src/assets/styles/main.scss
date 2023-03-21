@@ -259,26 +259,6 @@ input {
         font-family: 'Montserrat-SemiBold';
     }
 
-    .accountSetting {
-        .el-form-item__label {
-            font-size: 14px;
-            color: #fff;
-            font-family: 'Montserrat-SemiBold';
-            margin-bottom: 5px !important;
-        }
-
-        .el-input__wrapper {
-            background-color: #313131;
-            box-shadow: none;
-
-            .el-input__inner {
-                color: #fff;
-                font-family: 'Montserrat-Light';
-                font-size: 14px;
-            }
-        }
-    }
-
     .teamPage {
         .el-input__wrapper {
             background-color: #fff;
@@ -362,11 +342,6 @@ input {
             }
         }
     }
-}
-
-.el-drawer {
-    background-color: #1c1c1c;
-    color: #fff;
 }
 
 .el-table--enable-row-hover .el-table__body tr:hover>td.el-table__cell {

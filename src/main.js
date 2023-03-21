@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import ElementPlus from 'element-plus'
 import './assets/styles/element/index.scss'
+import 'sequin-platform-packages/dist/style.css'
 import App from './App.vue'
 import store from './store/index'
 import router from './router'
