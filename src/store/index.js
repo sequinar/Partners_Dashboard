@@ -35,7 +35,7 @@ const store = createStore({
   },
   actions: {
     async getUser ({ commit, getters }) {
-      const user = await axios.get(`/user-profile/${getters.getAuth0UserId}`)
+      const user = await axios.get(`/user-profile?userIds=${getters.getAuth0UserId}`)
       commit('setUser', user.data.data)
     },
     async updateUser ({ commit, dispatch }, data) {
