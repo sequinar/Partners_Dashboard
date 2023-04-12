@@ -21,7 +21,7 @@ const store = createStore({
     },
     setUser (state, user) {
       if (state.user) {
-        state.user = { ...state.user, ...user }
+        state.user = { ...state.user, ...user[0] }
       } else {
         state.user = { ...user }
       }
