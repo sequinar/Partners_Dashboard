@@ -2,14 +2,15 @@
   <div class="videoPreview">
     <h3>Video Preview (16:9)</h3>
     <div class="videoContainer d-flex align-center justify-center">
-      <video
+      <!-- <video
         v-if="props.video"
         id="videoPreview"
         :src="props.video"
         controls
         data-dashjs-player autoplay
-      />
-      <span v-else>Add Stream Key to Preview</span>
+      /> -->
+      <iframe :src="props.video" allowfullscreen width="320" height="240"></iframe>
+      <!-- <span v-else>Add Stream Key to Preview</span> -->
     </div>
   </div>
 </template>
@@ -26,9 +27,9 @@ const props = defineProps({
 })
 
 onMounted(() => {
-  if (props.video.url) {
-    player.initialize(document.querySelector('#videoPreview'), props.video, true)
-  }
+  // if (props.video.url) {
+  //   player.initialize(document.querySelector('#videoPreview'), props.video, true)
+  // }
 })
 </script>
 

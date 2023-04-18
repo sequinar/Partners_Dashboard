@@ -21,7 +21,7 @@ const store = createStore({
     },
     setUser (state, user) {
       if (state.user) {
-        state.user = { ...state.user, ...user }
+        state.user = { ...state.user, ...user[0] }
       } else {
         state.user = { ...user }
       }
@@ -35,7 +35,7 @@ const store = createStore({
   },
   actions: {
     async getUser ({ commit, getters }) {
-      const user = await axios.get(`/user-profile/${getters.getAuth0UserId}`)
+      const user = await axios.get(`/user-profile?userIds=${getters.getAuth0UserId}`)
       commit('setUser', user.data.data)
     },
     async updateUser ({ commit, dispatch }, data) {
