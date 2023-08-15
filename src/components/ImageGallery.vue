@@ -1,8 +1,8 @@
 <template>
-  <div ref="imageGallery">
-    <el-upload v-model:file-list="fileList" action="#" list-type="picture-card"
+  <div class="image-gallery" ref="imageGallery">
+    <el-upload ref="imageGalleryUpload" v-model:file-list="fileList" action="#" list-type="picture-card"
       :on-preview="handlePictureCardPreview" accept="image/png, image/jpeg" :auto-upload="false" :limit="props.limit"
-      :on-remove="handleRemove">
+      :on-remove="handleRemove" :on-change="checkSize">
       <div class="addButton">
         <el-icon>
           +
@@ -19,6 +19,7 @@
 
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
+import { ElMessage } from 'element-plus'
 
 const emits = defineEmits(['imageUpdate', 'imageRemove'])
 
@@ -32,6 +33,7 @@ const props = defineProps({
 })
 
 const imageGallery = ref(null)
+const imageGalleryUpload = ref(null)
 const dialogImageUrl = ref('')
 const dialogVisible = ref(false)
 
@@ -41,7 +43,9 @@ const fileList = computed({
   },
   set (images) {
     const newImg = images[images.length - 1]
-    newImg.raw = new File([newImg.raw], newImg.raw.name.replace(/\s/g, ''))
+    if (newImg && newImg.raw) {
+      newImg.raw = new File([newImg.raw], newImg.raw.name.replace(/\s/g, ''))
+    }
     emits('imageUpdate', images)
   }
 })
@@ -65,6 +69,17 @@ const hideUploadButton = (length) => {
   }
 }
 
+const checkSize = (image) => {
+  if (image.size > (1024 * 1024 * 4.5)) {
+    ElMessage({
+      type: 'error',
+      message: 'Oops! The size limit for images is 5.0 MB.',
+      duration: 5000
+    })
+    imageGalleryUpload.value.handleRemove(image)
+  }
+}
+
 watch(fileListLength, (length) => {
   hideUploadButton(length)
 })
@@ -75,45 +90,47 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-.el-upload-list--picture-card {
-  gap: 30px;
+.image-gallery {
+  .el-upload-list--picture-card {
+    gap: 30px;
 
-  .el-upload-list__item,
-  .el-upload--picture-card {
-    width: 195px;
-    height: 125px;
-    margin: 0;
+    .el-upload-list__item,
+    .el-upload--picture-card {
+      width: 195px;
+      height: 125px;
+      margin: 0;
 
-    .el-upload-list__item-thumbnail {
-      object-fit: cover;
+      .el-upload-list__item-thumbnail {
+        object-fit: cover;
+      }
     }
-  }
 
-  .el-upload--picture-card {
-    order: -1;
-    background-color: rgba(96, 58, 150, 0.05);
-    border: 1px dashed var(--el-color-primary);
-  }
+    .el-upload--picture-card {
+      order: -1;
+      background-color: rgba(96, 58, 150, 0.05);
+      border: 1px dashed var(--el-color-primary);
+    }
 
-  .el-upload-list__item-status-label,
-  .el-icon--close-tip {
-    display: none !important;
-  }
+    .el-upload-list__item-status-label,
+    .el-icon--close-tip {
+      display: none !important;
+    }
 
-  .addButton {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-items: center;
-    color: var(--el-color-primary);
-    font-size: 12px;
-    font-family: 'Montserrat-Bold';
-
-    i {
-      font-style: normal;
-      font-size: 42px;
+    .addButton {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-items: center;
       color: var(--el-color-primary);
-      font-family: 'Montserrat';
+      font-size: 12px;
+      font-family: 'Montserrat-Bold';
+
+      i {
+        font-style: normal;
+        font-size: 42px;
+        color: var(--el-color-primary);
+        font-family: 'Montserrat';
+      }
     }
   }
 }

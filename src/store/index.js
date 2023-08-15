@@ -7,7 +7,7 @@ const store = createStore({
   state () {
     return {
       accessToken: null,
-      user: {},
+      user: null,
       apiEndpoint: process.env.API_ENDPOINT,
       messageSuccess: null,
       messageError: null
@@ -16,11 +16,12 @@ const store = createStore({
   mutations: {
     updateAccessToken (state, token) {
       axios.defaults.headers.common.Authorization = `Bearer ${token}`
+      sessionStorage.setItem('token', token)
       state.accessToken = token
     },
     setUser (state, user) {
       if (state.user) {
-        state.user = { ...state.user, ...user }
+        state.user = { ...state.user, ...user[0] }
       } else {
         state.user = { ...user }
       }
@@ -34,7 +35,7 @@ const store = createStore({
   },
   actions: {
     async getUser ({ commit, getters }) {
-      const user = await axios.get(`/user-profile/${getters.getAuth0UserId}`)
+      const user = await axios.get(`/user-profile?userIds=${getters.getAuth0UserId}`)
       commit('setUser', user.data.data)
     },
     async updateUser ({ commit, dispatch }, data) {
@@ -65,7 +66,7 @@ const store = createStore({
   },
   getters: {
     getAuth0UserId: (state) => {
-      return state.user.sub || state.user.user_id
+      return state.user?.sub || state.user?.user_id
     }
   },
   modules: {

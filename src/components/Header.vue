@@ -30,19 +30,20 @@
     </el-col>
   </el-row>
   <el-drawer v-model="drawer" size="400px" :with-header="false" destroy-on-close>
-    <account-settings @close="drawer = false" />
+    <AccountSettings :user="user" @close="drawer = false" @update-user="updateUser" @updatePassword="updatePassword">
+      <template v-slot:avatar>
+        <UserAvatar :user-avatar="user.picture" @avatar-update="updateUser" @error="showError"/>
+      </template>
+    </AccountSettings>
   </el-drawer>
 </template>
 
 <script setup>
 import { ArrowDown } from '@element-plus/icons-vue'
-import { ref, computed, defineAsyncComponent, inject } from 'vue'
+import { ref, computed, inject } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-
-const AccountSettings = defineAsyncComponent(() =>
-  import('./AccountSettings.vue')
-)
+import { AccountSettings, UserAvatar } from 'sequin-platform-packages'
 
 const store = useStore()
 const route = useRoute()
@@ -58,7 +59,20 @@ const search = computed({
 const drawer = ref(false)
 const auth = inject('Auth')
 
+const showError = (error) => {
+  store.commit('setMessageError', error)
+}
+
+const updateUser = (data) => {
+  store.dispatch('updateUser', data)
+}
+
+const updatePassword = (data) => {
+  store.dispatch('updatePassword', data)
+}
+
 const logOut = () => {
+  sessionStorage.removeItem('token')
   auth.logout()
 }
 </script>

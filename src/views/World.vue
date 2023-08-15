@@ -5,7 +5,7 @@
       <el-col :span="15">
         <div class="d-flex justify-between">
           <h1 class="title">{{ route.name }}</h1>
-          <el-button type="primary" link :icon="ArrowLeft" @click="router.push('/')">Back to Worlds
+          <el-button type="primary" link :icon="ArrowLeft" @click="router.push('/worlds')">Back to Worlds
           </el-button>
         </div>
         <p class="description">Upload World zip file, and world assets like title ,description, gallery images,
@@ -159,13 +159,15 @@ const updateFeaturedImage = async () => {
   return await store.dispatch('worlds/updateFeaturedImage', featureImage.value)
 }
 const updateGallery = async () => {
-  const fd = new FormData()
+  const promises = []
   gallery.value.forEach((image, index) => {
     if (image.raw) {
+      const fd = new FormData()
       fd.append(index, image.raw)
+      promises.push(store.dispatch('worlds/updateGallery', fd))
     }
   })
-  return store.dispatch('worlds/updateGallery', fd)
+  return Promise.all(promises)
 }
 const updateThumbnailImage = async () => {
   const fd = new FormData()

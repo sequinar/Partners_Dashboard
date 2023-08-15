@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container v-if="token && team && user">
     <el-aside>
       <Menu />
     </el-aside>
@@ -8,31 +8,27 @@
         <Header />
       </el-header>
       <el-main>
-        <router-view v-if="token && team"/>
+        <router-view/>
       </el-main>
     </el-container>
   </el-container>
 </template>
 
 <script setup>
-import { onMounted, inject, computed, watch } from 'vue'
+import { onMounted, computed, watch } from 'vue'
 import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
 import Menu from '../components/Menu.vue'
 import Header from '../components/Header.vue'
 
 const store = useStore()
-const auth = inject('Auth')
 const messageSuccess = computed(() => store.state.messageSuccess)
 const messageError = computed(() => store.state.messageError)
 const token = computed(() => store.state.accessToken)
 const team = computed(() => store.state.team.team)
+const user = computed(() => store.state.user)
 
 onMounted(async () => {
-  store.commit('setUser', auth.user.value)
-  await auth.getTokenSilently().then((data) => {
-    store.commit('updateAccessToken', data)
-  })
   store.dispatch('getUser')
   await store.dispatch('team/getTeam')
 })

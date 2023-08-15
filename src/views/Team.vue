@@ -14,7 +14,7 @@
           <img src="../assets/icons/Search.svg" alt="Search">
         </template>
       </el-input>
-      <AddNewMember />
+      <AddNewMember @member-added="getMembers()"/>
     </el-col>
   </el-row>
   <el-row v-if="team" class="teamsContainer">
@@ -107,7 +107,8 @@ const resendInvitation = async (member) => {
 
 const getMembers = async (newPage, filter) => {
   if (!route.params.id) return
-  return await store.dispatch('team/getMembers', {
+  loading.value = true
+  await store.dispatch('team/getMembers', {
     params: {
       limit: limit.value,
       page: newPage || page.value,
@@ -115,22 +116,18 @@ const getMembers = async (newPage, filter) => {
     },
     teamId: route.params.id
   })
+  loading.value = false
 }
 
 onMounted(async () => {
   await getMembers()
-  loading.value = false
 })
 
 watch(page, async (newPage) => {
-  loading.value = true
   await getMembers(newPage, search.value)
-  loading.value = false
 })
 watch(search, useDebounce(async (newVal) => {
-  loading.value = true
   await getMembers(1, newVal)
-  loading.value = false
 }, 500))
 </script>
 

@@ -23,30 +23,6 @@
           :rules="rules"
           @submit.prevent
         >
-          <!-- <el-row :gutter="25">
-            <el-col :span="12">
-              <el-form-item
-                label="Name"
-                prop="name"
-              >
-                <el-input
-                  v-model="member.name"
-                  size="large"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item
-                label="Last Name"
-                prop="last_name"
-              >
-                <el-input
-                  v-model="member.last_name"
-                  size="large"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row> -->
           <el-row>
             <el-col :span="24">
               <el-form-item
@@ -104,6 +80,7 @@ const member = reactive({
   last_name: '',
   email: ''
 })
+const emits = defineEmits(['memberAdded'])
 
 const isOpen = ref(false)
 
@@ -132,7 +109,7 @@ const submitMemberForm = async () => {
       await store.dispatch('team/inviteMember', {
         ...member
       })
-      store.dispatch('team/getMembers')
+      emits('memberAdded')
     } else {
       console.log('error submit!', fields)
     }

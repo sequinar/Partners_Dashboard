@@ -2,7 +2,7 @@
   <div v-loading="loading" class="worldEditor">
     <div v-if="world" class="worldEditor__container">
       <h1>World Settings</h1>
-      <p>Edit content available inside the world as banner ads, video uploads, and streming.</p>
+      <p>Edit content available inside the world as banner ads, video uploads, and streaming.</p>
       <el-row :gutter="25">
         <el-col :span="13" class="d-flex">
           <div class="switcher mt-30">

@@ -31,7 +31,7 @@
           disabled
         />
         <h3 class="mt-30">
-          Stream URL
+          Stream Name
         </h3>
         <el-row :gutter="15">
           <el-col :span="19">
@@ -50,7 +50,7 @@
           </el-col>
         </el-row>
         <h3 class="mt-30">
-          Stream key (paste in encoder)
+          Publishing Token (paste in encoder)
         </h3>
         <el-row :gutter="15">
           <el-col :span="19">
@@ -101,9 +101,9 @@ const store = useStore()
 const streamTypeDefault = ref('')
 const streamKey = ref(props.world?.stream_key)
 const streamUrl = ref(props.world?.streaming_input_url)
+const streamingOutputUrl = ref(props.world?.streaming_url)
 const streamStatus = ref(props.world?.streaming_status)
-
-const videoUrl = 'https://livesim.dashif.org/livesim/chunkdur_1/ato_7/testpic4_8s/Manifest.mpd'
+const videoUrl = "https://viewer.millicast.com?streamId=" + streamingOutputUrl.value + "&pip=false&cast=false";
 
 const startStreamDisabled = computed(() => !streamKey.value || !streamUrl.value)
 

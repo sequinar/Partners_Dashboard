@@ -6,14 +6,43 @@ import Team from '../views/Team.vue'
 import WorldEditor from '../views/WorldEditor.vue'
 import World from '../views/World.vue'
 import Product from '../views/Product.vue'
-import NotFound from '../views/NotFound.vue'
-import Auth0 from '../auth0/index'
+import {
+  Auth,
+  Signup,
+  Login,
+  UpdatePassword,
+  NewPassword,
+  NotFound,
+  ErrorPage
+} from 'sequin-platform-packages'
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: '/',
+      path: '/auth',
+      component: Auth,
+      children: [
+        {
+          path: 'login',
+          component: Login
+        },
+        {
+          path: 'signup',
+          component: Signup
+        },
+        {
+          path: 'pass-update',
+          component: UpdatePassword
+        },
+        {
+          path: 'new-password',
+          component: NewPassword
+        }
+      ]
+    },
+    {
+      path: '/worlds',
       component: Main,
       children: [
         {
@@ -50,13 +79,16 @@ const router = createRouter({
       ]
     },
     {
+      path: '/error',
+      name: 'Error',
+      component: ErrorPage
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
       component: NotFound
     }
   ]
 })
-
-router.beforeEach(Auth0.routeGuard)
 
 export default router
